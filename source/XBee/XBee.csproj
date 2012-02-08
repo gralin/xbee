@@ -45,8 +45,13 @@
   </PropertyGroup>
   <Import Project="$(NetMfTargetsBaseDir)$(TargetFrameworkVersion)\CSharp.Targets" />
   <ItemGroup>
+    <Compile Include="Api\ICollectTerminator.cs" />
+    <Compile Include="Api\IPacketListener.cs" />
     <Compile Include="Api\IXBee.cs" />
     <Compile Include="Api\XBee.cs" />
+    <Compile Include="Api\XBeePacket.cs" />
+    <Compile Include="Api\XBeeRequest.cs" />
+    <Compile Include="Api\XBeeResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="XBee.cs" />
   </ItemGroup>
@@ -77,6 +82,9 @@
     <None Include="Setup\common.wxi" />
     <None Include="Setup\msi.wxs" />
     <None Include="Setup\G.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Util\" />
   </ItemGroup>
   <!--Stuff for wix-->
   <PropertyGroup>
