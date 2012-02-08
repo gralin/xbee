@@ -45,11 +45,17 @@
   </PropertyGroup>
   <Import Project="$(NetMfTargetsBaseDir)$(TargetFrameworkVersion)\CSharp.Targets" />
   <ItemGroup>
+    <Compile Include="Api\ApiId.cs" />
+    <Compile Include="Api\XBeeException.cs" />
+    <Compile Include="Api\XBeeTimeoutException.cs" />
+    <Compile Include="Util\Arrays.cs" />
     <Compile Include="Api\ICollectTerminator.cs" />
     <Compile Include="Api\IPacketListener.cs" />
+    <Compile Include="Api\IPacketParser.cs" />
     <Compile Include="Api\IXBee.cs" />
     <Compile Include="Api\XBee.cs" />
     <Compile Include="Api\XBeePacket.cs" />
+    <Compile Include="Api\XBeePacketLength.cs" />
     <Compile Include="Api\XBeeRequest.cs" />
     <Compile Include="Api\XBeeResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -83,9 +89,7 @@
     <None Include="Setup\msi.wxs" />
     <None Include="Setup\G.ico" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Util\" />
-  </ItemGroup>
+  <ItemGroup />
   <!--Stuff for wix-->
   <PropertyGroup>
     <WixTasksPath Condition=" '$(WixTasksPath)' == '' AND '$(MSBuildExtensionsPath32)' != '' ">$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\WixTasks.dll</WixTasksPath>
