@@ -8,7 +8,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 	    // XBee will not generate a TX Status Packet if this frame id sent
 	    public static int NO_RESPONSE_FRAME_ID = 0;
 
-        public ApiId ApiId { get; set; }
+        public virtual ApiId ApiId { get; set; }
         public int FrameId { get; set; }
 
         // TODO create XBeePacket(XBeeRequest) constructor and move operation there

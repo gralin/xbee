@@ -1,3 +1,5 @@
+using Gadgeteer.Modules.GHIElectronics.Util;
+
 namespace Gadgeteer.Modules.GHIElectronics.Api
 {
     /// <summary>
@@ -80,7 +82,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         public override string ToString()
         {
             return "ApiId=" + ApiId +
-                   ",Length=" + (Length == null ? "null" : Length.Get16BitValue()) +
+                   ",Length=" + (Length == null ? "null" : ByteUtils.ToBase16(Length.Get16BitValue())) +
                    ",Checksum=" + Checksum +
                    "Error=" + Error;
         }
