@@ -1,15 +1,15 @@
 ﻿using System.Threading;
+using Gadgeteer.Modules.GHIElectronics.Api;
 using Microsoft.SPOT;
 
 namespace NETMF.Tester
 {
     public class Program
     {
-        private Gadgeteer.Modules.GHIElectronics.Api.XBee _xbee;
-
         public static void Main()
         {
             Debug.Print("Program Started");
+            var xbee = new XBee();
             Thread.Sleep(Timeout.Infinite);
         }
     }

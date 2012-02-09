@@ -38,9 +38,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\XBee\XBee.csproj">
-      <Project>{9E0199D1-8B75-4A82-9F03-3F1718C9E9C2}</Project>
-      <Name>XBee</Name>
+    <ProjectReference Include="..\XBee Core\XBee Core.csproj">
+      <Project>{7F280F44-4AE1-4917-83BC-36825E729EC2}</Project>
+      <Name>XBee Core</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>

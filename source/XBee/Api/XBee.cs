@@ -87,5 +87,10 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         }
 
         #endregion
+
+        public string SayHello()
+        {
+            return "Hello from XBee";
+        }
     }
 }
