@@ -121,6 +121,24 @@
     <Compile Include="..\XBee\Api\XBeeTimeoutException.cs">
       <Link>Api\XBeeTimeoutException.cs</Link>
     </Compile>
+    <Compile Include="..\XBee\Api\Zigbee\AssociationStatus.cs">
+      <Link>Api\Zigbee\AssociationStatus.cs</Link>
+    </Compile>
+    <Compile Include="..\XBee\Api\Zigbee\ZBForceSampleRequest.cs">
+      <Link>Api\Zigbee\ZBForceSampleRequest.cs</Link>
+    </Compile>
+    <Compile Include="..\XBee\Api\Zigbee\ZBNodeDiscover.cs">
+      <Link>Api\Zigbee\ZBNodeDiscover.cs</Link>
+    </Compile>
+    <Compile Include="..\XBee\Api\Zigbee\ZNetExplicitRxResponse.cs">
+      <Link>Api\Zigbee\ZNetExplicitRxResponse.cs</Link>
+    </Compile>
+    <Compile Include="..\XBee\Api\Zigbee\ZNetRxBaseResponse.cs">
+      <Link>Api\Zigbee\ZNetRxBaseResponse.cs</Link>
+    </Compile>
+    <Compile Include="..\XBee\Api\Zigbee\ZNetRxResponse.cs">
+      <Link>Api\Zigbee\ZNetRxResponse.cs</Link>
+    </Compile>
     <Compile Include="..\XBee\Util\Arrays.cs">
       <Link>Util\Arrays.cs</Link>
     </Compile>
@@ -132,6 +150,12 @@
     </Compile>
     <Compile Include="..\XBee\Util\IIntArray.cs">
       <Link>Util\IIntArray.cs</Link>
+    </Compile>
+    <Compile Include="..\XBee\Util\IIntInputStream.cs">
+      <Link>Util\IIntInputStream.cs</Link>
+    </Compile>
+    <Compile Include="..\XBee\Util\IntArrayInputStream.cs">
+      <Link>Util\IntArrayInputStream.cs</Link>
     </Compile>
     <Compile Include="..\XBee\Util\IntArrayOutputStream.cs">
       <Link>Util\IntArrayOutputStream.cs</Link>
