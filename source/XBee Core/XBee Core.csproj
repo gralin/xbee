@@ -133,11 +133,26 @@
     <Compile Include="..\XBee\Api\Zigbee\ZNetExplicitRxResponse.cs">
       <Link>Api\Zigbee\ZNetExplicitRxResponse.cs</Link>
     </Compile>
+    <Compile Include="..\XBee\Api\Zigbee\ZNetExplicitTxRequest.cs">
+      <Link>Api\Zigbee\ZNetExplicitTxRequest.cs</Link>
+    </Compile>
+    <Compile Include="..\XBee\Api\Zigbee\ZNetNodeIdentificationResponse.cs">
+      <Link>Api\Zigbee\ZNetNodeIdentificationResponse.cs</Link>
+    </Compile>
     <Compile Include="..\XBee\Api\Zigbee\ZNetRxBaseResponse.cs">
       <Link>Api\Zigbee\ZNetRxBaseResponse.cs</Link>
     </Compile>
+    <Compile Include="..\XBee\Api\Zigbee\ZNetRxIoSampleResponse.cs">
+      <Link>Api\Zigbee\ZNetRxIoSampleResponse.cs</Link>
+    </Compile>
     <Compile Include="..\XBee\Api\Zigbee\ZNetRxResponse.cs">
       <Link>Api\Zigbee\ZNetRxResponse.cs</Link>
+    </Compile>
+    <Compile Include="..\XBee\Api\Zigbee\ZNetTxRequest.cs">
+      <Link>Api\Zigbee\ZNetTxRequest.cs</Link>
+    </Compile>
+    <Compile Include="..\XBee\Api\Zigbee\ZNetTxStatusResponse.cs">
+      <Link>Api\Zigbee\ZNetTxStatusResponse.cs</Link>
     </Compile>
     <Compile Include="..\XBee\Util\Arrays.cs">
       <Link>Util\Arrays.cs</Link>
