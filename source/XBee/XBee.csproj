@@ -66,6 +66,12 @@
     <Compile Include="Api\XBeeFrameIdResponse.cs" />
     <Compile Include="Api\XBeeParseException.cs" />
     <Compile Include="Api\XBeeTimeoutException.cs" />
+    <Compile Include="Api\Zigbee\AssociationStatus.cs" />
+    <Compile Include="Api\Zigbee\ZBForceSampleRequest.cs" />
+    <Compile Include="Api\Zigbee\ZBNodeDiscover.cs" />
+    <Compile Include="Api\Zigbee\ZNetExplicitRxResponse.cs" />
+    <Compile Include="Api\Zigbee\ZNetRxBaseResponse.cs" />
+    <Compile Include="Api\Zigbee\ZNetRxResponse.cs" />
     <Compile Include="Util\Arrays.cs" />
     <Compile Include="Api\ICollectTerminator.cs" />
     <Compile Include="Api\IPacketListener.cs" />
@@ -80,6 +86,8 @@
     <Compile Include="Util\ByteUtils.cs" />
     <Compile Include="Util\DoubleByte.cs" />
     <Compile Include="Util\IIntArray.cs" />
+    <Compile Include="Util\IIntInputStream.cs" />
+    <Compile Include="Util\IntArrayInputStream.cs" />
     <Compile Include="Util\IntArrayOutputStream.cs" />
     <Compile Include="XBee.cs" />
   </ItemGroup>
