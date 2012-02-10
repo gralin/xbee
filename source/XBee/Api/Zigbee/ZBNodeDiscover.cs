@@ -44,10 +44,8 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
             // NI is terminated with 0
             while ((ch = input.Read()) != 0)
             {
-                if (ch < 32 || ch > 126)
-                    throw new Exception("Node Identifier " + ch + " is non-ascii");
-                
-                nodeIdentifier += (char)ch;
+                if (ch > 32 && ch < 126)
+                    nodeIdentifier += (char)ch;
             }
 
             frame.NodeIdentifier = nodeIdentifier;

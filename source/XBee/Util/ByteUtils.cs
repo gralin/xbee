@@ -44,5 +44,15 @@ namespace Gadgeteer.Modules.GHIElectronics.Util
 
             return (byte)(lowDigit + (highDigit << 4));
         }
+
+        public static bool GetBit(int value, int bit)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static int Parse10BitAnalog(IIntInputStream parser, int enabledCount)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

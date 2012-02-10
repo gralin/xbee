@@ -13,5 +13,27 @@ namespace Gadgeteer.Modules.GHIElectronics.Util
         {
             throw new NotImplementedException();
         }
+
+        public static byte[] ToByteArray(int[] array)
+        {
+            var result = new byte[array.Length];
+
+            for (var i = 0; i < array.Length; i++)
+                result[i] = (byte) array[i];
+
+            Array.Copy(array, result, array.Length);
+
+            return result;
+        }
+
+        public static int[] ToIntArray(byte[] array)
+        {
+            var result = new int[array.Length];
+
+            for (var i = 0; i < array.Length; i++)
+                result[i] = array[i];
+
+            return result;
+        }
     }
 }

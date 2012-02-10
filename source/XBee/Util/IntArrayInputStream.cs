@@ -1,23 +1,26 @@
 ﻿using System;
+using System.IO;
+using Microsoft.SPOT;
 
 namespace Gadgeteer.Modules.GHIElectronics.Util
 {
     public class IntArrayInputStream : IIntInputStream
     {
-        private readonly int[] _source;
-        private int _pos;
+        private readonly Stream _stream;
 
         public IntArrayInputStream(int[] source)
         {
-            _source = source;
+            _stream = new MemoryStream(Arrays.ToByteArray(source));
         }
 
         public int Read()
         {
-            if (_pos >= _source.Length)
+            var result = _stream.ReadByte();
+
+            if (result == -1)
                 throw new InvalidOperationException("end of input stream");
 
-            return _source[_pos++];
+            return result;
         }
 
         /// <summary>
@@ -27,16 +30,22 @@ namespace Gadgeteer.Modules.GHIElectronics.Util
         /// <returns></returns>
         public int[] Read(int size)
         {
-            var block = new int[size];
-            Array.Copy(_source, _pos, block, 0, size);
-            // index pos
-            _pos += size;
-            return block;
+            var block = new byte[size];
+            _stream.Read(block, 0, size);
+
+            return Arrays.ToIntArray(block);
         }
 
         public int Read(string s)
         {
+            Debug.Print(s);
             return Read();
+        }
+
+        public void Dispose()
+        {
+            if (_stream != null)
+                _stream.Dispose();
         }
     }
 }

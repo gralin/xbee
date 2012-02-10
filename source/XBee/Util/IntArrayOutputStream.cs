@@ -4,7 +4,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Util
 {
     public class IntArrayOutputStream : IIntArray
     {
-        private readonly MemoryStream _stream;
+        private readonly Stream _stream;
 
         public IntArrayOutputStream()
         {
@@ -34,15 +34,11 @@ namespace Gadgeteer.Modules.GHIElectronics.Util
 
         public int[] GetIntArray()
         {
-            _stream.Position = 0;
             var result = new byte[_stream.Length];
+            _stream.Position = 0;
             _stream.Read(result, 0, result.Length);
-            var resultAsIntArray = new int[result.Length];
 
-            for (var i = 0; i < result.Length; i++)
-                resultAsIntArray[i] = result[i];
-
-            return resultAsIntArray;
+            return Arrays.ToIntArray(result);
         }
 
         public void Dispose()

@@ -70,8 +70,13 @@
     <Compile Include="Api\Zigbee\ZBForceSampleRequest.cs" />
     <Compile Include="Api\Zigbee\ZBNodeDiscover.cs" />
     <Compile Include="Api\Zigbee\ZNetExplicitRxResponse.cs" />
+    <Compile Include="Api\Zigbee\ZNetExplicitTxRequest.cs" />
+    <Compile Include="Api\Zigbee\ZNetNodeIdentificationResponse.cs" />
     <Compile Include="Api\Zigbee\ZNetRxBaseResponse.cs" />
+    <Compile Include="Api\Zigbee\ZNetRxIoSampleResponse.cs" />
     <Compile Include="Api\Zigbee\ZNetRxResponse.cs" />
+    <Compile Include="Api\Zigbee\ZNetTxRequest.cs" />
+    <Compile Include="Api\Zigbee\ZNetTxStatusResponse.cs" />
     <Compile Include="Util\Arrays.cs" />
     <Compile Include="Api\ICollectTerminator.cs" />
     <Compile Include="Api\IPacketListener.cs" />
