@@ -12,6 +12,7 @@ namespace NETMF.Tester
         {
             Debug.Print("Program Started");
             _xbee = new XBee("COM4",9600);
+            _xbee.Open();
             Debug.Print(_xbee.SayHello());
             Thread.Sleep(Timeout.Infinite);
         }

@@ -220,5 +220,10 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 
             return valid;
         }
+
+        public int[] ToByteArray()
+        {
+            return _packet;
+        }
     }
 }
