@@ -9,7 +9,7 @@ namespace Gadgeteer.Modules.GHIElectronics
     /// </summary>
     public class XBee : GTM.Module
     {
-        private Api.XBee _xbee;
+        public Api.XBee Api { get; private set; }
 
         /// <summary>
         /// Gets the <see cref="T:Microsoft.Gadgeteer.Interfaces.Serial"/> device associated with this instance.
@@ -69,11 +69,13 @@ namespace Gadgeteer.Modules.GHIElectronics
         public void Configure(int baudRate, GTI.Serial.SerialParity parity, GTI.Serial.SerialStopBits stopBits, int dataBits)
         {
             if (_SerialLine != null)
-            {
                 throw new Exception("UsbSerial.Configure can only be called once");
-            }
+
             // TODO: check if HW flow control should be used
             _SerialLine = new GTI.Serial(socket, baudRate, parity, stopBits, dataBits, GTI.Serial.HardwareFlowControl.NotRequired, this);
+            
+            var connection = new XBeeConnection(_SerialLine);
+            Api = new Api.XBee(connection);
         }
     }
 }
