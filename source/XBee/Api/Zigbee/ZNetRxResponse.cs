@@ -10,7 +10,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
     {
         public int[] Data { get; set; }
 
-        protected override void Parse(IPacketParser parser)
+        public override void Parse(IPacketParser parser)
         {
             ParseAddress(parser);
             ParseOption(parser);

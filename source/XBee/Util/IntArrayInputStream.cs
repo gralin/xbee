@@ -1,12 +1,17 @@
 ﻿using System;
 using System.IO;
-using Microsoft.SPOT;
 
 namespace Gadgeteer.Modules.GHIElectronics.Util
 {
     public class IntArrayInputStream : IIntInputStream
     {
         private readonly Stream _stream;
+
+        public IntArrayInputStream(Stream stream)
+        {
+            _stream = stream;
+            _stream.Position = 0;
+        }
 
         public IntArrayInputStream(int[] source)
         {
@@ -38,7 +43,6 @@ namespace Gadgeteer.Modules.GHIElectronics.Util
 
         public int Read(string s)
         {
-            Debug.Print(s);
             return Read();
         }
 

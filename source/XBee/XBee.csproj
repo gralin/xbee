@@ -57,11 +57,17 @@
     <Compile Include="Api\IResponseFilter.cs" />
     <Compile Include="Api\IXBeePacketHandler.cs" />
     <Compile Include="Api\ModemStatusResponse.cs" />
+    <Compile Include="Api\PacketParser.cs" />
     <Compile Include="Api\RemoteAtRequest.cs" />
     <Compile Include="Api\RemoteAtResponse.cs" />
+    <Compile Include="Api\Wpan\RxResponse64.cs" />
+    <Compile Include="Api\Wpan\RxResponse16.cs" />
+    <Compile Include="Api\Wpan\RxResponseIoSample.cs" />
+    <Compile Include="Api\Wpan\TxStatusResponse.cs" />
     <Compile Include="Api\XBeeAddress.cs" />
     <Compile Include="Api\XBeeAddress16.cs" />
     <Compile Include="Api\XBeeAddress64.cs" />
+    <Compile Include="Api\XBeeConfiguration.cs" />
     <Compile Include="Api\XBeeException.cs" />
     <Compile Include="Api\XBeeFrameIdResponse.cs" />
     <Compile Include="Api\XBeeParseException.cs" />
@@ -77,6 +83,7 @@
     <Compile Include="Api\Zigbee\ZNetRxResponse.cs" />
     <Compile Include="Api\Zigbee\ZNetTxRequest.cs" />
     <Compile Include="Api\Zigbee\ZNetTxStatusResponse.cs" />
+    <Compile Include="IXBeeConnection.cs" />
     <Compile Include="Util\Arrays.cs" />
     <Compile Include="Api\ICollectTerminator.cs" />
     <Compile Include="Api\IPacketListener.cs" />
@@ -95,6 +102,8 @@
     <Compile Include="Util\IntArrayInputStream.cs" />
     <Compile Include="Util\IntArrayOutputStream.cs" />
     <Compile Include="XBee.cs" />
+    <Compile Include="XBeePin.cs" />
+    <Compile Include="SerialConnection.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Gadgeteer">
@@ -102,6 +111,7 @@
       <Private>false</Private>
     </Reference>
     <Reference Include="Microsoft.SPOT.Hardware" />
+    <Reference Include="Microsoft.SPOT.Hardware.SerialPort" />
     <Reference Include="Microsoft.SPOT.IO" />
     <Reference Include="Microsoft.SPOT.Native" />
     <Reference Include="mscorlib" />

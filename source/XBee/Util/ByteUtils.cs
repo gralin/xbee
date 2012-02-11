@@ -4,12 +4,12 @@ namespace Gadgeteer.Modules.GHIElectronics.Util
 {
     public class ByteUtils
     {
-        public static string ToBase16(int[] data)
+        public static string ToBase16(int[] value)
         {
             throw new NotImplementedException();
         }
 
-        public static string ToBase16(int frameId)
+        public static string ToBase16(int value)
         {
             throw new NotImplementedException();
         }
@@ -51,6 +51,11 @@ namespace Gadgeteer.Modules.GHIElectronics.Util
         }
 
         public static int Parse10BitAnalog(IIntInputStream parser, int enabledCount)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static string FormatByte(int i)
         {
             throw new NotImplementedException();
         }

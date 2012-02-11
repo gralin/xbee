@@ -57,7 +57,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         /// result in an error.
         /// </summary>
         /// <param name="parser"></param>
-        protected abstract void Parse(IPacketParser parser);
+        public abstract void Parse(IPacketParser parser);
 
         public bool Equals(XBeeResponse other)
         {

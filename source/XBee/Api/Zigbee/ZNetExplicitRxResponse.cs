@@ -13,7 +13,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
         public DoubleByte ClusterId { get; set; }
         public DoubleByte ProfileId { get; set; }
 
-        protected override void Parse(IPacketParser parser)
+        public override void Parse(IPacketParser parser)
         {
             ParseAddress(parser);
             SourceEndpoint = parser.Read("Reading Source Endpoint");

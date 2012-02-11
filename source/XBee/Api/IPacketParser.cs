@@ -4,12 +4,11 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
     {
         int Read(string context);
         int[] ReadRemainingBytes();
-        int GetFrameDataBytesRead();
-        int GetRemainingBytes();
-        int GetBytesRead();
-        XBeePacketLength GetLength();
-        ApiId GetApiId();
-        int GetIntApiId();
+        int FrameDataBytesRead { get; }
+        int RemainingBytes { get; }
+        int BytesRead { get; }
+        XBeePacketLength Length { get; }
+        ApiId ApiId { get; }
 	    // TODO move to util
 	    XBeeAddress16 ParseAddress16();
 	    XBeeAddress64 ParseAddress64();

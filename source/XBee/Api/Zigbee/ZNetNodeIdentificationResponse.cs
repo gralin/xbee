@@ -39,7 +39,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
         public DoubleByte ProfileId { get; set; }
         public DoubleByte MfgId { get; set; }
 
-        protected override void Parse(IPacketParser parser)
+        public override void Parse(IPacketParser parser)
         {
             RemoteAddress64 = parser.ParseAddress64();
             RemoteAddress16 = parser.ParseAddress16();

@@ -16,7 +16,7 @@
                       && RemoteAddress16.Address.Lsb == 0xFE; }
         }
 
-        protected override void Parse(IPacketParser parser)
+        public override void Parse(IPacketParser parser)
         {
             FrameId = parser.Read("Remote AT Response Frame Id");
             RemoteAddress64 = parser.ParseAddress64();

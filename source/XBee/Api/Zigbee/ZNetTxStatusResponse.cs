@@ -40,7 +40,7 @@
         /// </summary>
         public bool IsSuccess { get { return DeliveryStatus == DeliveryResult.SUCCESS; } }
 
-        protected override void Parse(IPacketParser parser)
+        public override void Parse(IPacketParser parser)
         {
             FrameId = parser.Read("ZNet Tx Status Frame Id");
             RemoteAddress16 = parser.ParseAddress16();

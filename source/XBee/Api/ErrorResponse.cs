@@ -18,7 +18,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             Error = true;
         }
 
-        protected override void Parse(IPacketParser parser)
+        public override void Parse(IPacketParser parser)
         {
             // do nothing
         }

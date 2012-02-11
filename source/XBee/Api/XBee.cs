@@ -2,13 +2,36 @@
 
 namespace Gadgeteer.Modules.GHIElectronics.Api
 {
+    /// <summary>
+    /// This is an API for communicating with Digi XBee 802.15.4 and ZigBee radios
+    /// </summary>
     public class XBee : IXBee
     {
-        #region IXBee Members
+        private object _sendPacketBlock;
+        private readonly IXBeeConnection _connection;
 
-        public void Open(string port, int baudRate)
+        public XBee(IXBeeConnection connection)
+        {
+            _connection = connection;
+            _connection.DataReceived += OnDataReceived;
+        }
+
+        public XBee(string portName, int baudRate)
+        {
+            _connection = new SerialConnection(portName, baudRate);
+            _connection.DataReceived += OnDataReceived;
+        }
+
+        private void OnDataReceived(byte[] data, int offset, int count)
         {
             throw new NotImplementedException();
+        }
+
+        #region IXBee Members
+
+        public void Open()
+        {
+            _connection.Open();
         }
 
         public void AddPacketListener(IPacketListener packetListener)

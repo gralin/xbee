@@ -23,7 +23,7 @@
 
         public Status ResponseStatus { get; set; }
 
-        protected override void Parse(IPacketParser parser)
+        public override void Parse(IPacketParser parser)
         {
             ResponseStatus = (Status) parser.Read("Modem Status");
         }

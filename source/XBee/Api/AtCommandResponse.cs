@@ -46,7 +46,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             return new string(new[] {(char) Char1, (char) Char2});
         }
 
-        protected override void Parse(IPacketParser parser)
+        public override void Parse(IPacketParser parser)
         {
             FrameId = parser.Read("AT Response Frame Id");
             Char1 = parser.Read("AT Response Char 1");

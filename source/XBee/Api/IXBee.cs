@@ -2,7 +2,7 @@
 {
     public interface IXBee
     {
-        void Open(string port, int baudRate);
+        void Open();
 
         void AddPacketListener(IPacketListener packetListener);
 
