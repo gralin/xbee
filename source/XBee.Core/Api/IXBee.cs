@@ -32,6 +32,8 @@
 
         void ClearResponseQueue();
 
+        XBeeResponse[] CollectResponses(int wait, int maxPacketCount);
+
         XBeeResponse[] CollectResponses(int wait, ICollectTerminator terminator);
     }
 }

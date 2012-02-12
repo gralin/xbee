@@ -26,7 +26,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         public int ParseTimeout { get; set; }
         public DateTime ParseStartTime { get; private set; }
         public TimeSpan ParseElapsedTime { get { return DateTime.Now.Subtract(ParseStartTime); } }
-        public int ParseTimeLeft { get { return (int) (ParseTimeout - ParseElapsedTime.Ticks*TimeSpan.TicksPerMillisecond); } }
+        public int ParseTimeLeft { get { return (int) (ParseTimeout - ParseElapsedTime.Ticks/TimeSpan.TicksPerMillisecond); } }
 
         public bool PacketsAvailable { get { return _parsedPackets.Count > 0; } }
 

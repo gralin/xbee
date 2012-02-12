@@ -12,6 +12,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         private readonly IXBeeConnection _connection;
         private readonly PacketParser _parser;
         private int _sequentialFrameId = 0xff;
+        private readonly CountLimitTerminator _collectCountLimit;
 
         public LogLevel LogLevel
         {
@@ -24,6 +25,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         protected XBee()
         {
             _parser = new PacketParser();
+            _collectCountLimit = new CountLimitTerminator();
         }
 
         public XBee(IXBeeConnection connection) 
@@ -271,31 +273,47 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             _parser.ClearPackets();
         }
 
+        public XBeeResponse[] CollectResponses(int wait, int maxPacketCount)
+        {
+            _collectCountLimit.MaxPacketCount = maxPacketCount;
+            return CollectResponses(wait, _collectCountLimit);
+        }
+
         /// <summary>
         /// Collects responses until the timeout is reached or the CollectTerminator returns true
         /// </summary>
         /// <param name="wait"></param>
         /// <param name="terminator"></param>
         /// <returns></returns>
-        public XBeeResponse[] CollectResponses(int wait, ICollectTerminator terminator)
+        public XBeeResponse[] CollectResponses(int wait, ICollectTerminator terminator = null)
         {
             var startTime = DateTime.Now;
             var responses = new Queue();
 
             while (true)
             {
-                var remainingTime = (int)(wait - DateTime.Now.Subtract(startTime).Ticks*TimeSpan.TicksPerMillisecond);
+                var elapsedTime = DateTime.Now.Subtract(startTime);
+                var elapsedMilliseconds = elapsedTime.Ticks/TimeSpan.TicksPerMillisecond;
+                var remainingMilliseconds = (int)(wait - elapsedMilliseconds);
 
-                if (remainingTime <= 0)
+                if (remainingMilliseconds <= 0)
                     break;
 
-                var response = GetResponse(remainingTime);
+                try
+                {
+                    var response = GetResponse(remainingMilliseconds);
+                    responses.Enqueue(response);
 
-                if (terminator.Stop(response))
-                    break;
+                    if (terminator != null && terminator.Stop(response))
+                        break;
+                }
+                catch (XBeeTimeoutException)
+                {
+                    // failed to receive packet in this iteration
+                }
             }
 
-            if (responses.Count <= 0)
+            if (responses.Count == 0)
                 return new XBeeResponse[0];
             
             var result = new XBeeResponse[responses.Count];

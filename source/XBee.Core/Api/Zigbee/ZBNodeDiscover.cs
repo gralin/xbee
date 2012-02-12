@@ -24,6 +24,11 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
         public int[] ProfileId { get; set; }
         public int[] MfgId { get; set; }
 
+        public static ZBNodeDiscover Parse(XBeeResponse response)
+        {
+            return Parse(response as AtCommandResponse);
+        }
+
         public static ZBNodeDiscover Parse(AtCommandResponse response)
         {
             if (response.GetCommand() != "ND")
