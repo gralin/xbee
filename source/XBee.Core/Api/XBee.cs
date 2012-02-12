@@ -22,6 +22,8 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 
         public HardwareVersion.RadioType RadioType { get; protected set; }
 
+        public string FirmwareVersion { get; protected set; }
+
         protected XBee()
         {
             _parser = new PacketParser();
@@ -93,7 +95,10 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
                 var vr = (AtCommandResponse) SendSynchronous(new AtCommand("VR"));
 			
 			    if (vr.IsOk)
-                    Logger.Info("Firmware version is " + ByteUtils.ToBase16(vr.Value));
+			    {
+			        FirmwareVersion = ByteUtils.ToBase16(vr.Value);
+                    Logger.Info("Firmware version is " + FirmwareVersion);
+			    }
 			
 			    ClearResponseQueue();
 		    } 
