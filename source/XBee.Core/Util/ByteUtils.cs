@@ -6,12 +6,14 @@ namespace Gadgeteer.Modules.GHIElectronics.Util
     {
         public static string ToBase16(int[] value)
         {
-            throw new NotImplementedException();
+            //TODO: Implement ToBase16(int[] value)
+            return "int[" + value.Length + "]";
         }
 
         public static string ToBase16(int value)
         {
-            throw new NotImplementedException();
+            //TODO: Implement ToBase16()
+            return value.ToString();
         }
 
         /// <summary>
@@ -55,9 +57,9 @@ namespace Gadgeteer.Modules.GHIElectronics.Util
             throw new NotImplementedException();
         }
 
-        public static string FormatByte(int i)
+        public static string FormatByte(int value)
         {
-            throw new NotImplementedException();
+            return "0x" + ToBase16(value);
         }
     }
 }
