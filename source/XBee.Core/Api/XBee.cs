@@ -54,7 +54,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         {
 		    try 
             {
-                var ap = (AtCommandResponse)SendSynchronous(new AtCommand("AP"));
+                var ap = Send(new AtCommand("AP"));
 
                 if (!ap.IsOk)
                     throw new XBeeException("Attempt to query AP parameter failed");
@@ -70,7 +70,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
                         + "(AP=2) for use with this library.");
 
                     Logger.LowDebug("Attempting to set AP to 2");
-                    ap = (AtCommandResponse)SendSynchronous(new AtCommand("AP", 2));
+                    ap = Send(new AtCommand("AP", 2));
 
                     if (!ap.IsOk)
                         throw new XBeeException("Attempt to set AP=2 failed");
@@ -79,7 +79,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
                         + "persist a power cycle without the WR (write) command");
                 }
 
-                ap = (AtCommandResponse) SendSynchronous(new AtCommand("HV"));
+                ap = Send(new AtCommand("HV"));
 			
 			    var radioType = HardwareVersion.Parse(ap);
 
@@ -92,7 +92,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
                     Logger.Info("XBee radio is " + HardwareVersion.GetName(radioType));
                 }
                 
-                var vr = (AtCommandResponse) SendSynchronous(new AtCommand("VR"));
+                var vr = Send(new AtCommand("VR"));
 			
 			    if (vr.IsOk)
 			    {
@@ -109,20 +109,14 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 		    }
 	    }
 
-        public void SendRequest(XBeeRequest request)
+        public AtCommandResponse Send(AtCommand atCommand, int timeout = PacketParser.DefaultParseTimeout)
         {
-            if (RadioType != HardwareVersion.RadioType.UNKNOWN)
-            {
-                // TODO use interface to mark series type
-                if (RadioType == HardwareVersion.RadioType.SERIES1 && request.GetType().Name.IndexOf("Api.Zigbee") > -1)
-                    throw new ArgumentException("You are connected to a Series 1 radio but attempting to send Series 2 requests");
- 
-                if (RadioType == HardwareVersion.RadioType.SERIES2 && request.GetType().Name.IndexOf("Api.Wpan") > -1)
-                    throw new ArgumentException("You are connected to a Series 2 radio but attempting to send Series 1 requests");
-            }
+            return (AtCommandResponse)Send((XBeeRequest)atCommand, timeout);
+        }
 
-            Logger.Info("Sending packet: " + request);
-            SendPacket(request.GetXBeePacket());
+        public RemoteAtResponse Send(RemoteAtRequest remoteAtCommand, int timeout = PacketParser.DefaultParseTimeout)
+        {
+            return (RemoteAtResponse)Send((XBeeRequest)remoteAtCommand, timeout);
         }
 
         #region IXBee Members
@@ -172,10 +166,20 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             _connection.Send(Arrays.ToByteArray(packet));
         }
 
-        public void SendAsynchronous(XBeeRequest xbeeRequest)
+        public void SendAsync(XBeeRequest request)
         {
-            Logger.Debug("Sending packet: " + xbeeRequest);
-            SendPacket(xbeeRequest.GetXBeePacket());
+            if (RadioType != HardwareVersion.RadioType.UNKNOWN)
+            {
+                // TODO use interface to mark series type
+                if (RadioType == HardwareVersion.RadioType.SERIES1 && request.GetType().Name.IndexOf("Api.Zigbee") > -1)
+                    throw new ArgumentException("You are connected to a Series 1 radio but attempting to send Series 2 requests");
+
+                if (RadioType == HardwareVersion.RadioType.SERIES2 && request.GetType().Name.IndexOf("Api.Wpan") > -1)
+                    throw new ArgumentException("You are connected to a Series 2 radio but attempting to send Series 1 requests");
+            }
+
+            Logger.Debug("Sending packet: " + request);
+            SendPacket(request.GetXBeePacket());
         }
 
         /// <summary>
@@ -209,12 +213,12 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         /// XBeeTimeoutException thrown if no matching response is identified
         /// </exception>
         /// <returns></returns>
-        public XBeeResponse SendSynchronous(XBeeRequest xbeeRequest, int timeout = PacketParser.DefaultParseTimeout)
+        public XBeeResponse Send(XBeeRequest xbeeRequest, int timeout = PacketParser.DefaultParseTimeout)
         {
             if (xbeeRequest.FrameId == XBeeRequest.NO_RESPONSE_FRAME_ID)
                 throw new XBeeException("Frame Id cannot be 0 for a synchronous call -- it will always timeout as there is no response!");
             
-            SendAsynchronous(xbeeRequest);
+            SendAsync(xbeeRequest);
             _parser.ParseTimeout = timeout;
             return _parser.GetPacket();
         }

@@ -12,9 +12,9 @@
 
         void SendPacket(int[] packet);
 
-        void SendAsynchronous(XBeeRequest xbeeRequest);
+        void SendAsync(XBeeRequest xbeeRequest);
 
-        XBeeResponse SendSynchronous(XBeeRequest xbeeRequest, int timeout);
+        XBeeResponse Send(XBeeRequest xbeeRequest, int timeout);
 
         XBeeResponse GetResponse();
 

@@ -18,7 +18,9 @@ namespace Gadgeteer.Modules.GHIElectronics.Util
 
         public static string ToBase16(int b)
         {
-            return new string(new[] { Hex[b >> 4], Hex[b & 0x0F] });
+            return b <= byte.MaxValue
+                       ? new string(new[] { Hex[b >> 4], Hex[b & 0x0F]})
+                       : new string(new[] { Hex[b >> 12], Hex[(b >> 8) & 0x0F], Hex[(b >> 4) & 0x00F], Hex[b & 0x0000F] });
         }
 
         /// <summary>

@@ -5,7 +5,7 @@ using Gadgeteer.Modules.GHIElectronics.Util;
 namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
 {
     /// <summary>
-    /// Series 2 XBee.  Parses a Node Discover (ND) AT Command Response
+    /// Series 2 XBee. Parses a Node Discover (ND) AT Command Response
     /// </summary>
     public class ZBNodeDiscover
     {
@@ -82,14 +82,9 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
 
         public override string ToString()
         {
-            return "nodeAddress16=" + NodeAddress16
-                + ",nodeAddress64=" + NodeAddress64
-                + ",nodeIdentifier=" + NodeIdentifier
-                + ",parentAddress=" + Parent
-                + ",deviceType=" + DeviceTypeName
-                + ",status=" + Status
-                + ",profileId=" + ProfileId
-                + ",mfgId=" + ByteUtils.ToBase16(MfgId);
+            return DeviceTypeName 
+                + ", PhysicalAddress = " + NodeAddress64 
+                + ", LogicalAddress = " + NodeAddress16;
         }
     }
 }

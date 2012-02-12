@@ -74,5 +74,10 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         {
             return _address;
         }
+
+        public override string ToString()
+        {
+            return ByteUtils.ToBase16(_address);
+        }
     }
 }

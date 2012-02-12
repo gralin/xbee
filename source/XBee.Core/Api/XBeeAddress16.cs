@@ -49,5 +49,10 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         {
             return Address.GetArray();
         }
+
+        public override string ToString()
+        {
+            return ByteUtils.ToBase16(Address.Get16BitValue());
+        }
     }
 }
