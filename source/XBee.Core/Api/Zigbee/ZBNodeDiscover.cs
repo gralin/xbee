@@ -83,8 +83,8 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
         public override string ToString()
         {
             return DeviceTypeName 
-                + ", PhysicalAddress = " + NodeAddress64 
-                + ", LogicalAddress = " + NodeAddress16;
+                + ", SerialNumber = " + NodeAddress64 
+                + ", NetworkAddress = " + NodeAddress16;
         }
     }
 }

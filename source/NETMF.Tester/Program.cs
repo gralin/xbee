@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Text;
+using System.Threading;
 using Gadgeteer.Modules.GHIElectronics;
 using Gadgeteer.Modules.GHIElectronics.Api;
 using Gadgeteer.Modules.GHIElectronics.Api.Zigbee;
@@ -13,36 +14,44 @@ namespace NETMF.Tester
         {
             Debug.Print("Program Started");
             
-            var xbee = new XBee("COM4", 9600) {LogLevel = LogLevel.Info};
+            var xbee = new XBee("COM4", 9600) {LogLevel = LogLevel.LowDebug};
             
             // opening serial port and reading XBee harware/software info
             xbee.Open();
 
             // reading addresses of the connected module
-            Debug.Print("Physical address: " + GetAddress64(xbee));
-            Debug.Print("Logical address: " + GetAddress16(xbee));
+            Debug.Print("Serial number: " + GetAddress64(xbee));
+            Debug.Print("Network address: " + GetAddress16(xbee));
 
-            // discovering modules available in ZigBee network
-            var foundNodes = DiscoverNodes(xbee, 1);
+            ZBNodeDiscover[] foundNodes;
 
-            if (foundNodes.Length == 0)
+            while (true)
             {
+                // discovering modules available in ZigBee network
+                foundNodes = DiscoverNodes(xbee, 1);
+
+                if (foundNodes.Length != 0)
+                    break;
+                
                 Debug.Print("No nodes where discovered");
             }
-            else
-            {
-                Debug.Print("RSSI: -" + GetRssi(xbee) + "dBi");
-                Debug.Print("Found: " + foundNodes.Length + " nodes");
 
-                // printing basic info about found modules
-                for (var i = 0; i < foundNodes.Length; i++)
-                    Debug.Print("#" + (i + 1) + " - " + foundNodes[i]);
-            }
+            Debug.Print("RSSI: -" + GetRssi(xbee) + "dBi");
+            Debug.Print("Found: " + foundNodes.Length + " nodes");
 
-            // setting digital I/O in all modules
+            // printing basic info about found modules
+            for (var i = 0; i < foundNodes.Length; i++)
+                Debug.Print("#" + (i + 1) + " - " + foundNodes[i]);
+
             foreach (var foundNode in foundNodes)
-                SetOutput(xbee, foundNode, "D0", (int)XBeePin.Capability.DIGITAL_OUTPUT_HIGH);
+            {
+                // This is not working yet i think....
+                SendText(xbee, foundNode.NodeAddress64, "Hello XBee!");
 
+                // setting digital I/O in all modules
+                //SetOutput(xbee, foundNode.NodeAddress64, "D0", (int)XBeePin.Capability.DIGITAL_OUTPUT_HIGH);
+            }
+                
             Thread.Sleep(Timeout.Infinite);
         }
 
@@ -86,10 +95,16 @@ namespace NETMF.Tester
             return new XBeeAddress16(response.Value);
         }
 
-        private static bool SetOutput(XBee xbee, ZBNodeDiscover foundNode, string output, int state)
+        private static bool SetOutput(XBee xbee, XBeeAddress64 node, string output, int state)
         {
-            var request = new RemoteAtRequest(foundNode.NodeAddress64, output, new[] { state });
+            var request = new RemoteAtRequest(node, output, new[] { state });
             return xbee.Send(request).IsOk;
+        }
+
+        private static void SendText(XBee xbee, XBeeAddress64 node, string message)
+        {
+            var request = new ZNetTxRequest(node, Arrays.ToIntArray(Encoding.UTF8.GetBytes(message)));
+            xbee.SendAsync(request);
         }
     }
 }
