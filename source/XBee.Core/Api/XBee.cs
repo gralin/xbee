@@ -29,7 +29,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             {
                 var buffer = new byte[count];
                 Array.Copy(data, offset, buffer, 0, count);
-                _parser.AddBuffer(data);
+                _parser.AddBuffer(buffer);
             };
         }
 
@@ -45,10 +45,10 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         {
 		    try 
             {
-                var ap = (AtCommandResponse) SendSynchronous(new AtCommand("AP"));
+                var ap = (AtCommandResponse)SendSynchronous(new AtCommand("AP"));
 
-			    if (!ap.IsOk)
-				    throw new XBeeException("Attempt to query AP parameter failed");
+                if (!ap.IsOk)
+                    throw new XBeeException("Attempt to query AP parameter failed");
 
                 if (ap.Value[0] == 2)
                 {
@@ -57,16 +57,16 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
                 else
                 {
                     Debug.Print("XBee radio is in API mode without escape characters (AP=1)."
-                        + " The radio must be configured in API mode with escape bytes " 
+                        + " The radio must be configured in API mode with escape bytes "
                         + "(AP=2) for use with this library.");
 
                     Debug.Print("Attempting to set AP to 2");
-                    ap = (AtCommandResponse) SendSynchronous(new AtCommand("AP", 2));
+                    ap = (AtCommandResponse)SendSynchronous(new AtCommand("AP", 2));
 
                     if (!ap.IsOk)
                         throw new XBeeException("Attempt to set AP=2 failed");
 
-                    Debug.Print("Successfully set AP mode to 2. This setting will not " 
+                    Debug.Print("Successfully set AP mode to 2. This setting will not "
                         + "persist a power cycle without the WR (write) command");
                 }
 
@@ -194,6 +194,9 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         /// <returns></returns>
         public XBeeResponse SendSynchronous(XBeeRequest xbeeRequest, int timeout = PacketParser.DefaultParseTimeout)
         {
+            if (xbeeRequest.FrameId == XBeeRequest.NO_RESPONSE_FRAME_ID)
+                throw new XBeeException("Frame Id cannot be 0 for a synchronous call -- it will always timeout as there is no response!");
+            
             SendAsynchronous(xbeeRequest);
             _parser.ParseTimeout = timeout;
             return _parser.GetPacket();

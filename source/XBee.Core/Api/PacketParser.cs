@@ -35,7 +35,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         {
             get
             {
-                return _currentBuffer == null || _currentBuffer.Position == _currentBuffer.Length - 1;
+                return _currentBuffer == null || _currentBuffer.Position == _currentBuffer.Length;
             }
         }
 
@@ -52,6 +52,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         public PacketParser()
         {
             ParseTimeout = DefaultParseTimeout;
+            Length = new XBeePacketLength(0);
 
             _checksum = new Checksum();
             _buffers = new Queue();
@@ -161,10 +162,13 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
                 ParseStartTime = DateTime.Now;
                 BytesRead = 0;
                 _checksum.Clear();
+                Length.Lsb = 0;
+                Length.Lsb = 0;
                 
                 // length of api structure, starting here (not including start byte or length bytes, or checksum)
                 // length doesn't account for escaped bytes
-                Length = new XBeePacketLength(Read("Length MSB"), Read("Length LSB"));
+                Length.Msb = Read("Length MSB");
+                Length.Lsb = Read("Length LSB");
 
                 Debug.Print("packet length is " + ByteUtils.ToBase16(Length.GetLength()));
 
@@ -239,7 +243,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
                 return null;
 
             var responseClass = (Type)_responseHandler[apiId];
-            var constructor = responseClass.GetConstructor(null);
+            var constructor = responseClass.GetConstructor(new Type[0]);
 
             if (constructor == null)
                 return null;
@@ -281,6 +285,9 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             {
                 var newBuffer = (byte[])_buffers.Dequeue();
                 _currentBuffer = new MemoryStream(newBuffer);
+
+                if (_buffers.Count == 0)
+                    _buffersAvailable.Reset();
             }
         }
 
@@ -366,11 +373,11 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
                 // when computing checksum, do not include start byte, length, or checksum; when verifying, include checksum
                 _checksum.AddByte(b);
 
-                Debug.Print("Read byte " + ByteUtils.FormatByte(b)
-                    + " at position " + BytesRead
-                    + ", packet length is " + Length.Get16BitValue()
-                    + ", #escapeBytes is " + _escapedBytes
-                    + ", remaining bytes is " + RemainingBytes);
+                //Debug.Print("Read byte " + ByteUtils.FormatByte(b)
+                //    + " at position " + BytesRead
+                //    + ", packet length is " + Length.Get16BitValue()
+                //    + ", #escapeBytes is " + _escapedBytes
+                //    + ", remaining bytes is " + RemainingBytes);
 
                 // escape bytes are not included in the stated packet length
                 if (FrameDataBytesRead >= (Length.Get16BitValue() + 1))

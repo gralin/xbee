@@ -21,8 +21,6 @@ namespace Gadgeteer.Modules.GHIElectronics.Util
             for (var i = 0; i < array.Length; i++)
                 result[i] = (byte) array[i];
 
-            Array.Copy(array, result, array.Length);
-
             return result;
         }
 

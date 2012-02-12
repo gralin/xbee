@@ -7,7 +7,12 @@ namespace Gadgeteer.Modules.GHIElectronics.Util
         public static string ToBase16(int[] value)
         {
             //TODO: Implement ToBase16(int[] value)
-            return "int[" + value.Length + "]";
+            var result = "";
+
+            foreach (var v in value)
+                result += ToBase16(v);
+
+            return result;
         }
 
         public static string ToBase16(int value)
