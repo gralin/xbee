@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 
 namespace Gadgeteer.Modules.GHIElectronics.Api
 {
@@ -15,6 +16,21 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             SERIES2 = 0x19,
             SERIES2_PRO = 0x1a,
             SERIES2B_PRO = 0x1e
+        }
+
+        private static readonly Hashtable RadioTypeNames;
+
+        static HardwareVersion()
+        {
+            RadioTypeNames = new Hashtable
+            {
+                {RadioType.UNKNOWN,"Unknown"},
+                {RadioType.SERIES1,"Series 1"},
+                {RadioType.SERIES1_PRO,"Series 1 Pro"},
+                {RadioType.SERIES2,"Series 2"},
+                {RadioType.SERIES2_PRO,"Series 2 Pro"},
+                {RadioType.SERIES2B_PRO,"Series 2B Pro"},
+            };
         }
 
         public static RadioType Parse(AtCommandResponse response)
@@ -39,6 +55,11 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
                 default:
                     return RadioType.UNKNOWN;
             }
+        }
+
+        public static string GetName(RadioType radiotype)
+        {
+            return (string) RadioTypeNames[radiotype];
         }
     }
 }

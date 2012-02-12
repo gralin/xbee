@@ -5,7 +5,6 @@ using System.Threading;
 using Gadgeteer.Modules.GHIElectronics.Api.Wpan;
 using Gadgeteer.Modules.GHIElectronics.Api.Zigbee;
 using Gadgeteer.Modules.GHIElectronics.Util;
-using Microsoft.SPOT;
 
 namespace Gadgeteer.Modules.GHIElectronics.Api
 {
@@ -80,7 +79,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 
             if (!_parsingThread.Join(ParseTimeout))
             {
-                Debug.Print("Failed to stop parsing thread!");
+                Logger.Error("Failed to stop parsing thread!");
                 _parsingThread.Abort();
             }
 
@@ -89,6 +88,8 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 
         public void AddBuffer(byte[] buffer)
         {
+            Logger.LowDebug("Received " + buffer.Length + " bytes");
+             
             lock (_buffers)
             {
                 _buffers.Enqueue(buffer);
@@ -134,6 +135,8 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
                 {
                     var packet = ParsePacket();
 
+                    Logger.Debug("Received packet: " + packet);
+
                     lock (_parsedPackets)
                     {
                         _parsedPackets.Enqueue(packet);
@@ -150,7 +153,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
                 }
                 catch (Exception e)
                 {
-                    Debug.Print("Unexpected exception occured while parsing packet. " + e.Message);
+                    Logger.Error("Unexpected exception occured while parsing packet. " + e.Message);
                 }
             }
         }
@@ -170,13 +173,13 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
                 Length.Msb = Read("Length MSB");
                 Length.Lsb = Read("Length LSB");
 
-                Debug.Print("packet length is " + ByteUtils.ToBase16(Length.GetLength()));
+                Logger.LowDebug("packet length is " + ByteUtils.ToBase16(Length.GetLength()));
 
                 // total packet length = stated length + 1 start byte + 1 checksum byte + 2 length bytes
 
                 ApiId = (ApiId)Read("API ID");
 
-                Debug.Print("Handling ApiId: " + ApiId);
+                Logger.LowDebug("Handling ApiId: " + ApiId);
 
                 // TODO parse I/O data page 12. 82 API Identifier Byte for 64 bit address A/D data (83 is for 16bit A/D data)
                 // TODO XBeeResponse should implement an abstract parse method
@@ -185,7 +188,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 
                 if (_response == null)
                 {
-                    Debug.Print("Did not find a response handler for ApiId [" + ByteUtils.ToBase16((int)ApiId));
+                    Logger.Warn("Did not find a response handler for ApiId [" + ByteUtils.ToBase16((int)ApiId));
                     _response = new GenericResponse();
                 }
 
@@ -199,7 +202,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             }
             catch (Exception e)
             {
-                Debug.Print("Failed to parse packet due to exception. " + e.Message);
+                Logger.Error("Failed to parse packet due to exception. " + e.Message);
                 _response = new ErrorResponse { ErrorMsg = e.Message, Exception = e };
             }
             finally
@@ -341,17 +344,17 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 
             if (XBeePacket.IsSpecialByte(b))
             {
-                Debug.Print("Read special byte that needs to be unescaped");
+                Logger.LowDebug("Read special byte that needs to be unescaped");
 
                 if (b == (int)XBeePacket.SpecialByte.ESCAPE)
                 {
-                    Debug.Print("found escape byte");
+                    Logger.LowDebug("found escape byte");
                     // read next byte
                     b = TakeFromBuffer(ParseTimeLeft);
 
-                    Debug.Print("next byte is " + ByteUtils.FormatByte(b));
+                    Logger.LowDebug("next byte is " + ByteUtils.FormatByte(b));
                     b = 0x20 ^ b;
-                    Debug.Print("unescaped (xor) byte is " + ByteUtils.FormatByte(b));
+                    Logger.LowDebug("unescaped (xor) byte is " + ByteUtils.FormatByte(b));
 
                     _escapedBytes++;
                 }
@@ -359,7 +362,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
                 {
                     // TODO some responses such as AT Response for node discover do not escape the bytes?? shouldn't occur if AP mode is 2?
                     // while reading remote at response Found unescaped special byte base10=19,base16=0x13,base2=00010011 at position 5 
-                    Debug.Print("Found unescaped special byte " + ByteUtils.FormatByte(b) + " at position " + BytesRead);
+                    Logger.LowDebug("Found unescaped special byte " + ByteUtils.FormatByte(b) + " at position " + BytesRead);
                 }
             }
 
@@ -373,7 +376,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
                 // when computing checksum, do not include start byte, length, or checksum; when verifying, include checksum
                 _checksum.AddByte(b);
 
-                //Debug.Print("Read byte " + ByteUtils.FormatByte(b)
+                //Logger.LowDebug("Read byte " + ByteUtils.FormatByte(b)
                 //    + " at position " + BytesRead
                 //    + ", packet length is " + Length.Get16BitValue()
                 //    + ", #escapeBytes is " + _escapedBytes
@@ -384,7 +387,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
                 {
                     // this is checksum and final byte of packet
 
-                    Debug.Print("Checksum byte is " + b);
+                    Logger.LowDebug("Checksum byte is " + b);
 
                     if (!_checksum.Verify())
                         throw new XBeeParseException("Checksum is incorrect. Expected 0xff, but got 0x" 
@@ -403,7 +406,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         public int Read(string context)
         {
             var b = Read();
-            Debug.Print("Read " + context + " byte, val is " + b);
+            Logger.LowDebug("Read " + context + " byte, val is " + b);
             return b;
         }
 
@@ -417,7 +420,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             var valueLength = RemainingBytes - 1;
             var value = new int[valueLength];
 
-            Debug.Print("There should be " + valueLength + " remaining bytes");
+            Logger.LowDebug("There should be " + valueLength + " remaining bytes");
 
             for (var i = 0; i < valueLength; i++)
                 value[i] = Read("Remaining byte " + i);

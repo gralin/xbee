@@ -88,6 +88,7 @@
     <Compile Include="Util\IIntInputStream.cs" />
     <Compile Include="Util\IntArrayInputStream.cs" />
     <Compile Include="Util\IntArrayOutputStream.cs" />
+    <Compile Include="Util\Logger.cs" />
     <Compile Include="XBeePin.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,6 +1,5 @@
 using System;
 using Gadgeteer.Modules.GHIElectronics.Util;
-using Microsoft.SPOT;
 
 namespace Gadgeteer.Modules.GHIElectronics.Api
 {
@@ -77,8 +76,8 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
                     packetStr += " ";
             }
 
-            Debug.Print(packetStr);
-            Debug.Print("pre-escape packet size is " + preEscapeLength + ", post-escape packet size is " + escapeLength);
+            Logger.LowDebug(packetStr);
+            Logger.LowDebug("pre-escape packet size is " + preEscapeLength + ", post-escape packet size is " + escapeLength);
         }
 
         /// <summary>
@@ -96,14 +95,14 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
                 if (!IsSpecialByte(packet[i])) 
                     continue;
                 
-                Debug.Print("escapeFrameData: packet byte requires escaping byte " + ByteUtils.ToBase16(packet[i]));
+                Logger.LowDebug("escapeFrameData: packet byte requires escaping byte " + ByteUtils.ToBase16(packet[i]));
                 escapeBytes++;
             }
 
             if (escapeBytes == 0)
 			    return packet;
 
-            Debug.Print("packet requires escaping");
+            Logger.LowDebug("packet requires escaping");
 			
             var escapePacket = new int[packet.Length + escapeBytes];
 			
@@ -117,7 +116,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
                 {
                     escapePacket[pos] = (int) SpecialByte.ESCAPE;
                     escapePacket[++pos] = 0x20 ^ packet[i];
-                    Debug.Print("escapeFrameData: xor'd byte is 0x" + ByteUtils.ToBase16(escapePacket[pos]));
+                    Logger.LowDebug("escapeFrameData: xor'd byte is 0x" + ByteUtils.ToBase16(escapePacket[pos]));
                 } 
                 else 
                 {

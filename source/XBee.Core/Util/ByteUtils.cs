@@ -4,21 +4,21 @@ namespace Gadgeteer.Modules.GHIElectronics.Util
 {
     public class ByteUtils
     {
+        const string Hex = "0123456789ABCDEF";
+
         public static string ToBase16(int[] value)
         {
-            //TODO: Implement ToBase16(int[] value)
             var result = "";
 
-            foreach (var v in value)
-                result += ToBase16(v);
+            foreach (var b in value)
+                result += ToBase16(b);
 
             return result;
         }
 
-        public static string ToBase16(int value)
+        public static string ToBase16(int b)
         {
-            //TODO: Implement ToBase16()
-            return value.ToString();
+            return new string(new[] { Hex[b >> 4], Hex[b & 0x0F] });
         }
 
         /// <summary>
