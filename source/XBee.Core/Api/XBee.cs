@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.IO;
 using Gadgeteer.Modules.GHIElectronics.Util;
 using Microsoft.SPOT;
 
@@ -12,24 +11,31 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
     public class XBee : IXBee
     {
         private readonly IXBeeConnection _connection;
+        private readonly PacketParser _parser;
+        private int _sequentialFrameId = 0xff;
 
         public HardwareVersion.RadioType RadioType { get; protected set; }
 
-        public XBee(IXBeeConnection connection)
+        protected XBee()
+        {
+            _parser = new PacketParser();
+        }
+
+        public XBee(IXBeeConnection connection) 
+            : this()
         {
             _connection = connection;
-            _connection.DataReceived += OnDataReceived;
+            _connection.DataReceived += (data, offset, count) =>
+            {
+                var buffer = new byte[count];
+                Array.Copy(data, offset, buffer, 0, count);
+                _parser.AddBuffer(data);
+            };
         }
 
         public XBee(string portName, int baudRate)
+            : this(new SerialConnection(portName, baudRate))
         {
-            _connection = new SerialConnection(portName, baudRate);
-            _connection.DataReceived += OnDataReceived;
-        }
-
-        private void OnDataReceived(byte[] data, int offset, int count)
-        {
-            // TODO: handle the received data
         }
 
         /// <summary>
@@ -38,8 +44,8 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         private void DoStartupChecks()
         {
 		    try 
-            {				
-			    var ap = SendAtCommand(new AtCommand("AP"));
+            {
+                var ap = (AtCommandResponse) SendSynchronous(new AtCommand("AP"));
 
 			    if (!ap.IsOk)
 				    throw new XBeeException("Attempt to query AP parameter failed");
@@ -55,7 +61,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
                         + "(AP=2) for use with this library.");
 
                     Debug.Print("Attempting to set AP to 2");
-                    ap = SendAtCommand(new AtCommand("AP", 2));
+                    ap = (AtCommandResponse) SendSynchronous(new AtCommand("AP", 2));
 
                     if (!ap.IsOk)
                         throw new XBeeException("Attempt to set AP=2 failed");
@@ -64,7 +70,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
                         + "persist a power cycle without the WR (write) command");
                 }
 
-                ap = SendAtCommand(new AtCommand("HV"));
+                ap = (AtCommandResponse) SendSynchronous(new AtCommand("HV"));
 			
 			    var radioType = HardwareVersion.Parse(ap);
 
@@ -72,8 +78,8 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 
                 if (radioType == HardwareVersion.RadioType.UNKNOWN)
                     Debug.Print("Unknown radio type (HV): " + ap.Value[0]);
-			
-			    var vr = SendAtCommand(new AtCommand("VR"));
+
+                var vr = (AtCommandResponse) SendSynchronous(new AtCommand("VR"));
 			
 			    if (vr.IsOk)
                     Debug.Print("Firmware version is " + ByteUtils.ToBase16(vr.Value));
@@ -86,19 +92,6 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
                     + "The XBee radio must be in API mode (AP=2) to use with this library");
 		    }
 	    }
-
-        /// <summary>
-        /// Uses sendSynchronous to send an AtCommand and collect the response
-        /// </summary>
-        /// <remarks>
-        /// Timeout value is fixed at 5 seconds
-        /// </remarks>
-        /// <param name="command"></param>
-        /// <returns></returns>
-        private AtCommandResponse SendAtCommand(AtCommand command)
-        {
-            return (AtCommandResponse)SendSynchronous(command, 5000);
-        }
 
         public void SendRequest(XBeeRequest request)
         {
@@ -120,13 +113,15 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 
         public void Open()
         {
+            _parser.Start();
             _connection.Open();
             
-            //DoStartupChecks();
+            DoStartupChecks();
         }
 
         public void Close()
         {
+            _parser.Stop();
             _connection.Close();
         }
 
@@ -157,12 +152,13 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 
         public void SendPacket(int[] packet)
         {
-            throw new NotImplementedException();
+            Debug.Print("sending packet to XBee " + ByteUtils.ToBase16(packet));
+            _connection.Send(Arrays.ToByteArray(packet));
         }
 
         public void SendAsynchronous(XBeeRequest xbeeRequest)
         {
-            throw new NotImplementedException();
+            SendPacket(xbeeRequest.GetXBeePacket());
         }
 
         /// <summary>
@@ -196,56 +192,107 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         /// XBeeTimeoutException thrown if no matching response is identified
         /// </exception>
         /// <returns></returns>
-        public XBeeResponse SendSynchronous(XBeeRequest xbeeRequest, int timeout)
+        public XBeeResponse SendSynchronous(XBeeRequest xbeeRequest, int timeout = PacketParser.DefaultParseTimeout)
         {
-            throw new NotImplementedException();
+            SendAsynchronous(xbeeRequest);
+            _parser.ParseTimeout = timeout;
+            return _parser.GetPacket();
         }
 
         public XBeeResponse GetResponse()
         {
-            throw new NotImplementedException();
+            return GetResponse(PacketParser.DefaultParseTimeout);
         }
 
         public XBeeResponse GetResponse(int timeout)
         {
-            throw new NotImplementedException();
+            _parser.ParseTimeout = timeout;
+            return _parser.GetPacket();
         }
 
         public int GetCurrentFrameId()
         {
-            throw new NotImplementedException();
+            return _sequentialFrameId;
         }
 
+        /// <summary>
+        /// This is useful for obtaining a frame id when composing your XBeeRequest. 
+        /// It will return frame ids in a sequential manner until the maximum is reached (0xff)
+        /// and it flips to 1 and starts over.
+        /// </summary>
+        /// <returns></returns>
         public int GetNextFrameId()
         {
-            throw new NotImplementedException();
+            if (_sequentialFrameId == 0xff)
+            {
+                // flip
+                _sequentialFrameId = 1;
+            }
+            else
+            {
+                _sequentialFrameId++;
+            }
+
+            return _sequentialFrameId;
         }
 
+        /// <summary>
+        /// Updates the frame id.
+        /// </summary>
+        /// <param name="val">Any value between 1 and ff is valid</param>
         public void UpdateFrameId(int val)
         {
-            throw new NotImplementedException();
+            if (val <= 0 || val > 0xff)
+                throw new ArgumentException("invalid frame id");
+        
+            _sequentialFrameId = val;
         }
 
         public bool IsConnected()
         {
-            throw new NotImplementedException();
+            return _connection != null && _connection.Connected;
         }
 
         public void ClearResponseQueue()
         {
-            throw new NotImplementedException();
+            _parser.ClearPackets();
         }
 
+        /// <summary>
+        /// Collects responses until the timeout is reached or the CollectTerminator returns true
+        /// </summary>
+        /// <param name="wait"></param>
+        /// <param name="terminator"></param>
+        /// <returns></returns>
         public XBeeResponse[] CollectResponses(int wait, ICollectTerminator terminator)
         {
-            throw new NotImplementedException();
+            var startTime = DateTime.Now;
+            var responses = new Queue();
+
+            while (true)
+            {
+                var remainingTime = (int)(wait - DateTime.Now.Subtract(startTime).Ticks*TimeSpan.TicksPerMillisecond);
+
+                if (remainingTime <= 0)
+                    break;
+
+                var response = GetResponse(remainingTime);
+
+                if (terminator.Stop(response))
+                    break;
+            }
+
+            if (responses.Count <= 0)
+                return new XBeeResponse[0];
+            
+            var result = new XBeeResponse[responses.Count];
+
+            for (var i = 0; i < result.Length; i++)
+                result[i] = (XBeeResponse) responses.Dequeue();
+
+            return result;
         }
 
         #endregion
-
-        public string SayHello()
-        {
-            return "Hello from XBee";
-        }
     }
 }

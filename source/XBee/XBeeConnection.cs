@@ -35,6 +35,11 @@ namespace Gadgeteer.Modules.GHIElectronics
             _serial.Close();
         }
 
+        public bool Connected
+        {
+            get { return _serial.IsOpen; }
+        }
+
         public void Send(byte[] data)
         {
             _serial.Write(data, 0, data.Length);

@@ -45,6 +45,14 @@
         /***********************************************************************/
 
         /// <summary>
+        /// Resets the checksum value
+        /// </summary>
+        public void Clear()
+        {
+            _checksum = 0;
+        }
+
+        /// <summary>
         /// Verify that data contains valid checksum
         /// </summary>
         /// <param name="bytes">Data bytes with checksum</param>

@@ -4,7 +4,9 @@
     {
         void Open();
         void Close();
-        
+
+        bool Connected { get; }
+
         void Send(byte[] data);
         void Send(byte[] data, int offset, int count);
 

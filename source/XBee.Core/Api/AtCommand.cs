@@ -72,7 +72,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         public override int[] GetFrameData()
         {
             if (Command.Length > 2)
-                throw new ArgumentException("Command should be two characters.  Do not include AT prefix");
+                throw new ArgumentException("Command should be two characters. Do not include AT prefix");
 
             var frameData = new IntArrayOutputStream();
 

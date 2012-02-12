@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.IO;
+using System.Threading;
 using Gadgeteer.Modules.GHIElectronics.Api.Wpan;
 using Gadgeteer.Modules.GHIElectronics.Api.Zigbee;
 using Gadgeteer.Modules.GHIElectronics.Util;
@@ -15,15 +16,199 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
     /// Escaped bytes increase packet length but packet stated length only indicates un-escaped bytes.
     /// Stated length includes all bytes after Length bytes, not including the checksum
     /// </remarks>
-    public class PacketParser : IIntInputStream, IPacketParser
+    public class PacketParser : IPacketParser
     {
         private static Hashtable _responseHandler;
-        private readonly IIntInputStream _input;
         private readonly Checksum _checksum;
         private XBeeResponse _response;
-        private IIntArray _rawBytes;
-        private bool _done;
         private int _escapedBytes;
+
+        public const int DefaultParseTimeout = 5000;
+        public int ParseTimeout { get; set; }
+        public DateTime ParseStartTime { get; private set; }
+        public TimeSpan ParseElapsedTime { get { return DateTime.Now.Subtract(ParseStartTime); } }
+        public int ParseTimeLeft { get { return (int) (ParseTimeout - ParseElapsedTime.Ticks*TimeSpan.TicksPerMillisecond); } }
+
+        public bool PacketsAvailable { get { return _parsedPackets.Count > 0; } }
+
+        protected bool CurrentBufferEmpty
+        {
+            get
+            {
+                return _currentBuffer == null || _currentBuffer.Position == _currentBuffer.Length - 1;
+            }
+        }
+
+        private readonly Queue _buffers;
+        private readonly ManualResetEvent _buffersAvailable;
+        private Stream _currentBuffer;
+
+        private readonly Queue _parsedPackets;
+        private readonly ManualResetEvent _parsedPacketsAvailable;
+
+        private Thread _parsingThread;
+        private bool _finished;
+
+        public PacketParser()
+        {
+            ParseTimeout = DefaultParseTimeout;
+
+            _checksum = new Checksum();
+            _buffers = new Queue();
+            _buffersAvailable = new ManualResetEvent(false);
+
+            _parsedPackets = new Queue();
+            _parsedPacketsAvailable = new ManualResetEvent(false);
+        }
+
+        public void Start()
+        {
+            Stop();
+
+            _parsingThread = new Thread(ParsePackets);
+            _parsingThread.Start();
+        }
+
+        public void Stop()
+        {
+            if (_parsingThread == null)
+                return;
+
+            _finished = true;
+            _buffersAvailable.Set();
+
+            if (!_parsingThread.Join(ParseTimeout))
+            {
+                Debug.Print("Failed to stop parsing thread!");
+                _parsingThread.Abort();
+            }
+
+            _parsingThread = null;
+        }
+
+        public void AddBuffer(byte[] buffer)
+        {
+            lock (_buffers)
+            {
+                _buffers.Enqueue(buffer);
+                _buffersAvailable.Set();    
+            }
+        }
+
+        public void ClearPackets()
+        {
+            lock (_parsedPackets)
+                _parsedPackets.Clear();
+        }
+
+        public XBeeResponse GetPacket()
+        {
+            if (!_parsedPacketsAvailable.WaitOne(ParseTimeout, false))
+                throw new XBeeTimeoutException();
+
+            lock (_parsedPackets)
+            {
+                var packet = (XBeeResponse)_parsedPackets.Dequeue();
+
+                if (_parsedPackets.Count == 0)
+                    _parsedPacketsAvailable.Reset();
+
+                return packet;
+            }
+        }
+
+        private void ParsePackets()
+        {
+            while (!_finished)
+            {
+                var b = TakeFromBuffer();
+
+                if (_finished)
+                    return;
+
+                if (!XBeePacket.IsSpecialByte(b) || b != (int) XBeePacket.SpecialByte.START_BYTE) 
+                    continue;
+
+                try
+                {
+                    var packet = ParsePacket();
+
+                    lock (_parsedPackets)
+                    {
+                        _parsedPackets.Enqueue(packet);
+                        _parsedPacketsAvailable.Set();   
+                    }
+                }
+                catch (XBeeTimeoutException)
+                {
+                    // incomplete packet received
+                }
+                catch (XBeeParseException)
+                {
+                    // errors occured while parsing this packet
+                }
+                catch (Exception e)
+                {
+                    Debug.Print("Unexpected exception occured while parsing packet. " + e.Message);
+                }
+            }
+        }
+
+        private XBeeResponse ParsePacket()
+        {
+            try
+            {
+                ParseStartTime = DateTime.Now;
+                BytesRead = 0;
+                _checksum.Clear();
+                
+                // length of api structure, starting here (not including start byte or length bytes, or checksum)
+                // length doesn't account for escaped bytes
+                Length = new XBeePacketLength(Read("Length MSB"), Read("Length LSB"));
+
+                Debug.Print("packet length is " + ByteUtils.ToBase16(Length.GetLength()));
+
+                // total packet length = stated length + 1 start byte + 1 checksum byte + 2 length bytes
+
+                ApiId = (ApiId)Read("API ID");
+
+                Debug.Print("Handling ApiId: " + ApiId);
+
+                // TODO parse I/O data page 12. 82 API Identifier Byte for 64 bit address A/D data (83 is for 16bit A/D data)
+                // TODO XBeeResponse should implement an abstract parse method
+
+                _response = GetResponse(ApiId);
+
+                if (_response == null)
+                {
+                    Debug.Print("Did not find a response handler for ApiId [" + ByteUtils.ToBase16((int)ApiId));
+                    _response = new GenericResponse();
+                }
+
+                _response.Parse(this);
+                _response.Checksum = Read("Checksum");
+
+                if (RemainingBytes > 0)
+                    throw new XBeeParseException("There are remaining bytes after parsing the packet");
+
+                _response.Finish();
+            }
+            catch (Exception e)
+            {
+                Debug.Print("Failed to parse packet due to exception. " + e.Message);
+                _response = new ErrorResponse { ErrorMsg = e.Message, Exception = e };
+            }
+            finally
+            {
+                if (_response != null)
+                {
+                    _response.Length = Length;
+                    _response.ApiId = ApiId;
+                }
+            }
+
+            return _response;
+        }
 
         private static void SetupResponseHandlers()
         {
@@ -62,180 +247,47 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             return constructor.Invoke(null) as XBeeResponse;
         }
 
-        protected PacketParser()
+        private int TakeFromBuffer(int timeout = 0)
         {
-            _checksum = new Checksum();
+            if (CurrentBufferEmpty)
+                GetNextBuffer(timeout);
+
+            return _currentBuffer.ReadByte();
         }
 
-        public PacketParser(Stream input) 
-            : this()
+        private void GetNextBuffer(int timeout = 0)
         {
-            _input = new IntArrayInputStream(input);
-        }
-
-        public PacketParser(IIntInputStream input) 
-            : this()
-        {
-            _input = input;
-        }
-
-        /// <summary>
-        /// This method is guaranteed (unless I screwed up) to return an instance of XBeeResponse and should never throw an exception
-        /// If an exception occurs, it will be packaged and returned as an ErrorResponse. 
-        /// </summary>
-        /// <returns></returns>
-        public XBeeResponse ParsePacket()
-        {
-            try
+            if (_currentBuffer != null)
             {
-                // length of api structure, starting here (not including start byte or length bytes, or checksum)
-                // length doesn't account for escaped bytes
-                var length = new XBeePacketLength(Read("Length MSB"), Read("Length LSB"));
-
-                Debug.Print("packet length is " + ByteUtils.ToBase16(length.GetLength()));
-
-                // total packet length = stated length + 1 start byte + 1 checksum byte + 2 length bytes
-
-                ApiId = (ApiId) Read("API ID");
-
-                Debug.Print("Handling ApiId: " + ApiId);
-
-                // TODO parse I/O data page 12. 82 API Identifier Byte for 64 bit address A/D data (83 is for 16bit A/D data)
-                // TODO XBeeResponse should implement an abstract parse method
-
-                _response = GetResponse(ApiId);
-
-                if (_response == null)
-                {
-                    Debug.Print("Did not find a response handler for ApiId [" + ByteUtils.ToBase16((int)ApiId));
-                    _response = new GenericResponse();
-                }
-
-                _response.Parse(this);
-                _response.Checksum = Read("Checksum");
-
-                if (!_done)
-                    throw new XBeeParseException("There are remaining bytes according to stated packet length " 
-                        + "but we have read all the bytes we thought were required for this packet (if that makes sense)");
-
-                _response.Finish();
-            }
-            catch (Exception e)
-            {
-                // added bytes read for troubleshooting
-                Debug.Print("Failed due to exception. Returning ErrorResponse. Bytes read: " + ByteUtils.ToBase16(_rawBytes.GetIntArray()));
-                _response = new ErrorResponse { ErrorMsg = e.Message, Exception = e };
-            }
-            finally
-            {
-                if (_response != null)
-                {
-                    _response.Length = Length;
-                    _response.ApiId = ApiId;
-                    // preserve original byte array for transfer over networks
-                    _response.RawPacketBytes = _rawBytes.GetIntArray();
-                }
+                _currentBuffer.Dispose();
+                _currentBuffer = null;
             }
 
-            return _response;
-        }
-
-        #region IIntInputStream Members
-
-        /// <summary>
-        /// This method reads bytes from the underlying input stream and performs the following tasks:
-        /// 1. Keeps track of how many bytes we've read
-        /// 2. Un-escapes bytes if necessary and verifies the checksum.
-        /// </summary>
-        /// <returns></returns>
-        public int Read()
-        {
-            if (_done)
-                throw new XBeeParseException("Packet has read all of its bytes");
-
-            var b = _input.Read();
-
-            if (b == -1)
-                throw new XBeeParseException("Read -1 from input stream while reading packet!");
-
-            if (XBeePacket.IsSpecialByte(b))
+            if (timeout > 0)
             {
-                Debug.Print("Read special byte that needs to be unescaped");
-
-                if (b == (int)XBeePacket.SpecialByte.ESCAPE)
-                {
-                    Debug.Print("found escape byte");
-                    // read next byte
-                    b = _input.Read();
-
-                    Debug.Print("next byte is " + ByteUtils.FormatByte(b));
-                    b = 0x20 ^ b;
-                    Debug.Print("unescaped (xor) byte is " + ByteUtils.FormatByte(b));
-
-                    _escapedBytes++;
-                }
-                else
-                {
-                    // TODO some responses such as AT Response for node discover do not escape the bytes?? shouldn't occur if AP mode is 2?
-                    // while reading remote at response Found unescaped special byte base10=19,base16=0x13,base2=00010011 at position 5 
-                    Debug.Print("Found unescaped special byte " + ByteUtils.FormatByte(b) + " at position " + BytesRead);
-                }
+                if (!_buffersAvailable.WaitOne(timeout, false))
+                    throw new XBeeTimeoutException();
+            }
+            else
+            {
+                _buffersAvailable.WaitOne();
             }
 
-            BytesRead++;
-
-            // do this only after reading length bytes
-            if (BytesRead > 2)
+            // this can happen if Stop() was called
+            if (_buffers.Count == 0) 
+                return;
+            
+            lock (_buffers)
             {
-                // when verifying checksum you must add the checksum that we are verifying
-                // checksum should only include unescaped bytes!!!!
-                // when computing checksum, do not include start byte, length, or checksum; when verifying, include checksum
-                _checksum.AddByte(b);
-
-                Debug.Print("Read byte " + ByteUtils.FormatByte(b) 
-                    + " at position " + BytesRead 
-                    + ", packet length is " + Length.Get16BitValue() 
-                    + ", #escapeBytes is " + _escapedBytes 
-                    + ", remaining bytes is " + RemainingBytes);
-
-                // escape bytes are not included in the stated packet length
-                if (FrameDataBytesRead >= (Length.Get16BitValue() + 1))
-                {
-                    // this is checksum and final byte of packet
-                    _done = true;
-
-                    Debug.Print("Checksum byte is " + b);
-
-                    if (!_checksum.Verify())
-                        throw new XBeeParseException("Checksum is incorrect.  Expected 0xff, but got " + _checksum.GetChecksum());
-                }
+                var newBuffer = (byte[])_buffers.Dequeue();
+                _currentBuffer = new MemoryStream(newBuffer);
             }
-
-            return b;
         }
-
-        /// <summary>
-        /// Same as read() but logs the context of the byte being read.  useful for debugging
-        /// </summary>
-        /// <param name="context"></param>
-        /// <returns></returns>
-        public int Read(string context)
-        {
-            var b = Read();
-            Debug.Print("Read " + context + " byte, val is " + b);
-            return b;
-        }
-
-        public void Dispose()
-        {
-            _input.Dispose();
-        }
-
-        #endregion
 
         #region IPacketParser Members
 
         public ApiId ApiId { get; protected set; }
+
         public XBeePacketLength Length { get; protected set; }
 
         /// <summary>
@@ -268,6 +320,87 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         }
 
         /// <summary>
+        /// This method reads bytes from the underlying input stream and performs the following tasks:
+        /// 1. Keeps track of how many bytes we've read
+        /// 2. Un-escapes bytes if necessary and verifies the checksum.
+        /// </summary>
+        /// <returns></returns>
+        public int Read()
+        {
+            if (RemainingBytes == 0)
+                throw new XBeeParseException("Packet has read all of its bytes");
+
+            var b = TakeFromBuffer(ParseTimeLeft);
+
+            if (XBeePacket.IsSpecialByte(b))
+            {
+                Debug.Print("Read special byte that needs to be unescaped");
+
+                if (b == (int)XBeePacket.SpecialByte.ESCAPE)
+                {
+                    Debug.Print("found escape byte");
+                    // read next byte
+                    b = TakeFromBuffer(ParseTimeLeft);
+
+                    Debug.Print("next byte is " + ByteUtils.FormatByte(b));
+                    b = 0x20 ^ b;
+                    Debug.Print("unescaped (xor) byte is " + ByteUtils.FormatByte(b));
+
+                    _escapedBytes++;
+                }
+                else
+                {
+                    // TODO some responses such as AT Response for node discover do not escape the bytes?? shouldn't occur if AP mode is 2?
+                    // while reading remote at response Found unescaped special byte base10=19,base16=0x13,base2=00010011 at position 5 
+                    Debug.Print("Found unescaped special byte " + ByteUtils.FormatByte(b) + " at position " + BytesRead);
+                }
+            }
+
+            BytesRead++;
+
+            // do this only after reading length bytes
+            if (BytesRead > 2)
+            {
+                // when verifying checksum you must add the checksum that we are verifying
+                // checksum should only include unescaped bytes!!!!
+                // when computing checksum, do not include start byte, length, or checksum; when verifying, include checksum
+                _checksum.AddByte(b);
+
+                Debug.Print("Read byte " + ByteUtils.FormatByte(b)
+                    + " at position " + BytesRead
+                    + ", packet length is " + Length.Get16BitValue()
+                    + ", #escapeBytes is " + _escapedBytes
+                    + ", remaining bytes is " + RemainingBytes);
+
+                // escape bytes are not included in the stated packet length
+                if (FrameDataBytesRead >= (Length.Get16BitValue() + 1))
+                {
+                    // this is checksum and final byte of packet
+
+                    Debug.Print("Checksum byte is " + b);
+
+                    if (!_checksum.Verify())
+                        throw new XBeeParseException("Checksum is incorrect. Expected 0xff, but got 0x" 
+                            + ByteUtils.ToBase16(_checksum.GetChecksum()));
+                }
+            }
+
+            return b;
+        }
+
+        /// <summary>
+        /// Same as read() but logs the context of the byte being read.  useful for debugging
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public int Read(string context)
+        {
+            var b = Read();
+            Debug.Print("Read " + context + " byte, val is " + b);
+            return b;
+        }
+
+        /// <summary>
         /// Reads all remaining bytes except for checksum
         /// </summary>
         /// <returns></returns>
@@ -277,10 +410,10 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             var valueLength = RemainingBytes - 1;
             var value = new int[valueLength];
 
-            Debug.Print("There are " + valueLength + " remaining bytes");
+            Debug.Print("There should be " + valueLength + " remaining bytes");
 
             for (var i = 0; i < valueLength; i++)
-                value[i] = Read("Remaining bytes " + i);
+                value[i] = Read("Remaining byte " + i);
 
             return value;
         }
