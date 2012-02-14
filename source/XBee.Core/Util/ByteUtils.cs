@@ -56,13 +56,40 @@ namespace Gadgeteer.Modules.GHIElectronics.Util
 
         public static bool GetBit(int value, int bit)
         {
-            throw new NotImplementedException();
+          if (bit < 1 || bit > 8)
+          {
+            throw new ArgumentException("Bit is out of range");
+          }
+
+          if (value > 0xff)
+          {
+            throw new ArgumentException("input value [" + value + "] is larger than a byte");
+          }
+
+          return ((value >> (--bit)) & 0x1) == 0x1;
         }
 
-        public static int Parse10BitAnalog(IIntInputStream parser, int enabledCount)
+        public static int Parse10BitAnalog(IIntInputStream input, int pos)
         {
-            throw new NotImplementedException();
+          int adcMsb = input.Read("Analog " + pos + " MSB");
+		      int adcLsb = input.Read("Analog " + pos + " LSB");
+		
+		      return Parse10BitAnalog(adcMsb, adcLsb);
         }
+
+        public static int Parse10BitAnalog(int msb, int lsb)
+        {	
+		      msb = msb & 0xff;
+		
+		      // shift up bits 9 and 10 of the msb
+		      msb = (msb & 0x3) << 8;
+		
+          // log.debug("shifted msb is " + msb);
+		
+		      lsb = lsb & 0xff;
+		
+		      return msb + lsb;
+	      }
 
         public static string FormatByte(int value)
         {
