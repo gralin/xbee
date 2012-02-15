@@ -2,8 +2,9 @@ using System;
 
 namespace Gadgeteer.Modules.GHIElectronics.Util
 {
-    public static class Arrays
+    public class Arrays
     {
+
         public static byte[] ToByteArray(int[] array)
         {
             var result = new byte[array.Length];
