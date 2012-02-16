@@ -29,8 +29,8 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
          * if the payload size is exceeded
          */
 
-        public static int ZNET_MAX_PAYLOAD_SIZE = 72;
-	    public static int DEFAULT_BROADCAST_RADIUS = 0;
+        public const int ZNET_MAX_PAYLOAD_SIZE = 72;
+        public const int DEFAULT_BROADCAST_RADIUS = 0;
 
         public XBeeAddress64 DestAddr64 { get; set; }
         public XBeeAddress16 DestAddr16 { get; set; }
@@ -56,13 +56,14 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
         ///    <item>keep a hash table mapping of 64-bit address to 16-bit network address.</item>
         /// </list>
         /// </remarks>
-        /// <param name="frameId"></param>
         /// <param name="dest64"></param>
         /// <param name="dest16"></param>
+        /// <param name="payload"></param>
         /// <param name="broadcastRadius"></param>
         /// <param name="option"></param>
-        /// <param name="payload"></param>
-        public ZNetTxRequest(int frameId, XBeeAddress64 dest64, XBeeAddress16 dest16, int broadcastRadius, Options option, int[] payload)
+        /// <param name="frameId"></param>
+        public ZNetTxRequest(XBeeAddress64 dest64, XBeeAddress16 dest16, int[] payload, 
+            int broadcastRadius = DEFAULT_BROADCAST_RADIUS, Options option = Options.UNICAST, int frameId = DEFAULT_FRAME_ID)
         {
             FrameId = frameId;
             DestAddr64 = dest64;
@@ -77,8 +78,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
         /// </summary>
         /// <param name="dest64"></param>
         /// <param name="payload"></param>
-        public ZNetTxRequest(XBeeAddress64 dest64, int[] payload) 
-            : this(DEFAULT_FRAME_ID, dest64, XBeeAddress16.ZNET_BROADCAST, DEFAULT_BROADCAST_RADIUS, Options.UNICAST, payload)
+        public ZNetTxRequest(XBeeAddress64 dest64, int[] payload) : this(dest64, XBeeAddress16.ZNET_BROADCAST, payload)
         {
         }
 

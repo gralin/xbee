@@ -4,9 +4,9 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 {
     public abstract class XBeeRequest
     {
-        public static int DEFAULT_FRAME_ID = 1;
+        public const int DEFAULT_FRAME_ID = 1;
 	    // XBee will not generate a TX Status Packet if this frame id sent
-	    public static int NO_RESPONSE_FRAME_ID = 0;
+        public const int NO_RESPONSE_FRAME_ID = 0;
 
         public virtual ApiId ApiId { get; set; }
         public int FrameId { get; set; }

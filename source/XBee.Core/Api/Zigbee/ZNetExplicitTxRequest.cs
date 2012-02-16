@@ -35,9 +35,9 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
 
         // this is one big ctor ;)
 
-        public ZNetExplicitTxRequest(int frameId, XBeeAddress64 dest64, XBeeAddress16 dest16, int broadcastRadius, 
-            Options option, int[] payload, int srcEndpoint, int destEndpoint, DoubleByte clusterId, DoubleByte profileId) 
-            : base(frameId, dest64, dest16, broadcastRadius, option, payload)
+        public ZNetExplicitTxRequest(XBeeAddress64 dest64, XBeeAddress16 dest16, int[] payload, int srcEndpoint, int destEndpoint, DoubleByte clusterId, DoubleByte profileId, 
+            Options option = Options.UNICAST, int broadcastRadius = DEFAULT_BROADCAST_RADIUS, int frameId = DEFAULT_FRAME_ID) 
+            : base(dest64, dest16, payload, broadcastRadius, option, frameId)
         {
             SourceEndpoint = srcEndpoint;
             DestinationEndpoint = destEndpoint;

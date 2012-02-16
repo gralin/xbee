@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using System.Threading;
 using Gadgeteer.Modules.GHIElectronics;
 using Gadgeteer.Modules.GHIElectronics.Api;
@@ -14,7 +15,7 @@ namespace NETMF.Tester
         {
             Debug.Print("Program Started");
             
-            var xbee = new XBee("COM4", 9600) {LogLevel = LogLevel.LowDebug};
+            var xbee = new XBee("COM4", 9600) {LogLevel = LogLevel.Info};
             
             // opening serial port and reading XBee harware/software info
             xbee.Open();
@@ -43,10 +44,20 @@ namespace NETMF.Tester
             for (var i = 0; i < foundNodes.Length; i++)
                 Debug.Print("#" + (i + 1) + " - " + foundNodes[i]);
 
-            foreach (var foundNode in foundNodes)
+            xbee.LogLevel = LogLevel.LowDebug;
+
+            foreach (var node in foundNodes)
             {
-                // This is not working yet i think....
-                SendText(xbee, foundNode.NodeAddress64, "Hello XBee!");
+                try
+                {
+                    Debug.Print(SendText(xbee, node.NodeAddress64, node.NodeAddress16, "XXX")
+                                    ? "Success!"
+                                    : "Failed!");
+                }
+                catch (XBeeTimeoutException)
+                {
+                    Debug.Print("Failed to send text packet - timeout");
+                }
 
                 // setting digital I/O in all modules
                 //SetOutput(xbee, foundNode.NodeAddress64, "D0", (int)XBeePin.Capability.DIGITAL_OUTPUT_HIGH);
@@ -101,10 +112,11 @@ namespace NETMF.Tester
             return xbee.Send(request).IsOk;
         }
 
-        private static void SendText(XBee xbee, XBeeAddress64 node, string message)
+        private static bool SendText(XBee xbee, XBeeAddress64 dest64, XBeeAddress16 dest16, string message)
         {
-            var request = new ZNetTxRequest(node, Arrays.ToIntArray(Encoding.UTF8.GetBytes(message)));
-            xbee.SendAsync(request);
+            var request = new ZNetTxRequest(dest64, dest16, Arrays.ToIntArray(Encoding.UTF8.GetBytes(message)));
+            var response = (ZNetTxStatusResponse) xbee.Send(request);
+            return response.DeliveryStatus == ZNetTxStatusResponse.DeliveryResult.SUCCESS;
         }
     }
 }
