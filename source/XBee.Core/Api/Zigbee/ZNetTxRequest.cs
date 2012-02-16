@@ -123,6 +123,11 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
                 ",payload=" + ByteUtils.ToBase16(Payload);
         }
 
+        public override ApiId ApiId
+        {
+            get { return ApiId.ZNET_TX_REQUEST; }
+        }
+
         public override int[] GetFrameData()
         {
             return GetFrameDataAsIntArrayOutputStream().GetIntArray();
