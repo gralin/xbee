@@ -54,7 +54,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 
         public bool Equals(XBeeAddress64 other)
         {
-            return Object.Equals(_address, other._address);
+            return Arrays.AreEqual(_address, other._address);
         }
 
         public override bool Equals(object obj)
@@ -67,7 +67,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 
         public override int GetHashCode()
         {
-            return _address != null ? _address.GetHashCode() : 0;
+            return _address != null ? Arrays.HashCode(_address) : 0;
         }
 
         public override int[] GetAddress()

@@ -1,4 +1,3 @@
-using System;
 using Gadgeteer.Modules.GHIElectronics.Util;
 
 namespace Gadgeteer.Modules.GHIElectronics.Api
@@ -64,8 +63,8 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return Object.Equals(other.RawPacketBytes, RawPacketBytes)
-                && Object.Equals(other._processedPacketBytes, _processedPacketBytes) 
+            return Arrays.AreEqual(other.RawPacketBytes, RawPacketBytes)
+                && Arrays.AreEqual(other._processedPacketBytes, _processedPacketBytes) 
                 && Equals(other.Length, Length) 
                 && Equals(other.ApiId, ApiId) 
                 && other.Checksum == Checksum 

@@ -13,15 +13,13 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
   /// </remarks>
   public enum AtCmds
   {
-    #region Special
-                                                                               
     /// <summary>
-    /// Write. Write parameter values to non-volatile memory so that parameter 
-    /// modifications persist through subsequent power-up or reset.
+    /// Write. Write parameter values to non-volatile memory so that parameter modifications
+    /// persist through subsequent power-up or reset.
     /// </summary>
     /// <remarks>
-    /// Once WR is issued, no additional characters should be sent to the 
-    /// module until after the response "OK\r" is received.
+    /// Once WR is issued, no additional characters should be sent to the module until
+    /// after the response "OK\r" is received.
     /// </remarks>
     WR,
     
@@ -31,17 +29,14 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
     RE,
     
     /// <summary>
-    ///  Software Reset. Responds immediately with an OK then performs a 
-    ///  hard reset ~100ms later.   
+    ///  Software Reset. Responds immediately with an OK then performs a hard reset
+    /// ~100ms later.   
     /// </summary>
     /// <remarks>
     /// Introduced in firmware v1.x80.
     /// </remarks>
     FR,
-                   
-    #endregion
-
-    #region Networking and Security
+    
     /// <summary>
     /// Channel. Set/Read the channel number used for transmitting and receiving data
     /// between RF modules (uses 802.15.4 protocol channel numbers).  
@@ -79,22 +74,17 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
     DL,
 
     /// <summary>
-    /// 16-bit Source Address. Set/Read the RF module 16-bit source address. 
+    ///     
     /// </summary>
-    /// <remarks>
-    /// Set MY = 0xFFFF to disable reception of packets with 16-bit addresses.
-    /// </remarks>
     MY,
 
     /// <summary>
-    /// Serial Number High. Read high 32 bits of the RF module's unique 
-    /// IEEE 64-bit address.   
+    ///     
     /// </summary>
     SH,
 
     /// <summary>
-    /// Serial Number Low. Read low 32 bits of the RF module's unique 
-    /// IEEE 64-bit address.    
+    ///     
     /// </summary>
     SL,
 
@@ -186,16 +176,17 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
     /// <summary>
     ///     
     /// </summary>
+    ED,
+
+    /// <summary>
+    ///     
+    /// </summary>
     EE,
 
     /// <summary>
     ///     
     /// </summary>
     KY,
-
-    #endregion
-
-    #region RF Interfacing
 
     /// <summary>
     ///     
@@ -206,10 +197,6 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
     ///     
     /// </summary>
     CA,
-
-    #endregion
-
-    #region Sleep (Low Power)
 
     /// <summary>
     ///     
@@ -236,10 +223,6 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
     /// </summary>
     DP,
 
-    #endregion
-
-    #region Serial Interfacing
-
     /// <summary>
     ///     
     /// </summary>
@@ -264,10 +247,6 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
     ///     
     /// </summary>
     PR,
-
-    #endregion
-
-    #region IO Settings
 
     /// <summary>
     ///     
@@ -414,11 +393,6 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
     /// </summary>
     RP,
 
-    #endregion
-
-    #region Diagnostics
-
-
     /// <summary>
     ///     
     /// </summary>
@@ -452,15 +426,6 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
     /// <summary>
     ///     
     /// </summary>
-    ED,
-
-    #endregion
-
-    #region AT Command Options
-
-    /// <summary>
-    ///     
-    /// </summary>
     CT,
 
     /// <summary>
@@ -482,8 +447,6 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
     ///     
     /// </summary>
     GC
-
-    #endregion
   }
 
 
@@ -491,9 +454,10 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
   /// AT Command
   /// </summary>
   /// <remarks>
-  /// Implemented to wrap the AtCmds enumeration so the actual string value 
-  /// can be retrieved. NETMF does not support getting the actual string 
-  /// value of the enumeration member name directly.
+  /// Implemented to wrap the AtCmds enumeration so
+  /// the actual string value can be retrieved. NETMF
+  /// does not support getting the actual string value
+  /// of the enumeration member name directly.
   /// </remarks>
   public struct AtCmd
   {
