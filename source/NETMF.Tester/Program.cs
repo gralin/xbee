@@ -76,12 +76,8 @@ namespace NETMF.Tester
             for (var i = 0; i < foundNodes.Length; i++)
                 Debug.Print("#" + (i + 1) + " - " + foundNodes[i]);
 
-            _coordinator.LogLevel = LogLevel.LowDebug;
-            _router.LogLevel = LogLevel.LowDebug;
-
-            Debug.Print(SendText(_router, coordinator64, coordinator16, "1")
-                ? "Success!"
-                : "Failed!");
+            SendText(_router, coordinator64, coordinator16, "Hello world!");
+            Debug.Print(ReceiveText(_coordinator));
 
             //foreach (var node in foundNodes)
             //{
@@ -149,11 +145,17 @@ namespace NETMF.Tester
             return xbee.Send(request).IsOk;
         }
 
-        private static bool SendText(XBee xbee, XBeeAddress64 dest64, XBeeAddress16 dest16, string message)
+        private static void SendText(XBee xbee, XBeeAddress64 dest64, XBeeAddress16 dest16, string message)
         {
             var request = new ZNetTxRequest(dest64, dest16, Arrays.ToIntArray(Encoding.UTF8.GetBytes(message)));
-            var response = (ZNetTxStatusResponse) xbee.Send(request);
-            return response.DeliveryStatus == ZNetTxStatusResponse.DeliveryResult.SUCCESS;
+            xbee.SendAsync(request);
+        }
+
+        private static string ReceiveText(XBee xbee)
+        {
+            xbee.ClearResponseQueue();
+            var response = (ZNetRxResponse)xbee.GetResponse();
+            return new string(Encoding.UTF8.GetChars(Arrays.ToByteArray(response.Data)));
         }
     }
 }
