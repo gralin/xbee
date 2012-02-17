@@ -28,8 +28,6 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         public TimeSpan ParseElapsedTime { get { return DateTime.Now.Subtract(ParseStartTime); } }
         public int ParseTimeLeft { get { return (int) (ParseTimeout - ParseElapsedTime.Ticks/TimeSpan.TicksPerMillisecond); } }
 
-        public bool PacketsAvailable { get { return _parsedPackets.Count > 0; } }
-
         protected bool CurrentBufferEmpty
         {
             get
@@ -42,11 +40,10 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         private readonly ManualResetEvent _buffersAvailable;
         private Stream _currentBuffer;
 
-        private readonly Queue _parsedPackets;
-        private readonly ManualResetEvent _parsedPacketsAvailable;
-
         private Thread _parsingThread;
         private bool _finished;
+
+        private readonly ArrayList _packetListeners;
 
         public PacketParser()
         {
@@ -57,8 +54,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             _buffers = new Queue();
             _buffersAvailable = new ManualResetEvent(false);
 
-            _parsedPackets = new Queue();
-            _parsedPacketsAvailable = new ManualResetEvent(false);
+            _packetListeners = new ArrayList();
         }
 
         public void Start()
@@ -86,39 +82,30 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             _parsingThread = null;
         }
 
-        public void AddBuffer(byte[] buffer)
+        public void AddToParse(byte[] data)
         {
-            Logger.LowDebug("Received " + buffer.Length + " bytes");
+            Logger.LowDebug("Received " + data.Length + " bytes");
              
             lock (_buffers)
             {
-                _buffers.Enqueue(buffer);
+                _buffers.Enqueue(data);
                 _buffersAvailable.Set();    
             }
         }
 
-        public void ClearPackets()
+        public void AddPacketListener(IPacketListener listener)
         {
-            lock (_parsedPackets)
+            lock (_packetListeners)
             {
-                _parsedPackets.Clear();
-                _parsedPacketsAvailable.Reset();
+                _packetListeners.Add(listener);
             }
         }
 
-        public XBeeResponse GetPacket()
+        public void RemovePacketListener(IPacketListener listener)
         {
-            if (!_parsedPacketsAvailable.WaitOne(ParseTimeout, false))
-                throw new XBeeTimeoutException();
-
-            lock (_parsedPackets)
+            lock (_packetListeners)
             {
-                var packet = (XBeeResponse)_parsedPackets.Dequeue();
-
-                if (_parsedPackets.Count == 0)
-                    _parsedPacketsAvailable.Reset();
-
-                return packet;
+                _packetListeners.Remove(listener);
             }
         }
 
@@ -140,10 +127,13 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 
                     Logger.Debug("Received " + packet.GetType().Name + ": " + packet);
 
-                    lock (_parsedPackets)
+                    lock (_packetListeners)
                     {
-                        _parsedPackets.Enqueue(packet);
-                        _parsedPacketsAvailable.Set();   
+                        foreach (var obj in _packetListeners)
+                        {
+                            var packetListener = (IPacketListener) obj;
+                            packetListener.ProcessPacket(packet);
+                        }
                     }
                 }
                 catch (XBeeTimeoutException)

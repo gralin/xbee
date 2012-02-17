@@ -19,6 +19,11 @@
 
         public int RemainingPacketCount { get; private set; }
 
+        public CountLimitTerminator(int maxPacketCount)
+        {
+            MaxPacketCount = maxPacketCount;
+        }
+
         public bool Stop(XBeeResponse response)
         {
             RemainingPacketCount--;

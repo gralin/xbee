@@ -6,6 +6,6 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
     /// </summary>
     public interface IPacketListener
     {
-        void ProcessResponse(XBeeResponse response);
+        void ProcessPacket(XBeeResponse response);
     }
 }

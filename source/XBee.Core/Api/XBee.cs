@@ -8,12 +8,11 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
     /// <summary>
     /// This is an API for communicating with Digi XBee 802.15.4 and ZigBee radios
     /// </summary>
-    public class XBee : IXBee
+    public class XBee
     {
         private readonly IXBeeConnection _connection;
         private readonly PacketParser _parser;
         private int _sequentialFrameId = 0xff;
-        private readonly CountLimitTerminator _collectCountLimit;
 
         public LogLevel LogLevel
         {
@@ -28,7 +27,6 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         protected XBee()
         {
             _parser = new PacketParser();
-            _collectCountLimit = new CountLimitTerminator();
         }
 
         public XBee(IXBeeConnection connection) 
@@ -39,7 +37,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             {
                 var buffer = new byte[count];
                 Array.Copy(data, offset, buffer, 0, count);
-                _parser.AddBuffer(buffer);
+                _parser.AddToParse(buffer);
             };
         }
 
@@ -100,8 +98,6 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 			        FirmwareVersion = ByteUtils.ToBase16(vr.Value);
                     Logger.Info("Firmware version is " + FirmwareVersion);
 			    }
-			
-			    ClearResponseQueue();
 		    } 
             catch (XBeeTimeoutException) 
             {
@@ -109,18 +105,6 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
                     + "The XBee radio must be in API mode (AP=2) to use with this library");
 		    }
 	    }
-
-        public AtCommandResponse Send(AtCommand atCommand, int timeout = PacketParser.DefaultParseTimeout)
-        {
-            return (AtCommandResponse)Send((XBeeRequest) atCommand, timeout);
-        }
-
-        public RemoteAtResponse Send(RemoteAtRequest remoteAtCommand, int timeout = PacketParser.DefaultParseTimeout)
-        {
-            return (RemoteAtResponse)Send((XBeeRequest)remoteAtCommand, timeout);
-        }
-
-        #region IXBee Members
 
         public void Open()
         {
@@ -136,51 +120,24 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             _connection.Close();
         }
 
-        public void AddPacketListener(IPacketListener packetListener)
+        public void AddPacketListener(IPacketListener listener)
         {
-            throw new NotImplementedException();
+            _parser.AddPacketListener(listener);
         }
 
-        public void RemovePacketListener(IPacketListener packetListener)
+        public void RemovePacketListener(IPacketListener listener)
         {
-            throw new NotImplementedException();
+            _parser.RemovePacketListener(listener);
         }
 
-        /// <summary>
-        /// It's possible for packets to get interspersed if multiple threads send simultaneously.  
-        /// This method is not thread-safe because doing so would introduce a synchronized performance penalty 
-        /// for the vast majority of users that will not never need thread safety.
-        /// That said, it is responsibility of the user to provide synchronization if multiple threads are sending.
-        /// </summary>
-        /// <remarks>
-        /// Not thread safe.
-        /// </remarks>
-        /// <param name="packet"></param>
-        public void SendPacket(XBeePacket packet)
+        public AtCommandResponse Send(AtCommand atCommand, int timeout = PacketParser.DefaultParseTimeout)
         {
-            SendPacket(packet.ToByteArray());
+            return (AtCommandResponse)Send(atCommand, typeof(AtCommandResponse), timeout);
         }
 
-        public void SendPacket(int[] packet)
+        public RemoteAtResponse Send(RemoteAtRequest remoteAtCommand, int timeout = PacketParser.DefaultParseTimeout)
         {
-            Logger.LowDebug("sending packet to XBee " + ByteUtils.ToBase16(packet));
-            _connection.Send(Arrays.ToByteArray(packet));
-        }
-
-        public void SendAsync(XBeeRequest request)
-        {
-            if (RadioType != HardwareVersion.RadioType.UNKNOWN)
-            {
-                // TODO use interface to mark series type
-                if (RadioType == HardwareVersion.RadioType.SERIES1 && request.GetType().Name.IndexOf("Api.Zigbee") > -1)
-                    throw new ArgumentException("You are connected to a Series 1 radio but attempting to send Series 2 requests");
-
-                if (RadioType == HardwareVersion.RadioType.SERIES2 && request.GetType().Name.IndexOf("Api.Wpan") > -1)
-                    throw new ArgumentException("You are connected to a Series 2 radio but attempting to send Series 1 requests");
-            }
-
-            Logger.Debug("Sending " + request.GetType().Name + ": " + request);
-            SendPacket(request.GetXBeePacket());
+            return (RemoteAtResponse)Send(remoteAtCommand, typeof(RemoteAtResponse), timeout);
         }
 
         /// <summary>
@@ -209,44 +166,81 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         /// This method is thread-safe 
         /// </remarks>
         /// <param name="xbeeRequest"></param>
+        /// <param name="expectedResponse"></param>
         /// <param name="timeout"></param>
         /// <exception cref="XBeeTimeoutException">
         /// XBeeTimeoutException thrown if no matching response is identified
         /// </exception>
         /// <returns></returns>
-        public XBeeResponse Send(XBeeRequest xbeeRequest, int timeout = PacketParser.DefaultParseTimeout)
+        public XBeeResponse Send(XBeeRequest xbeeRequest, Type expectedResponse = null, int timeout = PacketParser.DefaultParseTimeout)
         {
             if (xbeeRequest.FrameId == XBeeRequest.NO_RESPONSE_FRAME_ID)
                 throw new XBeeException("Frame Id cannot be 0 for a synchronous call -- it will always timeout as there is no response!");
-            
-            _parser.ClearPackets();
-            SendAsync(xbeeRequest);
-            _parser.ParseTimeout = timeout;
 
-            while (true)
+            var listener = new SinglePacketListener(expectedResponse);
+
+            try
             {
-                var response = _parser.GetPacket();
-
-                if (response is ModemStatusResponse)
-                {
-                    var modemStatus = (ModemStatusResponse) response;
-                    Logger.Info("Modem status is: " + modemStatus.ResponseStatus);
-                    continue;
-                }
-
-                return response;
+                AddPacketListener(listener);
+                SendAsync(xbeeRequest);
+                return listener.GetPacket(timeout);
+            }
+            finally
+            {
+                _parser.RemovePacketListener(listener);
             }
         }
 
-        public XBeeResponse GetResponse()
+        public void SendAsync(XBeeRequest request)
         {
-            return GetResponse(PacketParser.DefaultParseTimeout);
+            if (RadioType != HardwareVersion.RadioType.UNKNOWN)
+            {
+                // TODO use interface to mark series type
+                if (RadioType == HardwareVersion.RadioType.SERIES1 && request.GetType().Name.IndexOf("Api.Zigbee") > -1)
+                    throw new ArgumentException("You are connected to a Series 1 radio but attempting to send Series 2 requests");
+
+                if (RadioType == HardwareVersion.RadioType.SERIES2 && request.GetType().Name.IndexOf("Api.Wpan") > -1)
+                    throw new ArgumentException("You are connected to a Series 2 radio but attempting to send Series 1 requests");
+            }
+
+            Logger.Debug("Sending " + request.GetType().Name + ": " + request);
+            SendPacket(request.GetXBeePacket());
         }
 
-        public XBeeResponse GetResponse(int timeout)
+        /// <summary>
+        /// It's possible for packets to get interspersed if multiple threads send simultaneously.  
+        /// This method is not thread-safe because doing so would introduce a synchronized performance penalty 
+        /// for the vast majority of users that will not never need thread safety.
+        /// That said, it is responsibility of the user to provide synchronization if multiple threads are sending.
+        /// </summary>
+        /// <remarks>
+        /// Not thread safe.
+        /// </remarks>
+        /// <param name="packet"></param>
+        public void SendPacket(XBeePacket packet)
         {
-            _parser.ParseTimeout = timeout;
-            return _parser.GetPacket();
+            SendPacket(packet.ToByteArray());
+        }
+
+        public void SendPacket(int[] packet)
+        {
+            Logger.LowDebug("sending packet to XBee " + ByteUtils.ToBase16(packet));
+            _connection.Send(Arrays.ToByteArray(packet));
+        }
+
+        public XBeeResponse Receive(Type expectedType = null, int timeout = PacketParser.DefaultParseTimeout)
+        {
+            var listener = new SinglePacketListener(expectedType);
+
+            try
+            {
+                AddPacketListener(listener);
+                return listener.GetPacket(timeout);
+            }
+            finally
+            {
+                _parser.RemovePacketListener(listener);
+            }
         }
 
         public int GetCurrentFrameId()
@@ -292,62 +286,36 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             return _connection != null && _connection.Connected;
         }
 
-        public void ClearResponseQueue()
-        {
-            _parser.ClearPackets();
-        }
-
         public XBeeResponse[] CollectResponses(int wait, int maxPacketCount)
         {
-            _collectCountLimit.MaxPacketCount = maxPacketCount;
-            return CollectResponses(wait, _collectCountLimit);
+            return CollectResponses(wait, null, new CountLimitTerminator(maxPacketCount));
+        }
+
+        public XBeeResponse[] CollectResponses(int wait, Type packetType, int maxPacketCount)
+        {
+            return CollectResponses(wait, packetType, new CountLimitTerminator(maxPacketCount));
         }
 
         /// <summary>
         /// Collects responses until the timeout is reached or the CollectTerminator returns true
         /// </summary>
         /// <param name="wait"></param>
+        /// <param name="packetType"></param>
         /// <param name="terminator"></param>
         /// <returns></returns>
-        public XBeeResponse[] CollectResponses(int wait, ICollectTerminator terminator = null)
+        public XBeeResponse[] CollectResponses(int wait, Type packetType = null, ICollectTerminator terminator = null)
         {
-            var startTime = DateTime.Now;
-            var responses = new Queue();
+            var result = new MultiplePacketListener(packetType, terminator);
 
-            while (true)
+            try
             {
-                var elapsedTime = DateTime.Now.Subtract(startTime);
-                var elapsedMilliseconds = elapsedTime.Ticks/TimeSpan.TicksPerMillisecond;
-                var remainingMilliseconds = (int)(wait - elapsedMilliseconds);
-
-                if (remainingMilliseconds <= 0)
-                    break;
-
-                try
-                {
-                    var response = GetResponse(remainingMilliseconds);
-                    responses.Enqueue(response);
-
-                    if (terminator != null && terminator.Stop(response))
-                        break;
-                }
-                catch (XBeeTimeoutException)
-                {
-                    // failed to receive packet in this iteration
-                }
+                AddPacketListener(result);
+                return result.GetPackets(wait);
             }
-
-            if (responses.Count == 0)
-                return new XBeeResponse[0];
-            
-            var result = new XBeeResponse[responses.Count];
-
-            for (var i = 0; i < result.Length; i++)
-                result[i] = (XBeeResponse) responses.Dequeue();
-
-            return result;
+            finally
+            {
+                RemovePacketListener(result);
+            }
         }
-
-        #endregion
     }
 }

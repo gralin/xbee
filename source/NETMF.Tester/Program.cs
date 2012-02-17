@@ -104,7 +104,7 @@ namespace NETMF.Tester
             xbee.SendAsync(new AtCommand("ND"));
 
             // wait max 5s for expectedNodeCount packets
-            var responses = xbee.CollectResponses(5000, expectedNodeCount);
+            var responses = xbee.CollectResponses(5000, typeof(AtCommandResponse), expectedNodeCount);
 
             if (responses.Length > 0)
             {
@@ -145,16 +145,16 @@ namespace NETMF.Tester
             return xbee.Send(request).IsOk;
         }
 
-        private static void SendText(XBee xbee, XBeeAddress64 dest64, XBeeAddress16 dest16, string message)
+        private static bool SendText(XBee xbee, XBeeAddress64 dest64, XBeeAddress16 dest16, string message)
         {
             var request = new ZNetTxRequest(dest64, dest16, Arrays.ToIntArray(Encoding.UTF8.GetBytes(message)));
-            xbee.SendAsync(request);
+            var response = (ZNetTxStatusResponse)xbee.Send(request, typeof(ZNetTxStatusResponse));
+            return response.DeliveryStatus == ZNetTxStatusResponse.DeliveryResult.SUCCESS;
         }
 
         private static string ReceiveText(XBee xbee)
         {
-            xbee.ClearResponseQueue();
-            var response = (ZNetRxResponse)xbee.GetResponse();
+            var response = (ZNetRxResponse)xbee.Receive(typeof(ZNetRxResponse));
             return new string(Encoding.UTF8.GetChars(Arrays.ToByteArray(response.Data)));
         }
     }
