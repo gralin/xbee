@@ -35,6 +35,7 @@
     <Compile Include="Api\AtCommand.cs" />
     <Compile Include="Api\AtCommandQueue.cs" />
     <Compile Include="Api\AtCommandResponse.cs" />
+    <Compile Include="Api\AtCmd.cs" />
     <Compile Include="Api\Checksum.cs" />
     <Compile Include="Api\CountLimitTerminator.cs" />
     <Compile Include="Api\ErrorResponse.cs" />

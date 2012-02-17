@@ -32,7 +32,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         /// <param name="applyChanges">set to true if setting a value or issuing a command that changes the state of the radio (e.g. FR); not applicable to query requests</param>
         /// <param name="command">two character AT command to set or query</param>
         /// <param name="value">if null then the current setting will be queried</param>
-        public RemoteAtRequest(int frameId, XBeeAddress64 remoteAddress64, XBeeAddress16 remoteAddress16, bool applyChanges, string command, int[] value) 
+        public RemoteAtRequest(int frameId, XBeeAddress64 remoteAddress64, XBeeAddress16 remoteAddress16, bool applyChanges, AtCmd command, int[] value) 
             : base(command, value)
         {
             FrameId = frameId;
@@ -49,7 +49,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         /// <param name="remoteAddress16"></param>
         /// <param name="applyChanges"></param>
         /// <param name="command"></param>
-        public RemoteAtRequest(int frameId, XBeeAddress64 remoteAddress64, XBeeAddress16 remoteAddress16, bool applyChanges, string command)
+        public RemoteAtRequest(int frameId, XBeeAddress64 remoteAddress64, XBeeAddress16 remoteAddress16, bool applyChanges, AtCmd command)
             : this(frameId, remoteAddress64, remoteAddress16, applyChanges, command, null)
         {
         }
@@ -64,7 +64,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         /// <param name="dest64"></param>
         /// <param name="command"></param>
         /// <param name="value"></param>
-        public RemoteAtRequest(XBeeAddress64 dest64, string command, int[] value)
+        public RemoteAtRequest(XBeeAddress64 dest64, AtCmd command, int[] value)
             : this(DEFAULT_FRAME_ID, dest64, XBeeAddress16.ZNET_BROADCAST, true, command, value)
         {
             // apply changes doesn't make sense for a query
@@ -80,7 +80,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         /// </remarks>
         /// <param name="dest16"></param>
         /// <param name="command"></param>
-        public RemoteAtRequest(XBeeAddress16 dest16, string command)
+        public RemoteAtRequest(XBeeAddress16 dest16, AtCmd command)
             : this(dest16, command, null)
         {
             // apply changes doesn't make sense for a query
@@ -97,7 +97,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         /// <param name="remoteAddress16"></param>
         /// <param name="command"></param>
         /// <param name="value"></param>
-        public RemoteAtRequest(XBeeAddress16 remoteAddress16, string command, int[] value)
+        public RemoteAtRequest(XBeeAddress16 remoteAddress16, AtCmd command, int[] value)
             : this(DEFAULT_FRAME_ID, XBeeAddress64.BROADCAST, remoteAddress16, true, command, value)
         {
         }

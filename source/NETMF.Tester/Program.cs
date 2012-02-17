@@ -1,5 +1,4 @@
-﻿using System.Text;
-using System.Threading;
+﻿using System.Threading;
 using GHIElectronics.NETMF.USBHost;
 using Gadgeteer.Modules.GHIElectronics.Api;
 using Gadgeteer.Modules.GHIElectronics.Api.Zigbee;
@@ -100,7 +99,7 @@ namespace NETMF.Tester
 
         private static ZBNodeDiscover[] DiscoverNodes(XBee xbee, int expectedNodeCount)
         {
-            xbee.SendAsync(new AtCommand("ND"));
+            xbee.SendAsync(new AtCommand(AtCmd.ND));
 
             // wait max 5s for expectedNodeCount packets
             var responses = xbee.CollectResponses(5000, typeof(AtCommandResponse), expectedNodeCount);
@@ -120,21 +119,21 @@ namespace NETMF.Tester
 
         private static int GetRssi(XBee xbee)
         {
-            var response = xbee.Send(new AtCommand("DB"));
+            var response = xbee.Send(new AtCommand(AtCmd.DB));
             return response.Value[0];
         }
 
         private static XBeeAddress64 GetAddress64(XBee xbee)
         {
             var data = new IntArrayOutputStream();
-            data.Write(xbee.Send(new AtCommand("SH")).Value);
-            data.Write(xbee.Send(new AtCommand("SL")).Value);
+            data.Write(xbee.Send(new AtCommand(AtCmd.SH)).Value);
+            data.Write(xbee.Send(new AtCommand(AtCmd.SL)).Value);
             return new XBeeAddress64(data.GetIntArray());
         }
 
         private static XBeeAddress16 GetAddress16(XBee xbee)
         {
-            var response = xbee.Send(new AtCommand("MY"));
+            var response = xbee.Send(new AtCommand(AtCmd.MY));
             return new XBeeAddress16(response.Value);
         }
 
@@ -145,7 +144,7 @@ namespace NETMF.Tester
             return response.DeliveryStatus == ZNetTxStatusResponse.DeliveryResult.SUCCESS;
         }
 
-        private static bool SetOutput(XBee xbee, XBeeAddress64 node, string output, int state)
+        private static bool SetOutput(XBee xbee, XBeeAddress64 node, AtCmd output, int state)
         {
             var request = new RemoteAtRequest(node, output, new[] { state });
             return xbee.Send(request).IsOk;

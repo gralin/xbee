@@ -53,7 +53,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         {
 		    try 
             {
-                var ap = Send(new AtCommand("AP"));
+                var ap = Send(new AtCommand(AtCmd.AP));
 
                 if (!ap.IsOk)
                     throw new XBeeException("Attempt to query AP parameter failed");
@@ -69,7 +69,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
                         + "(AP=2) for use with this library.");
 
                     Logger.LowDebug("Attempting to set AP to 2");
-                    ap = Send(new AtCommand("AP", 2));
+                    ap = Send(new AtCommand(AtCmd.AP, 2));
 
                     if (!ap.IsOk)
                         throw new XBeeException("Attempt to set AP=2 failed");
@@ -78,7 +78,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
                         + "persist a power cycle without the WR (write) command");
                 }
 
-                ap = Send(new AtCommand("HV"));
+                ap = Send(new AtCommand(AtCmd.HV));
 			
 			    var radioType = HardwareVersion.Parse(ap);
 
@@ -91,7 +91,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
                     Logger.Info("XBee radio is " + HardwareVersion.GetName(radioType));
                 }
                 
-                var vr = Send(new AtCommand("VR"));
+                var vr = Send(new AtCommand(AtCmd.VR));
 			
 			    if (vr.IsOk)
 			    {

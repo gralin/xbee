@@ -10,7 +10,7 @@
         /// </summary>
         /// <param name="dest64"></param>
         public ZBForceSampleRequest(XBeeAddress64 dest64)
-            : base(DEFAULT_FRAME_ID, dest64, XBeeAddress16.ZNET_BROADCAST, false, "IS", null)
+            : base(DEFAULT_FRAME_ID, dest64, XBeeAddress16.ZNET_BROADCAST, false, AtCmd.IS, null)
         {
         }
     }

@@ -6,12 +6,12 @@
     /// </summary>
     public class AtCommandQueue : AtCommand
     {
-        public AtCommandQueue(string command) 
+        public AtCommandQueue(AtCmd command) 
             : this(command, null, DEFAULT_FRAME_ID)
         {
         }
 
-        public AtCommandQueue(string command, int[] value, int frameId) 
+        public AtCommandQueue(AtCmd command, int[] value, int frameId) 
             : base(command, value, frameId)
         {
         }
