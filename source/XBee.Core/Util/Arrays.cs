@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 
 namespace Gadgeteer.Modules.GHIElectronics.Util
 {
@@ -32,6 +33,16 @@ namespace Gadgeteer.Modules.GHIElectronics.Util
                 result[i] = array[i];
 
             return result;
+        }
+
+        public static int[] ToIntArray(string message)
+        {
+            return ToIntArray(Encoding.UTF8.GetBytes(message));
+        }
+
+        public static string ToString(int[] array)
+        {
+            return new string(Encoding.UTF8.GetChars(ToByteArray(array)));
         }
     }
 }

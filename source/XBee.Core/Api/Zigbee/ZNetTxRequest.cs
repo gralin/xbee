@@ -82,6 +82,16 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
         {
         }
 
+        /// <summary>
+        /// Abbreviated constructor for sending a unicast TX packet
+        /// </summary>
+        /// <param name="dest64"></param>
+        /// <param name="payload"></param>
+        public ZNetTxRequest(XBeeAddress64 dest64, string payload)
+            : this(dest64, XBeeAddress16.ZNET_BROADCAST, Arrays.ToIntArray(payload))
+        {
+        }
+
         protected IntArrayOutputStream GetFrameDataAsIntArrayOutputStream()
         {
             if (MaxPayloadSize > 0 && Payload.Length > MaxPayloadSize)

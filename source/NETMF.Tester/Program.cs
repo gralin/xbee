@@ -47,55 +47,54 @@ namespace NETMF.Tester
             _router.Open();
             
             // reading addresses of the connected modules
+            
             var coordinator64 = GetAddress64(_coordinator);
             var coordinator16 = GetAddress16(_coordinator);
             Debug.Print("Coordinator serial number: " + coordinator64);
             Debug.Print("Coordinator network address: " + coordinator16);
-            Debug.Print("Router serial number: " + GetAddress64(_router));
-            Debug.Print("Router network address: " + GetAddress16(_router));
+            
+            var router64 = GetAddress64(_router);
+            var router16 = GetAddress16(_router);
+            Debug.Print("Router serial number: " + router64);
+            Debug.Print("Router network address: " + router16);
 
-            ZBNodeDiscover[] foundNodes;
+            // discovering modules available in ZigBee network
+
+            const int expectedNodesCount = 1;
 
             while (true)
             {
-                // discovering modules available in ZigBee network
-                foundNodes = DiscoverNodes(_coordinator, 1);
+                var foundNodes = DiscoverNodes(_coordinator, expectedNodesCount);
 
-                if (foundNodes.Length != 0)
+                if (foundNodes.Length > 0)
+                {
+                    Debug.Print("Found: " + foundNodes.Length + " nodes");
+
+                    for (var i = 0; i < foundNodes.Length; i++)
+                        Debug.Print("#" + (i + 1) + " - " + foundNodes[i]);
+
                     break;
+                }
                 
                 Debug.Print("No nodes where discovered");
             }
 
+            // printing RSSI of connected modules
+
             Debug.Print("Coordinator RSSI: -" + GetRssi(_coordinator) + "dBi");
             Debug.Print("Router RSSI: -" + GetRssi(_router) + "dBi");
 
-            Debug.Print("Found: " + foundNodes.Length + " nodes");
+            // sending text messages
 
-            // printing basic info about found modules
-            for (var i = 0; i < foundNodes.Length; i++)
-                Debug.Print("#" + (i + 1) + " - " + foundNodes[i]);
+            _coordinator.AddPacketListener(new IncomingDataListener());
+            _router.AddPacketListener(new IncomingDataListener());
 
-            SendText(_router, coordinator64, coordinator16, "Hello world!");
-            Debug.Print(ReceiveText(_coordinator));
+            if (!SendText(_router, coordinator64, "Hello coordinator"))
+                Debug.Print("Failed to send message to coordinator");
 
-            //foreach (var node in foundNodes)
-            //{
-            //    try
-            //    {
-            //        Debug.Print(SendText(_coordinator, new XBeeAddress64("01 02 03 04 05 06 07 08"), new XBeeAddress16(new[]{1,2}),  "XXX")
-            //                        ? "Success!"
-            //                        : "Failed!");
-            //    }
-            //    catch (XBeeTimeoutException)
-            //    {
-            //        Debug.Print("Failed to send text packet - timeout");
-            //    }
+            if (!SendText(_coordinator, router64, "Hello router"))
+                Debug.Print("Failed to send message to router");
 
-            //    // setting digital I/O in all modules
-            //    //SetOutput(xbee, foundNode.NodeAddress64, "D0", (int)XBeePin.Capability.DIGITAL_OUTPUT_HIGH);
-            //}
-                
             Thread.Sleep(Timeout.Infinite);
         }
 
@@ -139,23 +138,31 @@ namespace NETMF.Tester
             return new XBeeAddress16(response.Value);
         }
 
+        private static bool SendText(XBee xbee, XBeeAddress64 dest64, string message)
+        {
+            var request = new ZNetTxRequest(dest64, message);
+            var response = (ZNetTxStatusResponse)xbee.Send(request, typeof(ZNetTxStatusResponse));
+            return response.DeliveryStatus == ZNetTxStatusResponse.DeliveryResult.SUCCESS;
+        }
+
         private static bool SetOutput(XBee xbee, XBeeAddress64 node, string output, int state)
         {
             var request = new RemoteAtRequest(node, output, new[] { state });
             return xbee.Send(request).IsOk;
         }
+    }
 
-        private static bool SendText(XBee xbee, XBeeAddress64 dest64, XBeeAddress16 dest16, string message)
+    public class IncomingDataListener : IPacketListener
+    {
+        public void ProcessPacket(XBeeResponse response)
         {
-            var request = new ZNetTxRequest(dest64, dest16, Arrays.ToIntArray(Encoding.UTF8.GetBytes(message)));
-            var response = (ZNetTxStatusResponse)xbee.Send(request, typeof(ZNetTxStatusResponse));
-            return response.DeliveryStatus == ZNetTxStatusResponse.DeliveryResult.SUCCESS;
-        }
-
-        private static string ReceiveText(XBee xbee)
-        {
-            var response = (ZNetRxResponse)xbee.Receive(typeof(ZNetRxResponse));
-            return new string(Encoding.UTF8.GetChars(Arrays.ToByteArray(response.Data)));
+            var dataPacket = response as ZNetRxResponse;
+            
+            if (dataPacket == null) 
+                return;
+            
+            Debug.Print("Received '" + Arrays.ToString(dataPacket.Data) 
+                + "' from " + dataPacket.RemoteAddress16);
         }
     }
 }
