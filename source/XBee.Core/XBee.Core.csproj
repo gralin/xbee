@@ -32,6 +32,7 @@
   <Import Project="$(NetMfTargetsBaseDir)$(TargetFrameworkVersion)\CSharp.Targets" />
   <ItemGroup>
     <Compile Include="Api\ApiId.cs" />
+    <Compile Include="Api\ApiMode.cs" />
     <Compile Include="Api\AtCommand.cs" />
     <Compile Include="Api\AtCommandQueue.cs" />
     <Compile Include="Api\AtCommandResponse.cs" />

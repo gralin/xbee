@@ -20,9 +20,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             set { Logger.LoggingLevel = value; }
         }
 
-        public HardwareVersion.RadioType RadioType { get; protected set; }
-
-        public string FirmwareVersion { get; protected set; }
+        public XBeeConfiguration Config { get; private set; }
 
         protected XBee()
         {
@@ -46,78 +44,42 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         {
         }
 
-        /// <summary>
-        /// Perform startup checks
-        /// </summary>
-        private void DoStartupChecks()
-        {
-		    try 
-            {
-                var ap = Send(new AtCommand(AtCmd.AP));
-
-                if (!ap.IsOk)
-                    throw new XBeeException("Attempt to query AP parameter failed");
-
-                if (ap.Value[0] == 2)
-                {
-                    Logger.Info("Radio is in API mode with escape characters (AP=2)");
-                }
-                else
-                {
-                    Logger.LowDebug("XBee radio is in API mode without escape characters (AP=1)."
-                        + " The radio must be configured in API mode with escape bytes "
-                        + "(AP=2) for use with this library.");
-
-                    Logger.LowDebug("Attempting to set AP to 2");
-                    ap = Send(new AtCommand(AtCmd.AP, 2));
-
-                    if (!ap.IsOk)
-                        throw new XBeeException("Attempt to set AP=2 failed");
-
-                    Logger.Info("Successfully set AP mode to 2. This setting will not "
-                        + "persist a power cycle without the WR (write) command");
-                }
-
-                ap = Send(new AtCommand(AtCmd.HV));
-			
-			    var radioType = HardwareVersion.Parse(ap);
-
-                if (radioType == HardwareVersion.RadioType.UNKNOWN)
-                {
-                    Logger.Warn("Unknown radio type (HV): " + ap.Value[0]);
-                }
-                else
-                {
-                    Logger.Info("XBee radio is " + HardwareVersion.GetName(radioType));
-                }
-                
-                var vr = Send(new AtCommand(AtCmd.VR));
-			
-			    if (vr.IsOk)
-			    {
-			        FirmwareVersion = ByteUtils.ToBase16(vr.Value);
-                    Logger.Info("Firmware version is " + FirmwareVersion);
-			    }
-		    } 
-            catch (XBeeTimeoutException) 
-            {
-			    throw new XBeeException("AT command timed-out while attempt to set/read in API mode. " 
-                    + "The XBee radio must be in API mode (AP=2) to use with this library");
-		    }
-	    }
-
         public void Open()
         {
             _parser.Start();
             _connection.Open();
-            
-            DoStartupChecks();
+            ReadConfiguration();
         }
 
         public void Close()
         {
             _parser.Stop();
             _connection.Close();
+        }
+
+        public void ReadConfiguration()
+        {
+            try
+            {
+                Config = XBeeConfiguration.Read(this);
+
+                if (Config.ApiMode != ApiMode.EnabledWithEscaped)
+                {
+                    Logger.LowDebug("XBee radio is in API mode without escape characters (AP=1)."
+                                    + " The radio must be configured in API mode with escape bytes "
+                                    + "(AP=2) for use with this library.");
+
+                    Config.ApiMode = ApiMode.EnabledWithEscaped;
+                    Config.Save();
+
+                    Logger.Debug("Successfully set AP mode to ApiMode.EnabledWithEscaped");
+                }
+            }
+            catch (XBeeTimeoutException)
+            {
+                throw new XBeeException("AT command timed-out while attempt to read configuration. "
+                    + "The XBee radio must be in API mode (AP=2) to use with this library");
+            }
         }
 
         public void AddPacketListener(IPacketListener listener)
@@ -193,13 +155,13 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 
         public void SendAsync(XBeeRequest request)
         {
-            if (RadioType != HardwareVersion.RadioType.UNKNOWN)
+            if (Config != null)
             {
                 // TODO use interface to mark series type
-                if (RadioType == HardwareVersion.RadioType.SERIES1 && request.GetType().Name.IndexOf("Api.Zigbee") > -1)
+                if (Config.RadioType == HardwareVersion.RadioType.SERIES1 && request.GetType().Name.IndexOf("Api.Zigbee") > -1)
                     throw new ArgumentException("You are connected to a Series 1 radio but attempting to send Series 2 requests");
 
-                if (RadioType == HardwareVersion.RadioType.SERIES2 && request.GetType().Name.IndexOf("Api.Wpan") > -1)
+                if (Config.RadioType == HardwareVersion.RadioType.SERIES2 && request.GetType().Name.IndexOf("Api.Wpan") > -1)
                     throw new ArgumentException("You are connected to a Series 2 radio but attempting to send Series 1 requests");
             }
 

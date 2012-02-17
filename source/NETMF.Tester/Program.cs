@@ -44,17 +44,13 @@ namespace NETMF.Tester
 
             _router = new XBee("COM4", 9600) { LogLevel = LogLevel.Info };
             _router.Open();
+
+            // reading network addresses of the connected modules
             
-            // reading addresses of the connected modules
-            
-            var coordinator64 = GetAddress64(_coordinator);
             var coordinator16 = GetAddress16(_coordinator);
-            Debug.Print("Coordinator serial number: " + coordinator64);
-            Debug.Print("Coordinator network address: " + coordinator16);
-            
-            var router64 = GetAddress64(_router);
             var router16 = GetAddress16(_router);
-            Debug.Print("Router serial number: " + router64);
+
+            Debug.Print("Coordinator network address: " + coordinator16);
             Debug.Print("Router network address: " + router16);
 
             // discovering modules available in ZigBee network
@@ -88,10 +84,10 @@ namespace NETMF.Tester
             _coordinator.AddPacketListener(new IncomingDataListener());
             _router.AddPacketListener(new IncomingDataListener());
 
-            if (!SendText(_router, coordinator64, "Hello coordinator"))
+            if (!SendText(_router, _coordinator.Config.SerialNumber, "Hello coordinator"))
                 Debug.Print("Failed to send message to coordinator");
 
-            if (!SendText(_coordinator, router64, "Hello router"))
+            if (!SendText(_coordinator, _router.Config.SerialNumber, "Hello router"))
                 Debug.Print("Failed to send message to router");
 
             Thread.Sleep(Timeout.Infinite);
