@@ -172,7 +172,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             if (Command.Length > 2)
                 throw new ArgumentException("Command should be two characters. Do not include AT prefix");
 
-            var frameData = new IntArrayOutputStream();
+            var frameData = new OutputStream();
 
             frameData.Write((byte) ApiId);
             frameData.Write(FrameId);
@@ -182,7 +182,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             if (Value != null)
                 frameData.Write(Value);
 
-            return frameData.GetIntArray();
+            return frameData.ToArray();
         }
 
         public override string ToString()

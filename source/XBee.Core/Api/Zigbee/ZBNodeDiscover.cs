@@ -48,7 +48,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
             if (response.GetCommand() != "ND")
                 throw new ArgumentException("This method is only applicable for the ND command");
 
-            var input = new IntArrayInputStream(response.Value);
+            var input = new InputStream(response.Value);
 
             var frame = new ZBNodeDiscover
             {

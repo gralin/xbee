@@ -92,13 +92,13 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
         {
         }
 
-        protected IntArrayOutputStream GetFrameDataAsIntArrayOutputStream()
+        protected OutputStream GetFrameDataAsIntArrayOutputStream()
         {
             if (MaxPayloadSize > 0 && Payload.Length > MaxPayloadSize)
                 throw new ArgumentException("Payload exceeds user-defined maximum payload size of " 
                     + MaxPayloadSize + " bytes.  Please package into multiple packets");
 
-            var output = new IntArrayOutputStream();
+            var output = new OutputStream();
         
             // api id
 		    output.Write((byte) ApiId); 
@@ -140,7 +140,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
 
         public override int[] GetFrameData()
         {
-            return GetFrameDataAsIntArrayOutputStream().GetIntArray();
+            return GetFrameDataAsIntArrayOutputStream().ToArray();
         }
     }
 }

@@ -104,7 +104,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 
         public override int[] GetFrameData()
         {
-            var frameData = new IntArrayOutputStream();
+            var frameData = new OutputStream();
 
             // api id
             frameData.Write((byte)ApiId);
@@ -123,7 +123,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             if (Value != null)
                 frameData.Write(Value);
 
-            return frameData.GetIntArray();
+            return frameData.ToArray();
         }
 
         public override ApiId ApiId

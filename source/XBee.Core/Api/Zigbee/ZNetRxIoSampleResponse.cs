@@ -66,7 +66,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
 		    if (response.GetCommand() != "IS")
 			    throw new ArgumentException("This is only applicable to the \"IS\" AT command");
 		
-		    var input = new IntArrayInputStream(response.Value);
+		    var input = new InputStream(response.Value);
 		    var sample = new ZNetRxIoSampleResponse();
             sample.ParseIoSample(input);
 		
@@ -77,7 +77,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
         {
             ParseAddress(parser);
             ParseOption(parser);
-            ParseIoSample((IIntInputStream)parser);
+            ParseIoSample((IInputStream)parser);
         }
 
         /// <summary>
@@ -85,7 +85,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
         /// from either a RX response or a Remote AT/Local AT response (IS).
         /// </summary>
         /// <param name="parser"></param>
-        public void ParseIoSample(IIntInputStream parser)
+        public void ParseIoSample(IInputStream parser)
         {
             // eat sample size.. always 1
             var size = parser.Read("ZNet RX IO Sample Size");

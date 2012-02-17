@@ -125,10 +125,10 @@ namespace NETMF.Tester
 
         private static XBeeAddress64 GetAddress64(XBee xbee)
         {
-            var data = new IntArrayOutputStream();
+            var data = new OutputStream();
             data.Write(xbee.Send(new AtCommand(AtCmd.SH)).Value);
             data.Write(xbee.Send(new AtCommand(AtCmd.SL)).Value);
-            return new XBeeAddress64(data.GetIntArray());
+            return new XBeeAddress64(data.ToArray());
         }
 
         private static XBeeAddress16 GetAddress16(XBee xbee)

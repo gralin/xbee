@@ -85,7 +85,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
 
             frameData.Write(Payload);
 
-            return frameData.GetIntArray();
+            return frameData.ToArray();
         }
 
         public override ApiId ApiId

@@ -69,7 +69,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Util
           return ((value >> (--bit)) & 0x1) == 0x1;
         }
 
-        public static int Parse10BitAnalog(IIntInputStream input, int pos)
+        public static int Parse10BitAnalog(IInputStream input, int pos)
         {
           int adcMsb = input.Read("Analog " + pos + " MSB");
 		      int adcLsb = input.Read("Analog " + pos + " LSB");

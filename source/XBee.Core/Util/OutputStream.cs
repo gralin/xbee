@@ -2,42 +2,42 @@
 
 namespace Gadgeteer.Modules.GHIElectronics.Util
 {
-    public class IntArrayOutputStream : IIntArray
+    public class OutputStream : IOutputStream
     {
         private readonly Stream _stream;
 
-        public IntArrayOutputStream()
+        public OutputStream()
         {
             _stream = new MemoryStream();
         }
 
-        public void Write(byte val)
+        #region IOutputStream Members
+
+        public void Write(byte data)
         {
-            _stream.WriteByte(val);
+            _stream.WriteByte(data);
         }
 
-        public void Write(int val)
+        public void Write(int data)
         {
-            _stream.WriteByte((byte)val);
+            _stream.WriteByte((byte) data);
         }
 
-        public void Write(byte[] val)
+        public void Write(byte[] data)
         {
-            _stream.Write(val, 0, val.Length);
+            _stream.Write(data, 0, data.Length);
         }
 
-        public void Write(int[] val)
+        public void Write(int[] data)
         {
-            foreach (var i in val)
-                _stream.WriteByte((byte)i);
+            Write(Arrays.ToByteArray(data));
         }
 
-        public int[] GetIntArray()
+        public int[] ToArray()
         {
             var result = new byte[_stream.Length];
             _stream.Position = 0;
             _stream.Read(result, 0, result.Length);
-
             return Arrays.ToIntArray(result);
         }
 
@@ -45,5 +45,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Util
         {
             _stream.Dispose();
         }
+
+        #endregion
     }
 }
