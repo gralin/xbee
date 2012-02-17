@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using GHIElectronics.NETMF.USBHost;
 using Gadgeteer.Modules.GHIElectronics.Api;
 using Gadgeteer.Modules.GHIElectronics.Api.At;
@@ -48,11 +49,23 @@ namespace NETMF.Tester
 
             // reading network addresses of the connected modules
             
-            var coordinator16 = GetAddress16(_coordinator);
-            var router16 = GetAddress16(_router);
+            var coordinatorNetworkAddress = GetAddress16(_coordinator);
+            var routerNetworkAddress = GetAddress16(_router);
 
-            Debug.Print("Coordinator network address: " + coordinator16);
-            Debug.Print("Router network address: " + router16);
+            Debug.Print("Coordinator network address: " + coordinatorNetworkAddress);
+            Debug.Print("Router network address: " + routerNetworkAddress);
+
+            // setting Node Identifier of router
+
+            var randomIdentifier = DateTime.Now.Ticks.ToString();
+            Debug.Print("Setting router node identifier to: " + randomIdentifier);
+            _router.Config.SetNodeIdentifier(randomIdentifier);
+
+            // example of using reading configuration from remote XBee
+
+            var remoteConfiguration = XBeeConfiguration.Read(_coordinator, routerNetworkAddress);
+            Debug.Print("Remote router configuration:");
+            Debug.Print(remoteConfiguration.ToString());
 
             // discovering modules available in ZigBee network
 

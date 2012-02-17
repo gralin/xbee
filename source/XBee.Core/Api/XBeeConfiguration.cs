@@ -9,35 +9,18 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
     public class XBeeConfiguration
     {
         private readonly XBee _xbee;
-        private HardwareVersions _hardwareVersion;
-        private string _firmware;
-        private ApiModes _apiMode;
-        private XBeeAddress64 _serialNumber;
+        private readonly XBeeAddress16 _remoteXbee;
 
-        public HardwareVersions HardwareVersion
-        {
-            get { return _hardwareVersion; }
-        }
+        public HardwareVersions HardwareVersion { get; private set; }
+        public string Firmware { get; private set; }
+        public XBeeAddress64 SerialNumber { get; private set; }
+        public ApiModes ApiMode { get; private set; }
+        public string NodeIdentifier { get; private set; }
 
-        public string Firmware
-        {
-            get { return _firmware; }
-        }
-
-        public XBeeAddress64 SerialNumber
-        {
-            get { return _serialNumber; }
-        }
-
-        public ApiModes ApiMode
-        {
-            get { return _apiMode; }
-            set { WriteApiMode(value); }
-        }
-
-        private XBeeConfiguration(XBee xbee)
+        private XBeeConfiguration(XBee xbee, XBeeAddress16 remoteXbee = null)
         {
             _xbee = xbee;
+            _remoteXbee = remoteXbee;
         }
 
         /// <summary>
@@ -47,12 +30,60 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         /// <returns>XBee basic information</returns>
         public static XBeeConfiguration Read(XBee xbee)
         {
-            var config = new XBeeConfiguration(xbee);
-            config.ReadApiMode();
-            config.ReadHardware();
-            config.ReadFirmware();
-            config.ReadSerialNumber();
-            return config;
+            return new XBeeConfiguration(xbee)
+            {
+                ApiMode = At.ApiMode.Read(xbee),
+                HardwareVersion = At.HardwareVersion.Read(xbee),
+                Firmware = At.Firmware.Read(xbee),
+                SerialNumber = At.SerialNumber.Read(xbee),
+                NodeIdentifier = At.NodeIdentifier.Read(xbee)
+            };
+        }
+
+        /// <summary>
+        /// Reads remote module basic information
+        /// </summary>
+        /// <param name="sender">XBee module that will send AT command to remote target</param>
+        /// <param name="remoteXbee">XBee module which infomation will be retrieved</param>
+        /// <returns>Remote XBee basic infomation</returns>
+        public static XBeeConfiguration Read(XBee sender, XBeeAddress16 remoteXbee)
+        {
+            return new XBeeConfiguration(sender, remoteXbee)
+            {
+                ApiMode = At.ApiMode.Read(sender, remoteXbee),
+                HardwareVersion = At.HardwareVersion.Read(sender, remoteXbee),
+                Firmware = At.Firmware.Read(sender, remoteXbee),
+                SerialNumber = At.SerialNumber.Read(sender, remoteXbee),
+                NodeIdentifier = At.NodeIdentifier.Read(sender, remoteXbee)
+            };
+        }
+
+        public void SetApiMode(ApiModes apiMode)
+        {
+            if (_remoteXbee != null)
+            {
+                At.ApiMode.Write(_xbee, _remoteXbee, apiMode);
+            }
+            else
+            {
+                At.ApiMode.Write(_xbee, apiMode);
+            }
+
+            ApiMode = apiMode;
+        }
+
+        public void SetNodeIdentifier(string nodeIdentifier)
+        {
+            if (_remoteXbee != null)
+            {
+                At.NodeIdentifier.Write(_xbee, _remoteXbee, nodeIdentifier);
+            }
+            else
+            {
+                At.NodeIdentifier.Write(_xbee, nodeIdentifier);
+            }
+
+            NodeIdentifier = nodeIdentifier;
         }
 
         /// <summary>
@@ -60,37 +91,23 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         /// </summary>
         public void Save()
         {
-            SaveSettings.Write(_xbee);
+            if (_remoteXbee != null)
+            {
+                SaveSettings.Write(_xbee, _remoteXbee);
+            }
+            else
+            {
+                SaveSettings.Write(_xbee);   
+            }
         }
 
-        private void ReadApiMode()
+        public override string ToString()
         {
-            _apiMode = At.ApiMode.Read(_xbee);
-            Logger.Info("ApiMode: " + _apiMode);
-        }
-
-        private void WriteApiMode(ApiModes apiMode)
-        {
-            At.ApiMode.Write(_xbee, apiMode);
-            _apiMode = apiMode;
-        }
-
-        private void ReadHardware()
-        {
-            _hardwareVersion = At.HardwareVersion.Read(_xbee);
-            Logger.Info("HardwareVersion: " + At.HardwareVersion.GetName(_hardwareVersion));
-        }
-
-        private void ReadFirmware()
-        {
-            _firmware = At.Firmware.Read(_xbee);
-            Logger.Info("Firmware: " + _firmware);
-        }
-
-        private void ReadSerialNumber()
-        {
-            _serialNumber = At.SerialNumber.Read(_xbee);
-            Logger.Info("SerialNumber: " + _serialNumber);
+            return "ApiMode: " + At.ApiMode.GetName(ApiMode)
+                   + ", HardwareVersion: " + At.HardwareVersion.GetName(HardwareVersion)
+                   + ", Firmware: " + Firmware
+                   + ", SerialNumber: " + SerialNumber
+                   + ", NodeIdentifier: '" + NodeIdentifier + "'";
         }
     }
 }

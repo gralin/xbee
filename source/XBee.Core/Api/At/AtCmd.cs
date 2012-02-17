@@ -112,7 +112,11 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.At
         MM,
 
         /// <summary>
-        ///     
+        /// Node Identifier. Stores a string identifier. The register only accepts printable ASCII 
+        /// data. In AT Command Mode, a string can not start with a space. A carriage return ends
+        /// the command. Command will automatically end when maximum bytes for the string
+        /// have been entered. This string is returned as part of the ND (Node Discover) command.
+        /// This identifier is also used with the DN (Destination Node) command. 
         /// </summary>
         NI,
 

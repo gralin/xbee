@@ -19,12 +19,20 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.At
 
         public static ApiModes Read(XBee xbee)
         {
-            var response = xbee.Send(new AtCommand(AtCmd.AP));
+            return Parse(xbee.Send(new AtCommand(AtCmd.AP)));
+        }
 
+        public static ApiModes Read(XBee sender, XBeeAddress16 remoteXbee)
+        {
+            return Parse(sender.Send(new RemoteAtCommand(remoteXbee, AtCmd.AP)));
+        }
+
+        public static ApiModes Parse(AtCommandResponse response)
+        {
             if (!response.IsOk)
                 throw new XBeeException("Attempt to query AP parameter failed");
 
-            return (ApiModes)response.Value[0];
+            return (ApiModes) response.Value[0];
         }
 
         public static void Write(XBee xbee, ApiModes mode)
@@ -35,9 +43,17 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.At
                 throw new XBeeException("Failed to write api mode");
         }
 
-        public static string GetName(HardwareVersions radiotype)
+        public static void Write(XBee sender, XBeeAddress16 remoteXbee, ApiModes mode)
         {
-            return (string) ApiModeNames[radiotype];
+            var response = sender.Send(new RemoteAtCommand(remoteXbee, AtCmd.AP, new[] {(int)mode}));
+
+            if (!response.IsOk)
+                throw new XBeeException("Failed to write api mode");
+        }
+
+        public static string GetName(ApiModes apiMode)
+        {
+            return (string)ApiModeNames[apiMode];
         }
     }
 }

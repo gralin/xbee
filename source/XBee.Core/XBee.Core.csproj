@@ -40,6 +40,7 @@
     <Compile Include="Api\At\ApiMode.cs" />
     <Compile Include="Api\At\Firmware.cs" />
     <Compile Include="Api\At\HardwareVersions.cs" />
+    <Compile Include="Api\At\NodeIdentifier.cs" />
     <Compile Include="Api\At\SaveSettings.cs" />
     <Compile Include="Api\At\SerialNumber.cs" />
     <Compile Include="Api\Checksum.cs" />

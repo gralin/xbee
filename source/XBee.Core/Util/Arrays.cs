@@ -1,3 +1,4 @@
+using System;
 using System.Text;
 
 namespace Gadgeteer.Modules.GHIElectronics.Util
@@ -52,9 +53,15 @@ namespace Gadgeteer.Modules.GHIElectronics.Util
             return result;
         }
 
-        public static int[] ToIntArray(string message)
+        public static int[] ToIntArray(string message, int offset = 0, int count = int.MaxValue)
         {
-            return ToIntArray(ToByteArray(message));
+            var byteArray = ToByteArray(message);
+            var result = new int[Math.Min(byteArray.Length, count)];
+
+            for (var i = 0; i < result.Length; i++)
+                result[i] = byteArray[offset++];
+
+            return result;
         }
 
         public static int[] ToIntArray(ushort value)

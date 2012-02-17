@@ -68,11 +68,16 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
                                     + " The radio must be configured in API mode with escape bytes "
                                     + "(AP=2) for use with this library.");
 
-                    Config.ApiMode = ApiModes.EnabledWithEscaped;
+                    Config.SetApiMode(ApiModes.EnabledWithEscaped);
                     Config.Save();
 
                     Logger.Debug("Successfully set AP mode to ApiMode.EnabledWithEscaped");
                 }
+
+                if (!Logger.IsActive(LogLevel.Info))
+                    return;
+                
+                Logger.Info(Config.ToString());
             }
             catch (XBeeTimeoutException)
             {
