@@ -203,7 +203,9 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
                     throw new ArgumentException("You are connected to a Series 2 radio but attempting to send Series 1 requests");
             }
 
-            Logger.Debug("Sending " + request.GetType().Name + ": " + request);
+            if (Logger.IsActive(LogLevel.Debug))
+                Logger.Debug("Sending " + request.GetType().Name + ": " + request);
+            
             SendPacket(request.GetXBeePacket());
         }
 
@@ -224,7 +226,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 
         public void SendPacket(int[] packet)
         {
-            Logger.LowDebug("sending packet to XBee " + ByteUtils.ToBase16(packet));
+            Logger.LowDebug("sending packet " + ByteUtils.ToBase16(packet));
             _connection.Send(Arrays.ToByteArray(packet));
         }
 

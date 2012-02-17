@@ -65,7 +65,6 @@
     <Compile Include="Api\XBeeException.cs" />
     <Compile Include="Api\XBeeFrameIdResponse.cs" />
     <Compile Include="Api\XBeePacket.cs" />
-    <Compile Include="Api\XBeePacketLength.cs" />
     <Compile Include="Api\XBeeParseException.cs" />
     <Compile Include="Api\XBeeRequest.cs" />
     <Compile Include="Api\XBeeResponse.cs" />
@@ -86,12 +85,12 @@
     <Compile Include="SerialConnection.cs" />
     <Compile Include="Util\Arrays.cs" />
     <Compile Include="Util\ByteUtils.cs" />
-    <Compile Include="Util\DoubleByte.cs" />
     <Compile Include="Util\IOutputStream.cs" />
     <Compile Include="Util\IInputStream.cs" />
     <Compile Include="Util\InputStream.cs" />
     <Compile Include="Util\OutputStream.cs" />
     <Compile Include="Util\Logger.cs" />
+    <Compile Include="Util\UshortUtils.cs" />
     <Compile Include="XBeePin.cs" />
   </ItemGroup>
   <ItemGroup>

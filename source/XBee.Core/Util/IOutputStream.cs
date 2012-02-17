@@ -7,6 +7,8 @@ namespace Gadgeteer.Modules.GHIElectronics.Util
     {
         void Write(byte data);
         void Write(int data);
+        void Write(ushort data);
+        void Write(string data);
         void Write(byte[] data);
         void Write(int[] data);
         int[] ToArray();

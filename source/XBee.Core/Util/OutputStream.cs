@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Text;
 
 namespace Gadgeteer.Modules.GHIElectronics.Util
 {
@@ -21,6 +22,16 @@ namespace Gadgeteer.Modules.GHIElectronics.Util
         public void Write(int data)
         {
             _stream.WriteByte((byte) data);
+        }
+
+        public void Write(ushort data)
+        {
+            Write(Arrays.ToIntArray(data));
+        }
+
+        public void Write(string data)
+        {
+            Write(Arrays.ToByteArray(data));
         }
 
         public void Write(byte[] data)

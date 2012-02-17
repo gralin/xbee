@@ -41,25 +41,13 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
 
         private const int SUPPLY_VOLTAGE_INDEX = 4;
 
-        public DoubleByte DigitalChannelMask { get; protected set; }
+        public ushort DigitalChannelMask { get; protected set; }
         public int AnalogChannelMask { get; protected set; }
-        public DoubleByte Digital { get; protected set; }
+        public ushort Digital { get; protected set; }
         public int[] Analog { get; protected set; }
 
-        public bool ContainsDigital
-        {
-            get { return DigitalChannelMask != null 
-                && DigitalChannelMask.Msb > 0 
-                && DigitalChannelMask.Lsb > 0; }
-        }
-
-        public bool ContainsAnalog
-        {
-            get
-            {
-                return AnalogChannelMask > 0;
-            }
-        }
+        public bool ContainsDigital { get { return DigitalChannelMask > 0; } }
+        public bool ContainsAnalog { get { return AnalogChannelMask > 0; } }
 
         public static ZNetRxIoSampleResponse ParseIsSample(AtCommandResponse response)
         {
@@ -93,18 +81,18 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
             if (size != 1)
                 throw new XBeeParseException("Sample size is not supported if > 1 for ZNet I/O");
 
-            DigitalChannelMask = new DoubleByte(parser.Read("ZNet RX IO Sample Digital Mask 1"),
-                                                parser.Read("ZNet RX IO Sample Digital Mask 2"));
+            DigitalChannelMask = UshortUtils.ToUshort(parser.Read("ZNet RX IO Sample Digital Mask 1"),
+                                                      parser.Read("ZNet RX IO Sample Digital Mask 2"));
 
             // TODO apparent bug: channel mask on ZigBee Pro firmware has DIO10/P0 as enabled even though it's set to 01 (RSSI).  Digital value reports low. 
-            DigitalChannelMask.Msb &= 0x1c; //11100 zero out all but bits 3-5
+            DigitalChannelMask &= 0x1CFF; //11100 zero out all but bits 3-5
 
             AnalogChannelMask = parser.Read("ZNet RX IO Sample Analog Channel Mask");
             AnalogChannelMask &= 0x8f; //10001111 zero out n/a bits
 
             if (ContainsDigital)
-                Digital = new DoubleByte(parser.Read("ZNet RX IO DIO MSB"),
-                                         parser.Read("ZNet RX IO DIO LSB"));  
+                Digital = UshortUtils.ToUshort(parser.Read("ZNet RX IO DIO MSB"),
+                                               parser.Read("ZNet RX IO DIO LSB"));  
 
             // parse 10-bit analog values
 
@@ -136,16 +124,13 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
 
         public bool IsDigitalEnabled(Pin pin)
         {
-            if (DigitalChannelMask == null)
-                return false;
-
             var pinNumber = (int)pin;
 
             if (pinNumber >= 0 && pinNumber <= 7)
-                return ByteUtils.GetBit(DigitalChannelMask.Lsb, pinNumber + 1);
+                return ByteUtils.GetBit(UshortUtils.Lsb(DigitalChannelMask), pinNumber + 1);
             
             if (pinNumber >= 10 && pinNumber <= 12)
-                return ByteUtils.GetBit(DigitalChannelMask.Msb, pinNumber - 7);
+                return ByteUtils.GetBit(UshortUtils.Msb(DigitalChannelMask), pinNumber - 7);
 
             throw new ArgumentOutOfRangeException("Unsupported pin: " + pin);
         }
@@ -168,9 +153,9 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
             var pinNumber = (int)pin;
 
             if (pinNumber >= 0 && pinNumber <= 7)
-                return ByteUtils.GetBit(Digital.Lsb, pinNumber + 1);
+                return ByteUtils.GetBit(UshortUtils.Lsb(Digital), pinNumber + 1);
             
-            return ByteUtils.GetBit(Digital.Msb, pinNumber - 7);
+            return ByteUtils.GetBit(UshortUtils.Msb(Digital), pinNumber - 7);
         }
 
         /// <summary>

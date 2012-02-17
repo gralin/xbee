@@ -14,7 +14,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         private int[] _rawPacketBytes;
         private int[] _processedPacketBytes;
 
-        public XBeePacketLength Length { get; set; }
+        public ushort Length { get; set; }
         public ApiId ApiId { get; set; }
         public int Checksum { get; set; }
 
@@ -82,9 +82,9 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         public override string ToString()
         {
             return "ApiId=" + ApiId +
-                   ",Length=" + (Length == null ? "null" : ByteUtils.ToBase16(Length.Get16BitValue())) +
+                   ",Length=" + ByteUtils.ToBase16(Length) +
                    ",Checksum=" + Checksum +
-                   "Error=" + Error;
+                   ",Error=" + Error;
         }
     }
 }

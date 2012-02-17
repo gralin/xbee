@@ -111,14 +111,13 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             // frame id (arbitrary byte that will be sent back with ack)
             frameData.Write(FrameId);
 
-            frameData.Write(RemoteAddress64.GetAddress());
-            frameData.Write(RemoteAddress16.GetAddress());
+            frameData.Write(RemoteAddress64.Address);
+            frameData.Write(RemoteAddress16.Address);
 
             // 0 - queue changes -- don't forget to send AC command
             frameData.Write(ApplyChanges ? 2 : 0);
 
-            frameData.Write(Command[0]);
-            frameData.Write(Command[1]);
+            frameData.Write(Command);
 
             if (Value != null)
                 frameData.Write(Value);

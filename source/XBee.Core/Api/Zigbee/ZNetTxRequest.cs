@@ -107,10 +107,10 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
             output.Write(FrameId);
 		
 		    // add 64-bit dest address
-            output.Write(DestAddr64.GetAddress());
+            output.Write(DestAddr64.Address);
 		
 		    // add 16-bit dest address
-            output.Write(DestAddr16.GetAddress());
+            output.Write(DestAddr16.Address);
 		
 		    // write broadcast radius
             output.Write(BroadcastRadius);

@@ -12,8 +12,7 @@
 
         public bool IsSixteenBitAddressUnknown
         {
-            get { return RemoteAddress16.Address.Msb == 0xFF 
-                      && RemoteAddress16.Address.Lsb == 0xFE; }
+            get { return RemoteAddress16.Address == 0xFFFE; }
         }
 
         public override void Parse(IPacketParser parser)

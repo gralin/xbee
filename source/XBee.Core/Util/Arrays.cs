@@ -1,4 +1,3 @@
-using System;
 using System.Text;
 
 namespace Gadgeteer.Modules.GHIElectronics.Util
@@ -7,12 +6,25 @@ namespace Gadgeteer.Modules.GHIElectronics.Util
     {
         public static bool AreEqual(int[] array1, int[] array2)
         {
-            throw new NotImplementedException();
+            if (array1.Length != array2.Length)
+                return false;
+
+            for (var i = 0; i < array1.Length; i++)
+                if (array1[i] != array2[i])
+                    return false;
+
+            return true;
         }
 
         public static int HashCode(int[] array)
         {
-            throw new NotImplementedException();
+            var result = array.Length;
+
+            for (var i = 0; i < array.Length; i++)
+                if (array[i] > 0)
+                    result *= (array[i] << i);
+
+            return result;
         }
 
         public static byte[] ToByteArray(int[] array)
@@ -23,6 +35,11 @@ namespace Gadgeteer.Modules.GHIElectronics.Util
                 result[i] = (byte) array[i];
 
             return result;
+        }
+
+        public static byte[] ToByteArray(string value)
+        {
+            return Encoding.UTF8.GetBytes(value);
         }
 
         public static int[] ToIntArray(byte[] array)
@@ -37,7 +54,12 @@ namespace Gadgeteer.Modules.GHIElectronics.Util
 
         public static int[] ToIntArray(string message)
         {
-            return ToIntArray(Encoding.UTF8.GetBytes(message));
+            return ToIntArray(ToByteArray(message));
+        }
+
+        public static int[] ToIntArray(ushort value)
+        {
+            return new[] { UshortUtils.Msb(value), UshortUtils.Lsb(value) };
         }
 
         public static string ToString(int[] array)

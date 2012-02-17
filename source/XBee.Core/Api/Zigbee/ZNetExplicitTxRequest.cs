@@ -27,15 +27,15 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
 
         public int SourceEndpoint { get; set; }
         public int DestinationEndpoint { get; set; }
-        public DoubleByte ClusterId { get; set; }
-        public DoubleByte ProfileId { get; set; }
+        public ushort ClusterId { get; set; }
+        public ushort ProfileId { get; set; }
 
-        public static DoubleByte ZnetProfileId = new DoubleByte(0xC1, 0x05);
-        public static DoubleByte ZdoProfileId = new DoubleByte(0, 0);
+        public static ushort ZnetProfileId = UshortUtils.ToUshort(0xC1, 0x05);
+        public static ushort ZdoProfileId = UshortUtils.ToUshort(0x00, 0x00);
 
         // this is one big ctor ;)
 
-        public ZNetExplicitTxRequest(XBeeAddress64 dest64, XBeeAddress16 dest16, int[] payload, int srcEndpoint, int destEndpoint, DoubleByte clusterId, DoubleByte profileId, 
+        public ZNetExplicitTxRequest(XBeeAddress64 dest64, XBeeAddress16 dest16, int[] payload, int srcEndpoint, int destEndpoint, ushort clusterId, ushort profileId, 
             Options option = Options.UNICAST, int broadcastRadius = DEFAULT_BROADCAST_RADIUS, int frameId = DEFAULT_FRAME_ID) 
             : base(dest64, dest16, payload, broadcastRadius, option, frameId)
         {
@@ -57,25 +57,19 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
             frameData.Write(FrameId);
 
             // add 64-bit dest address
-            frameData.Write(DestAddr64.GetAddress());
+            frameData.Write(DestAddr64.Address);
 
             // add 16-bit dest address
-            frameData.Write(DestAddr16.GetAddress());
-
-            // add 16-bit dest address
-            frameData.Write(DestAddr16.GetAddress());
+            frameData.Write(DestAddr16.Address);
 
             // source endpoint
             frameData.Write(SourceEndpoint);
             // dest endpoint
             frameData.Write(DestinationEndpoint);
-            // cluster id msb
-            frameData.Write(ClusterId.Msb);
-            // cluster id lsb
-            frameData.Write(ClusterId.Lsb);
+            // cluster id
+            frameData.Write(ClusterId);
             // profile id
-            frameData.Write(ProfileId.Msb);
-            frameData.Write(ProfileId.Lsb);
+            frameData.Write(ProfileId);
 
             // write broadcast radius
             frameData.Write(BroadcastRadius);
@@ -98,10 +92,8 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
             return base.ToString() +
                 ",sourceEndpoint=" + ByteUtils.ToBase16(SourceEndpoint) +
                 ",destinationEndpoint=" + ByteUtils.ToBase16(DestinationEndpoint) +
-                ",clusterId(msb)=" + ByteUtils.ToBase16(ClusterId.Msb) +
-                ",clusterId(lsb)=" + ByteUtils.ToBase16(ClusterId.Lsb) +
-                ",profileId(msb)=" + ByteUtils.ToBase16(ProfileId.Msb) +
-                ",profileId(lsb)=" + ByteUtils.ToBase16(ProfileId.Lsb);
+                ",clusterId=" + ByteUtils.ToBase16(ClusterId) +
+                ",profileId=" + ByteUtils.ToBase16(ProfileId);
         }
     }
 }

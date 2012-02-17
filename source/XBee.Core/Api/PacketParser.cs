@@ -48,7 +48,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         public PacketParser()
         {
             ParseTimeout = DefaultParseTimeout;
-            Length = new XBeePacketLength(0);
+            Length = 0;
 
             _checksum = new Checksum();
             _buffers = new Queue();
@@ -125,7 +125,8 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
                 {
                     var packet = ParsePacket();
 
-                    Logger.Debug("Received " + packet.GetType().Name + ": " + packet);
+                    if (Logger.IsActive(LogLevel.Debug))
+                        Logger.Debug("Received " + packet.GetType().Name + ": " + packet);
 
                     lock (_packetListeners)
                     {
@@ -158,15 +159,12 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
                 ParseStartTime = DateTime.Now;
                 BytesRead = 0;
                 _checksum.Clear();
-                Length.Lsb = 0;
-                Length.Lsb = 0;
                 
                 // length of api structure, starting here (not including start byte or length bytes, or checksum)
                 // length doesn't account for escaped bytes
-                Length.Msb = Read("Length MSB");
-                Length.Lsb = Read("Length LSB");
+                Length = UshortUtils.ToUshort(Read("Length MSB"), Read("Length LSB"));
 
-                Logger.LowDebug("packet length is " + ByteUtils.ToBase16(Length.GetLength()));
+                Logger.LowDebug("packet length is " + ByteUtils.ToBase16(Length));
 
                 // total packet length = stated length + 1 start byte + 1 checksum byte + 2 length bytes
 
@@ -291,7 +289,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 
         public ApiId ApiId { get; protected set; }
 
-        public XBeePacketLength Length { get; protected set; }
+        public ushort Length { get; protected set; }
 
         /// <summary>
         /// Returns number of bytes remaining, relative to the stated packet length (not including checksum).
@@ -318,7 +316,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             get
             {
                 // add one for checksum byte (not included) in packet length
-                return Length.Get16BitValue() - FrameDataBytesRead + 1;
+                return Length - FrameDataBytesRead + 1;
             }
         }
 
@@ -376,7 +374,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
                 //    + ", remaining bytes is " + RemainingBytes);
 
                 // escape bytes are not included in the stated packet length
-                if (FrameDataBytesRead >= (Length.Get16BitValue() + 1))
+                if (FrameDataBytesRead >= (Length + 1))
                 {
                     // this is checksum and final byte of packet
 
@@ -423,11 +421,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 
         public XBeeAddress16 ParseAddress16()
         {
-            return new XBeeAddress16(new[]
-            {
-                Read("Address 16 MSB"),
-                Read("Address 16 LSB")
-            });
+            return new XBeeAddress16(Read("Address 16 MSB"), Read("Address 16 LSB"));
         }
 
         public XBeeAddress64 ParseAddress64()
@@ -435,7 +429,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             var addr = new XBeeAddress64();
 
             for (var i = 0; i < 8; i++)
-                addr.GetAddress()[i] = Read("64-bit Address byte " + i);
+                addr[i] = Read("64-bit Address byte " + i);
 
             return addr;
         }

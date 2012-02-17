@@ -33,6 +33,11 @@ namespace Gadgeteer.Modules.GHIElectronics.Util
             };
         }
         
+        public static bool IsActive(LogLevel level)
+        {
+            return level <= LoggingLevel;
+        }
+
         public static void Fatal(string message)
         {
             Log(message, LogLevel.Fatal);
@@ -65,10 +70,8 @@ namespace Gadgeteer.Modules.GHIElectronics.Util
 
         private static void Log(string message, LogLevel messageLevel)
         {
-            if (messageLevel > LoggingLevel)
-                return;
-
-            Microsoft.SPOT.Debug.Print(LevelNames[messageLevel] + "\t" + message);
+            if (IsActive(messageLevel))
+                Microsoft.SPOT.Debug.Print(LevelNames[messageLevel] + "\t" + message);
         }
     }
 }

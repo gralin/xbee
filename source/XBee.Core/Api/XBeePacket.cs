@@ -40,12 +40,12 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             _packet[0] = (int) SpecialByte.START_BYTE;
 
             // Packet length does not include escape bytes or start, length and checksum bytes
-            var length = new XBeePacketLength(frameData.Length);
+            var length = frameData.Length;
 
             // msb length (will be zero until maybe someday when > 255 bytes packets are supported)
-            _packet[1] = length.Msb;
+            _packet[1] = UshortUtils.Msb(length);
             // lsb length
-            _packet[2] = length.Lsb;
+            _packet[2] = UshortUtils.Lsb(length);
 
             for (var i = 0; i < frameData.Length; i++)
             {
@@ -193,11 +193,11 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
                 // first need to unescape packet
                 var unEscaped = UnEscapePacket(packet);
 
-                var len = new XBeePacketLength(unEscaped[1], unEscaped[2]);
+                var len = UshortUtils.ToUshort(unEscaped[1], unEscaped[2]);
 
                 // stated packet length does not include start byte, length bytes, or checksum and is calculated before escaping
 
-                var frameData = new int[len.Get16BitValue()];
+                var frameData = new int[len];
 
                 var checksum = new Checksum();
 

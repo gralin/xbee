@@ -36,8 +36,8 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
         public XBeeAddress16 ParentAddress { get; set; }
         public DeviceTypes DeviceType { get; set; }
         public SourceActions SourceAction { get; set; }
-        public DoubleByte ProfileId { get; set; }
-        public DoubleByte MfgId { get; set; }
+        public ushort ProfileId { get; set; }
+        public ushort MfgId { get; set; }
 
         public override void Parse(IPacketParser parser)
         {
@@ -64,21 +64,24 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
             ParentAddress = parser.ParseAddress16();
             DeviceType = (DeviceTypes) parser.Read("Device Type");
             SourceAction = (SourceActions) parser.Read("Source Action");
-            ProfileId = new DoubleByte(parser.Read("Profile MSB"), parser.Read("Profile LSB"));
-            MfgId = new DoubleByte(parser.Read("MFG MSB"), parser.Read("MFG LSB"));
+            ProfileId = UshortUtils.ToUshort(parser.Read("Profile MSB"), parser.Read("Profile LSB"));
+            MfgId = UshortUtils.ToUshort(parser.Read("MFG MSB"), parser.Read("MFG LSB"));
         }
 
         public override string ToString()
         {
             return "ZNetNodeIdentificationResponse [deviceType=" + DeviceType
-                   + ", mfgId=" + MfgId + ", nodeIdentifier=" + NodeIdentifier
-                   + ", option=" + Option + ", parentAddress=" + ParentAddress
-                   + ", profileId=" + ProfileId + ", remoteAddress16="
-                   + RemoteAddress16 + ", remoteAddress16_2=" + RemoteAddress16_2
+                   + ", mfgId=" + MfgId 
+                   + ", nodeIdentifier=" + NodeIdentifier
+                   + ", option=" + Option 
+                   + ", parentAddress=" + ParentAddress
+                   + ", profileId=" + ProfileId 
+                   + ", remoteAddress16=" + RemoteAddress16 
+                   + ", remoteAddress16_2=" + RemoteAddress16_2
                    + ", remoteAddress64=" + RemoteAddress64
                    + ", remoteAddress64_2=" + RemoteAddress64_2
-                   + ", sourceAction=" + SourceAction + "]" +
-                   base.ToString();
+                   + ", sourceAction=" + SourceAction + "]" 
+                   + base.ToString();
         }
     }
 }

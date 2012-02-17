@@ -176,8 +176,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 
             frameData.Write((byte) ApiId);
             frameData.Write(FrameId);
-            frameData.Write(Command[0]);
-            frameData.Write(Command[1]);
+            frameData.Write(Command);
 
             if (Value != null)
                 frameData.Write(Value);
