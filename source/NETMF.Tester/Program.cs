@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Threading;
 using GHIElectronics.NETMF.USBHost;
 using Gadgeteer.Modules.GHIElectronics.Api;
@@ -69,11 +70,9 @@ namespace NETMF.Tester
 
             // discovering modules available in ZigBee network
 
-            const int expectedNodesCount = 1;
-
             while (true)
             {
-                var foundNodes = DiscoverNodes(_coordinator, expectedNodesCount);
+                var foundNodes = DiscoverNodes(_coordinator);
 
                 if (foundNodes.Length > 0)
                 {
@@ -107,21 +106,27 @@ namespace NETMF.Tester
             Thread.Sleep(Timeout.Infinite);
         }
 
-        private static ZBNodeDiscover[] DiscoverNodes(XBee xbee, int expectedNodeCount)
+        private static ZBNodeDiscover[] DiscoverNodes(XBee xbee)
         {
             xbee.SendAsync(new AtCommand(AtCmd.ND));
 
-            // wait max 5s for expectedNodeCount packets
-            var responses = xbee.CollectResponses(5000, typeof(AtCommandResponse), expectedNodeCount);
+            // wait max 3s
+            var responses = xbee.CollectResponses(3000, typeof(AtCommandResponse));
 
             if (responses.Length > 0)
             {
-                var foundNodes = new ZBNodeDiscover[responses.Length];
+                var foundNodes = new ArrayList();
 
-                for (var i = 0; i < responses.Length; i++)
-                    foundNodes[i] = ZBNodeDiscover.Parse(responses[i]);
+                foreach (var response in responses)
+                    if (((AtCommandResponse)response).Command == AtCmd.ND)
+                        foundNodes.Add(ZBNodeDiscover.Parse(response));
 
-                return foundNodes;
+                var result = new ZBNodeDiscover[foundNodes.Count];
+
+                for (var i = 0; i < foundNodes.Count; i++)
+                    result[i] = (ZBNodeDiscover) foundNodes[i];
+
+                return result;
             }
 
             return new ZBNodeDiscover[0];
