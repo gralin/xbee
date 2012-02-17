@@ -1,4 +1,5 @@
-﻿using Gadgeteer.Modules.GHIElectronics.Util;
+﻿using Gadgeteer.Modules.GHIElectronics.Api.At;
+using Gadgeteer.Modules.GHIElectronics.Util;
 
 namespace Gadgeteer.Modules.GHIElectronics.Api
 {
@@ -8,14 +9,14 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
     public class XBeeConfiguration
     {
         private readonly XBee _xbee;
-        private HardwareVersion.RadioType _radioType;
+        private HardwareVersions _hardwareVersion;
         private string _firmware;
-        private ApiMode _apiMode;
+        private ApiModes _apiMode;
         private XBeeAddress64 _serialNumber;
 
-        public HardwareVersion.RadioType RadioType
+        public HardwareVersions HardwareVersion
         {
-            get { return _radioType; }
+            get { return _hardwareVersion; }
         }
 
         public string Firmware
@@ -28,7 +29,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             get { return _serialNumber; }
         }
 
-        public ApiMode ApiMode
+        public ApiModes ApiMode
         {
             get { return _apiMode; }
             set { WriteApiMode(value); }
@@ -48,7 +49,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         {
             var config = new XBeeConfiguration(xbee);
             config.ReadApiMode();
-            config.ReadRadioType();
+            config.ReadHardware();
             config.ReadFirmware();
             config.ReadSerialNumber();
             return config;
@@ -59,71 +60,36 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         /// </summary>
         public void Save()
         {
-            var response = _xbee.Send(new AtCommand(AtCmd.WR));
-
-            if (!response.IsOk)
-                throw new XBeeException("Failed to save config");
+            SaveSettings.Write(_xbee);
         }
 
         private void ReadApiMode()
         {
-            var response = _xbee.Send(new AtCommand(AtCmd.AP));
-
-            if (!response.IsOk)
-                throw new XBeeException("Failed to read api mode");
-
-            _apiMode = (ApiMode) response.Value[0];
-
+            _apiMode = At.ApiMode.Read(_xbee);
             Logger.Info("ApiMode: " + _apiMode);
         }
 
-        private void WriteApiMode(ApiMode apiMode)
+        private void WriteApiMode(ApiModes apiMode)
         {
-            var response = _xbee.Send(new AtCommand(AtCmd.AP, (int)apiMode));
-
-            if (!response.IsOk)
-                throw new XBeeException("Failed to write api mode");
-
+            At.ApiMode.Write(_xbee, apiMode);
             _apiMode = apiMode;
         }
 
-        private void ReadRadioType()
+        private void ReadHardware()
         {
-            var response = _xbee.Send(new AtCommand(AtCmd.HV));
-
-            if (!response.IsOk)
-                throw new XBeeException("Failed to read radio type");
-
-            _radioType = HardwareVersion.Parse(response);
-
-            Logger.Info("RadioType: " + HardwareVersion.GetName(_radioType));
+            _hardwareVersion = At.HardwareVersion.Read(_xbee);
+            Logger.Info("HardwareVersion: " + At.HardwareVersion.GetName(_hardwareVersion));
         }
 
         private void ReadFirmware()
         {
-            var response = _xbee.Send(new AtCommand(AtCmd.VR));
-
-            if (!response.IsOk)
-                throw new XBeeException("Failed to read firmware");
-
-            _firmware = ByteUtils.ToBase16(response.Value);
-
+            _firmware = At.Firmware.Read(_xbee);
             Logger.Info("Firmware: " + _firmware);
         }
 
         private void ReadSerialNumber()
         {
-            var data = new OutputStream();
-            var sh = _xbee.Send(new AtCommand(AtCmd.SH));
-            var sl = _xbee.Send(new AtCommand(AtCmd.SL));
-            
-            if (!sh.IsOk || !sl.IsOk)
-                throw new XBeeException("Failed to read serial number");
-
-            data.Write(sh.Value);
-            data.Write(sl.Value);
-            _serialNumber = new XBeeAddress64(data.ToArray());
-
+            _serialNumber = At.SerialNumber.Read(_xbee);
             Logger.Info("SerialNumber: " + _serialNumber);
         }
     }

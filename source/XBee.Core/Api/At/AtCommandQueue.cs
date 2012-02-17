@@ -1,4 +1,4 @@
-﻿namespace Gadgeteer.Modules.GHIElectronics.Api
+﻿namespace Gadgeteer.Modules.GHIElectronics.Api.At
 {
     /// <summary>
     /// AT Command Queue

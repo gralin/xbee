@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Collections;
-using System.Threading;
+using Gadgeteer.Modules.GHIElectronics.Api.At;
 using Gadgeteer.Modules.GHIElectronics.Util;
 
 namespace Gadgeteer.Modules.GHIElectronics.Api
@@ -63,13 +62,13 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             {
                 Config = XBeeConfiguration.Read(this);
 
-                if (Config.ApiMode != ApiMode.EnabledWithEscaped)
+                if (Config.ApiMode != ApiModes.EnabledWithEscaped)
                 {
                     Logger.LowDebug("XBee radio is in API mode without escape characters (AP=1)."
                                     + " The radio must be configured in API mode with escape bytes "
                                     + "(AP=2) for use with this library.");
 
-                    Config.ApiMode = ApiMode.EnabledWithEscaped;
+                    Config.ApiMode = ApiModes.EnabledWithEscaped;
                     Config.Save();
 
                     Logger.Debug("Successfully set AP mode to ApiMode.EnabledWithEscaped");
@@ -97,9 +96,9 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             return (AtCommandResponse)Send(atCommand, typeof(AtCommandResponse), timeout);
         }
 
-        public RemoteAtResponse Send(RemoteAtRequest remoteAtCommand, int timeout = PacketParser.DefaultParseTimeout)
+        public RemoteAtCommandResponse Send(RemoteAtCommand remoteAtCommand, int timeout = PacketParser.DefaultParseTimeout)
         {
-            return (RemoteAtResponse)Send(remoteAtCommand, typeof(RemoteAtResponse), timeout);
+            return (RemoteAtCommandResponse)Send(remoteAtCommand, typeof(RemoteAtCommandResponse), timeout);
         }
 
         /// <summary>
@@ -158,10 +157,10 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             if (Config != null)
             {
                 // TODO use interface to mark series type
-                if (Config.RadioType == HardwareVersion.RadioType.SERIES1 && request.GetType().Name.IndexOf("Api.Zigbee") > -1)
+                if (Config.HardwareVersion == HardwareVersions.SERIES1 && request.GetType().Name.IndexOf("Api.Zigbee") > -1)
                     throw new ArgumentException("You are connected to a Series 1 radio but attempting to send Series 2 requests");
 
-                if (Config.RadioType == HardwareVersion.RadioType.SERIES2 && request.GetType().Name.IndexOf("Api.Wpan") > -1)
+                if (Config.HardwareVersion == HardwareVersions.SERIES2 && request.GetType().Name.IndexOf("Api.Wpan") > -1)
                     throw new ArgumentException("You are connected to a Series 2 radio but attempting to send Series 1 requests");
             }
 

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.IO;
 using System.Threading;
+using Gadgeteer.Modules.GHIElectronics.Api.At;
 using Gadgeteer.Modules.GHIElectronics.Api.Wpan;
 using Gadgeteer.Modules.GHIElectronics.Api.Zigbee;
 using Gadgeteer.Modules.GHIElectronics.Util;
@@ -214,7 +215,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             {
                 {ApiId.AT_RESPONSE, typeof (AtCommandResponse)},
                 {ApiId.MODEM_STATUS_RESPONSE, typeof (ModemStatusResponse)},
-                {ApiId.REMOTE_AT_RESPONSE, typeof (RemoteAtResponse)},
+                {ApiId.REMOTE_AT_RESPONSE, typeof (RemoteAtCommandResponse)},
                 {ApiId.RX_16_IO_RESPONSE, typeof (RxResponseIoSample)},
                 {ApiId.RX_64_IO_RESPONSE, typeof (RxResponseIoSample)},
                 {ApiId.RX_16_RESPONSE, typeof (RxResponse16)},

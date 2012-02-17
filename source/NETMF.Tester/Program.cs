@@ -1,6 +1,7 @@
 ﻿using System.Threading;
 using GHIElectronics.NETMF.USBHost;
 using Gadgeteer.Modules.GHIElectronics.Api;
+using Gadgeteer.Modules.GHIElectronics.Api.At;
 using Gadgeteer.Modules.GHIElectronics.Api.Zigbee;
 using Gadgeteer.Modules.GHIElectronics.Util;
 using Microsoft.SPOT;
@@ -142,7 +143,7 @@ namespace NETMF.Tester
 
         private static bool SetOutput(XBee xbee, XBeeAddress64 node, AtCmd output, int state)
         {
-            var request = new RemoteAtRequest(node, output, new[] { state });
+            var request = new RemoteAtCommand(node, output, new[] { state });
             return xbee.Send(request).IsOk;
         }
     }

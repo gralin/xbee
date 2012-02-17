@@ -1,4 +1,5 @@
 ﻿using System;
+using Gadgeteer.Modules.GHIElectronics.Api.At;
 using Gadgeteer.Modules.GHIElectronics.Util;
 using Microsoft.SPOT;
 
@@ -51,8 +52,8 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
 
         public static ZNetRxIoSampleResponse ParseIsSample(AtCommandResponse response)
         {
-		    if (response.GetCommand() != "IS")
-			    throw new ArgumentException("This is only applicable to the \"IS\" AT command");
+		    if (response.Command != AtCmd.IS)
+			    throw new ArgumentException("This is only applicable to the 'IS' AT command");
 		
 		    var input = new InputStream(response.Value);
 		    var sample = new ZNetRxIoSampleResponse();

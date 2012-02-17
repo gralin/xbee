@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using Gadgeteer.Modules.GHIElectronics.Api.At;
 using Gadgeteer.Modules.GHIElectronics.Util;
 
 namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
@@ -45,7 +46,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
 
         public static ZBNodeDiscover Parse(AtCommandResponse response)
         {
-            if (response.GetCommand() != "ND")
+            if (response.Command != AtCmd.ND)
                 throw new ArgumentException("This method is only applicable for the ND command");
 
             var input = new InputStream(response.Value);
@@ -77,8 +78,6 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
 
             return frame;
         }
-
-
 
         public override string ToString()
         {

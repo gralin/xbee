@@ -1,6 +1,6 @@
-﻿namespace Gadgeteer.Modules.GHIElectronics.Api
+﻿namespace Gadgeteer.Modules.GHIElectronics.Api.At
 {
-    public enum ApiMode
+    public enum ApiModes
     {
         /// <summary>
         /// Disabled (Transparent operation)

@@ -2,7 +2,7 @@
 using System.Collections;
 using Gadgeteer.Modules.GHIElectronics.Util;
 
-namespace Gadgeteer.Modules.GHIElectronics.Api
+namespace Gadgeteer.Modules.GHIElectronics.Api.At
 {
     /// <summary>
     /// API technique to set/query commands
@@ -41,10 +41,10 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
     /// </remarks>
     public class AtCommand : XBeeRequest
     {
-        public string Command { get; set; }
+        public AtCmd Command { get; set; }
         public int[] Value { get; set; }
 
-        private static readonly Hashtable CommandNames;
+        protected static readonly Hashtable CommandNames;
 
         static AtCommand()
         {
@@ -157,7 +157,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         /// <param name="frameId">frameId must be > 0 for a response</param>
         public AtCommand(AtCmd command, int[] value, int frameId)
         {
-            Command = (string) CommandNames[command];
+            Command = command;
             Value = value;
             FrameId = frameId;
         }
@@ -169,14 +169,14 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 
         public override int[] GetFrameData()
         {
-            if (Command.Length > 2)
-                throw new ArgumentException("Command should be two characters. Do not include AT prefix");
+            if (!CommandNames.Contains(Command))
+                throw new ArgumentException("Unknown AT command " + Command);
 
             var frameData = new OutputStream();
 
             frameData.Write((byte) ApiId);
             frameData.Write(FrameId);
-            frameData.Write(Command);
+            frameData.Write((string)CommandNames[Command]);
 
             if (Value != null)
                 frameData.Write(Value);
