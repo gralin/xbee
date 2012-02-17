@@ -8,7 +8,7 @@ namespace NETMF.Tester
     internal class UsbHostConnection : IXBeeConnection
     {
         private readonly byte[] _buffer;
-        private readonly Timer _dataTimer;
+        private readonly Thread _readThread;
         private readonly USBH_SerialUSB _serial;
 
         public UsbHostConnection(USBH_Device device, USBH_DeviceType deviceType = USBH_DeviceType.Serial_FTDI)
@@ -18,23 +18,18 @@ namespace NETMF.Tester
             var usbhDevice = new USBH_Device(device.ID, device.INTERFACE_INDEX, deviceType, device.VENDOR_ID,
                                              device.PRODUCT_ID, device.PORT_NUMBER);
 
-            _serial = new USBH_SerialUSB(usbhDevice, 9600, Parity.None, 8, StopBits.One) {ReadTimeout = 100};
+            _serial = new USBH_SerialUSB(usbhDevice, 9600, Parity.None, 8, StopBits.One);
 
-            _dataTimer = new Timer(s =>
+            _readThread = new Thread(() =>
             {
-                while (true)
+                while (Connected)
                 {
                     var bytesRead = _serial.Read(_buffer, 0, _buffer.Length);
 
-                    if (bytesRead <= 0)
-                        break;
-
-                    DataReceived(_buffer, 0, bytesRead);
+                    if (bytesRead > 0)
+                        DataReceived(_buffer, 0, bytesRead);
                 }
-
-                if (Connected)
-                    _dataTimer.Change(100, -1);
-            }, null, -1, -1);
+            });
         }
 
         #region IXBeeConnection Members
@@ -44,13 +39,13 @@ namespace NETMF.Tester
         public void Open()
         {
             Connected = true;
-            _dataTimer.Change(0, -1);
+            _readThread.Start();
         }
 
         public void Close()
         {
             Connected = false;
-            _dataTimer.Change(-1, -1);
+            _readThread.Join();
         }
 
         public void Send(byte[] data)
