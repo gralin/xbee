@@ -176,6 +176,11 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             }
         }
 
+        public static bool IsStartByte(int b)
+        {
+            return b == (int) SpecialByte.START_BYTE;
+        }
+
         /// <summary>
         /// Returns true if the packet is valid
         /// </summary>

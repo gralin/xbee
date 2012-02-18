@@ -8,7 +8,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
     /// The remote radio receives the data as a ZNetRxResponse packet.
     /// API ID: 0x10
     /// </summary>
-    public class ZNetTxRequest : XBeeRequest
+    public class ZNetTxRequest : XBeeRequest, IZigbeePacket
     {
 	    public enum Options
         {

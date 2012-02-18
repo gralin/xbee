@@ -61,10 +61,18 @@
     <Compile Include="Api\At\RemoteAtCommand.cs" />
     <Compile Include="Api\At\RemoteAtResponse.cs" />
     <Compile Include="Api\SinglePacketListener.cs" />
+    <Compile Include="Api\Wpan\IoSample.cs" />
+    <Compile Include="Api\Wpan\IWpanPacket.cs" />
+    <Compile Include="Api\Wpan\RxResponse.cs" />
     <Compile Include="Api\Wpan\RxResponse16.cs" />
     <Compile Include="Api\Wpan\RxResponse64.cs" />
+    <Compile Include="Api\Wpan\RxResponseBase.cs" />
     <Compile Include="Api\Wpan\RxResponseIoSample.cs" />
+    <Compile Include="Api\Wpan\TxRequest16.cs" />
+    <Compile Include="Api\Wpan\TxRequest64.cs" />
+    <Compile Include="Api\Wpan\TxRequestBase.cs" />
     <Compile Include="Api\Wpan\TxStatusResponse.cs" />
+    <Compile Include="Api\Wpan\WpanNodeDiscover.cs" />
     <Compile Include="Api\XBee.cs" />
     <Compile Include="Api\XBeeAddress.cs" />
     <Compile Include="Api\XBeeAddress16.cs" />
@@ -78,6 +86,7 @@
     <Compile Include="Api\XBeeResponse.cs" />
     <Compile Include="Api\XBeeTimeoutException.cs" />
     <Compile Include="Api\Zigbee\AssociationStatus.cs" />
+    <Compile Include="Api\Zigbee\IZigbeePacket.cs" />
     <Compile Include="Api\Zigbee\ZBForceSampleRequest.cs" />
     <Compile Include="Api\Zigbee\ZBNodeDiscover.cs" />
     <Compile Include="Api\Zigbee\ZNetExplicitRxResponse.cs" />
