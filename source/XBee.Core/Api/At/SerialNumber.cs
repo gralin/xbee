@@ -6,19 +6,19 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.At
     {
         public static XBeeAddress64 Read(XBee xbee)
         {
-            var sh = xbee.Send(new AtCommand(AtCmd.SH));
-            var sl = xbee.Send(new AtCommand(AtCmd.SL));
+            var sh = xbee.Send(AtCmd.SerialNumberHigh);
+            var sl = xbee.Send(AtCmd.SerialNumberLow);
             return Parse(sl, sh);
         }
 
         public static XBeeAddress64 Read(XBee sender, XBeeAddress16 remoteXbee)
         {
-            var sh = sender.Send(new RemoteAtCommand(remoteXbee, AtCmd.SH));
-            var sl = sender.Send(new RemoteAtCommand(remoteXbee, AtCmd.SL));
+            var sh = sender.Send(AtCmd.SerialNumberHigh, remoteXbee);
+            var sl = sender.Send(AtCmd.SerialNumberLow, remoteXbee);
             return Parse(sl, sh);
         }
 
-        private static XBeeAddress64 Parse(AtCommandResponse sl, AtCommandResponse sh)
+        private static XBeeAddress64 Parse(AtResponse sl, AtResponse sh)
         {
             if (!sh.IsOk || !sl.IsOk)
                 throw new XBeeException("Failed to read serial number");

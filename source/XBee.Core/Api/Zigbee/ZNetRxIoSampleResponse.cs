@@ -50,9 +50,9 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
         public bool ContainsDigital { get { return DigitalChannelMask > 0; } }
         public bool ContainsAnalog { get { return AnalogChannelMask > 0; } }
 
-        public static ZNetRxIoSampleResponse ParseIsSample(AtCommandResponse response)
+        public static ZNetRxIoSampleResponse ParseIsSample(AtResponse response)
         {
-		    if (response.Command != AtCmd.IS)
+		    if (response.Command != AtCmd.ForceSample)
 			    throw new ArgumentException("This is only applicable to the 'IS' AT command");
 		
 		    var input = new InputStream(response.Value);

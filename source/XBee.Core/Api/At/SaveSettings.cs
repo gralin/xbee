@@ -4,15 +4,15 @@
     {
         public static void Write(XBee xbee)
         {
-            Parse(xbee.Send(new AtCommand(AtCmd.WR)));
+            Parse(xbee.Send(AtCmd.Write));
         }
 
         public static void Write(XBee sender, XBeeAddress16 remoteXbee)
         {
-            Parse(sender.Send(new RemoteAtCommand(remoteXbee, AtCmd.WR)));
+            Parse(sender.Send(AtCmd.Write, remoteXbee));
         }
 
-        public static void Parse(AtCommandResponse response)
+        public static void Parse(AtResponse response)
         {
             if (!response.IsOk)
                 throw new XBeeException("Failed to save settings");

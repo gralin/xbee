@@ -213,9 +213,9 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         {
             _responseHandler = new Hashtable(13)
             {
-                {ApiId.AT_RESPONSE, typeof (AtCommandResponse)},
+                {ApiId.AT_RESPONSE, typeof (AtResponse)},
                 {ApiId.MODEM_STATUS_RESPONSE, typeof (ModemStatusResponse)},
-                {ApiId.REMOTE_AT_RESPONSE, typeof (RemoteAtCommandResponse)},
+                {ApiId.REMOTE_AT_RESPONSE, typeof (RemoteAtResponse)},
                 {ApiId.RX_16_IO_RESPONSE, typeof (RxResponseIoSample)},
                 {ApiId.RX_64_IO_RESPONSE, typeof (RxResponseIoSample)},
                 {ApiId.RX_16_RESPONSE, typeof (RxResponse16)},

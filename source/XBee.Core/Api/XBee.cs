@@ -96,14 +96,29 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             _parser.RemovePacketListener(listener);
         }
 
-        public AtCommandResponse Send(AtCommand atCommand, int timeout = PacketParser.DefaultParseTimeout)
+        public AtResponse Send(AtCmd atCommand, int[] value = null, int timeout = PacketParser.DefaultParseTimeout)
         {
-            return (AtCommandResponse)Send(atCommand, typeof(AtCommandResponse), timeout);
+            return Send(new AtCommand(atCommand, value), timeout);
         }
 
-        public RemoteAtCommandResponse Send(RemoteAtCommand remoteAtCommand, int timeout = PacketParser.DefaultParseTimeout)
+        public AtResponse Send(AtCommand atCommand, int timeout = PacketParser.DefaultParseTimeout)
         {
-            return (RemoteAtCommandResponse)Send(remoteAtCommand, typeof(RemoteAtCommandResponse), timeout);
+            return (AtResponse)Send(atCommand, typeof(AtResponse), timeout);
+        }
+
+        public RemoteAtResponse Send(AtCmd atCommand, XBeeAddress16 remoteXbee, int[] value = null, int timeout = PacketParser.DefaultParseTimeout)
+        {
+            return Send(new RemoteAtCommand(atCommand, remoteXbee, value), timeout);
+        }
+
+        public RemoteAtResponse Send(AtCmd atCommand, XBeeAddress64 remoteXbee, int[] value = null, int timeout = PacketParser.DefaultParseTimeout)
+        {
+            return Send(new RemoteAtCommand(atCommand, remoteXbee, value), timeout);
+        }
+
+        public RemoteAtResponse Send(RemoteAtCommand remoteAtCommand, int timeout = PacketParser.DefaultParseTimeout)
+        {
+            return (RemoteAtResponse)Send(remoteAtCommand, typeof(RemoteAtResponse), timeout);
         }
 
         /// <summary>

@@ -41,12 +41,12 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
 
         public static ZBNodeDiscover Parse(XBeeResponse response)
         {
-            return Parse(response as AtCommandResponse);
+            return Parse(response as AtResponse);
         }
 
-        public static ZBNodeDiscover Parse(AtCommandResponse response)
+        public static ZBNodeDiscover Parse(AtResponse response)
         {
-            if (response.Command != AtCmd.ND)
+            if (response.Command != AtCmd.NodeDiscover)
                 throw new ArgumentException("This method is only applicable for the ND command");
 
             var input = new InputStream(response.Value);

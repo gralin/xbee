@@ -19,15 +19,15 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.At
 
         public static ApiModes Read(XBee xbee)
         {
-            return Parse(xbee.Send(new AtCommand(AtCmd.AP)));
+            return Parse(xbee.Send(AtCmd.ApiEnable));
         }
 
         public static ApiModes Read(XBee sender, XBeeAddress16 remoteXbee)
         {
-            return Parse(sender.Send(new RemoteAtCommand(remoteXbee, AtCmd.AP)));
+            return Parse(sender.Send(AtCmd.ApiEnable, remoteXbee));
         }
 
-        public static ApiModes Parse(AtCommandResponse response)
+        public static ApiModes Parse(AtResponse response)
         {
             if (!response.IsOk)
                 throw new XBeeException("Attempt to query AP parameter failed");
@@ -37,7 +37,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.At
 
         public static void Write(XBee xbee, ApiModes mode)
         {
-            var response = xbee.Send(new AtCommand(AtCmd.AP, (int)mode));
+            var response = xbee.Send(AtCmd.ApiEnable, new[]{(int)mode});
 
             if (!response.IsOk)
                 throw new XBeeException("Failed to write api mode");
@@ -45,7 +45,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.At
 
         public static void Write(XBee sender, XBeeAddress16 remoteXbee, ApiModes mode)
         {
-            var response = sender.Send(new RemoteAtCommand(remoteXbee, AtCmd.AP, new[] {(int)mode}));
+            var response = sender.Send(AtCmd.ApiEnable, remoteXbee, new[] {(int)mode});
 
             if (!response.IsOk)
                 throw new XBeeException("Failed to write api mode");

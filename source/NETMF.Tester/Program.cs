@@ -103,22 +103,29 @@ namespace NETMF.Tester
             if (!SendText(_coordinator, _router.Config.SerialNumber, "Hello router"))
                 Debug.Print("Failed to send message to router");
 
+            // reading supply voltage
+
+            var voltage1 = UshortUtils.ToUshort(_coordinator.Send(AtCmd.SupplyVoltage).Value);
+            var voltage2 = UshortUtils.ToUshort(_router.Send(AtCmd.SupplyVoltage).Value);
+            Debug.Print("Supply voltage of coordinator: " + (voltage1 / 1024.0).ToString("F2") + "V");
+            Debug.Print("Supply voltage of router: " + (voltage2 / 1024.0).ToString("F2") + "V");
+
             Thread.Sleep(Timeout.Infinite);
         }
 
         private static ZBNodeDiscover[] DiscoverNodes(XBee xbee)
         {
-            xbee.SendAsync(new AtCommand(AtCmd.ND));
+            xbee.SendAsync(new AtCommand(AtCmd.NodeDiscover));
 
             // wait max 3s
-            var responses = xbee.CollectResponses(3000, typeof(AtCommandResponse));
+            var responses = xbee.CollectResponses(5000, typeof(AtResponse));
 
             if (responses.Length > 0)
             {
                 var foundNodes = new ArrayList();
 
                 foreach (var response in responses)
-                    if (((AtCommandResponse)response).Command == AtCmd.ND)
+                    if (((AtResponse)response).Command == AtCmd.NodeDiscover)
                         foundNodes.Add(ZBNodeDiscover.Parse(response));
 
                 var result = new ZBNodeDiscover[foundNodes.Count];
@@ -134,21 +141,21 @@ namespace NETMF.Tester
 
         private static int GetRssi(XBee xbee)
         {
-            var response = xbee.Send(new AtCommand(AtCmd.DB));
+            var response = xbee.Send(AtCmd.ReceivedSignalStrength);
             return response.Value[0];
         }
 
         private static XBeeAddress64 GetAddress64(XBee xbee)
         {
             var data = new OutputStream();
-            data.Write(xbee.Send(new AtCommand(AtCmd.SH)).Value);
-            data.Write(xbee.Send(new AtCommand(AtCmd.SL)).Value);
+            data.Write(xbee.Send(AtCmd.SerialNumberHigh).Value);
+            data.Write(xbee.Send(AtCmd.SerialNumberLow).Value);
             return new XBeeAddress64(data.ToArray());
         }
 
         private static XBeeAddress16 GetAddress16(XBee xbee)
         {
-            var response = xbee.Send(new AtCommand(AtCmd.MY));
+            var response = xbee.Send(AtCmd.NetworkAddress);
             return new XBeeAddress16(response.Value);
         }
 
@@ -159,9 +166,9 @@ namespace NETMF.Tester
             return response.DeliveryStatus == ZNetTxStatusResponse.DeliveryResult.SUCCESS;
         }
 
-        private static bool SetOutput(XBee xbee, XBeeAddress64 node, AtCmd output, int state)
+        private static bool SetOutput(XBee xbee, XBeeAddress64 node, string output, int state)
         {
-            var request = new RemoteAtCommand(node, output, new[] { state });
+            var request = new RemoteAtCommand(output, node, new[] { state });
             return xbee.Send(request).IsOk;
         }
     }

@@ -21,15 +21,15 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.At
 
         public static HardwareVersions Read(XBee xbee)
         {
-            return Parse(xbee.Send(new AtCommand(AtCmd.HV)));
+            return Parse(xbee.Send(AtCmd.HardwareVersion));
         }
 
         public static HardwareVersions Read(XBee sender, XBeeAddress16 remoteXBee)
         {
-            return Parse(sender.Send(new RemoteAtCommand(remoteXBee, AtCmd.HV)));
+            return Parse(sender.Send(AtCmd.HardwareVersion, remoteXBee));
         }
 
-        public static HardwareVersions Parse(AtCommandResponse response)
+        public static HardwareVersions Parse(AtResponse response)
         {
             if (!response.IsOk)
                 throw new XBeeException("Attempt to query remote HV parameter failed");

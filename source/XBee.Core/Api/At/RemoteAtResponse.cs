@@ -7,7 +7,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.At
     /// Represents a response, corresponding to a RemoteAtCommand.
     /// API ID: 0x97
     /// </summary>
-    public class RemoteAtCommandResponse : AtCommandResponse
+    public class RemoteAtResponse : AtResponse
     {
         public XBeeAddress64 RemoteAddress64 { get; set; }
         public XBeeAddress16 RemoteAddress16 { get; set; }
@@ -23,11 +23,11 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.At
             RemoteAddress64 = parser.ParseAddress64();
             RemoteAddress16 = parser.ParseAddress16();
 
-            CommandName = Arrays.ToString(new[] { parser.Read("AT Response Char 1"), 
-                                                  parser.Read("AT Response Char 2")});
+            Command = (AtCmd)UshortUtils.ToUshort(
+                parser.Read("AT Response Char 1"),
+                parser.Read("AT Response Char 2"));
 
-            Command = (AtCmd)Commands[CommandName];
-            ResponseStatus = (Status) parser.Read("AT Response Status");
+            Status = (AtResponseStatus) parser.Read("AT Response Status");
             Value = parser.ReadRemainingBytes();
         }
 
