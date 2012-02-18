@@ -119,7 +119,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
                 if (_finished)
                     return;
 
-                if (!XBeePacket.IsSpecialByte(b) || b != (int) XBeePacket.SpecialByte.START_BYTE) 
+                if (!XBeePacket.IsStartByte(b)) 
                     continue;
 
                 try

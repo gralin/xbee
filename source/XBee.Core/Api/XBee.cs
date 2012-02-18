@@ -1,5 +1,7 @@
 ﻿using System;
 using Gadgeteer.Modules.GHIElectronics.Api.At;
+using Gadgeteer.Modules.GHIElectronics.Api.Wpan;
+using Gadgeteer.Modules.GHIElectronics.Api.Zigbee;
 using Gadgeteer.Modules.GHIElectronics.Util;
 
 namespace Gadgeteer.Modules.GHIElectronics.Api
@@ -176,11 +178,10 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         {
             if (Config != null)
             {
-                // TODO use interface to mark series type
-                if (Config.HardwareVersion == HardwareVersions.SERIES1 && request.GetType().Name.IndexOf("Api.Zigbee") > -1)
+                if (Config.HardwareVersion == HardwareVersions.SERIES1 && request is IZigbeePacket)
                     throw new ArgumentException("You are connected to a Series 1 radio but attempting to send Series 2 requests");
 
-                if (Config.HardwareVersion == HardwareVersions.SERIES2 && request.GetType().Name.IndexOf("Api.Wpan") > -1)
+                if (Config.HardwareVersion == HardwareVersions.SERIES2 && request is IWpanPacket)
                     throw new ArgumentException("You are connected to a Series 2 radio but attempting to send Series 1 requests");
             }
 

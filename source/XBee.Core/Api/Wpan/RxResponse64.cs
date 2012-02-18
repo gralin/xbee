@@ -2,7 +2,7 @@
 
 namespace Gadgeteer.Modules.GHIElectronics.Api.Wpan
 {
-    public class RxResponse64
+    public class RxResponse64 : RxResponse
     {
         public RxResponse64()
         {

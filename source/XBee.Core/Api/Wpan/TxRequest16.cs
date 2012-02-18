@@ -2,9 +2,9 @@
 
 namespace Gadgeteer.Modules.GHIElectronics.Api.Wpan
 {
-    public class RxResponse16 : RxResponse
+    public class TxRequest16 : TxRequestBase
     {
-        public RxResponse16()
+        public TxRequest16()
         {
             throw new NotImplementedException();
         }

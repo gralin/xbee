@@ -22,6 +22,16 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             return ByteUtils.ToBase16(Address);
         }
 
+        public static bool operator ==(XBeeAddress a1, XBeeAddress a2)
+        {
+            return !ReferenceEquals(null, a1) && a1.Equals(a2);
+        }
+
+        public static bool operator !=(XBeeAddress a1, XBeeAddress a2)
+        {
+            return !ReferenceEquals(null, a1) && !a1.Equals(a2);
+        }
+
         public bool Equals(XBeeAddress other)
         {
             if (ReferenceEquals(null, other)) return false;
