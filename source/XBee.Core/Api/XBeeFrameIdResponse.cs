@@ -9,6 +9,11 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
     {
         public int FrameId { get; set; }
 
+        public override void Parse(IPacketParser parser)
+        {
+            FrameId = parser.Read("Frame Id");
+        }
+
         public override string ToString()
         {
             return base.ToString() + ",frameId=" + ByteUtils.ToBase16(FrameId);

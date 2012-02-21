@@ -49,7 +49,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 
         public override int GetHashCode()
         {
-            return (Address != null ? Address.GetHashCode() : 0);
+            return (Address != null ? Arrays.HashCode(Address) : 0);
         }
     }
 }

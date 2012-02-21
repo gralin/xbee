@@ -42,7 +42,7 @@
 
         public override void Parse(IPacketParser parser)
         {
-            FrameId = parser.Read("ZNet Tx Status Frame Id");
+            base.Parse(parser);
             RemoteAddress16 = parser.ParseAddress16();
             RetryCount = parser.Read("ZNet Tx Status Tx Count");
             DeliveryStatus = (DeliveryResult) parser.Read("ZNet Tx Status Delivery Status");

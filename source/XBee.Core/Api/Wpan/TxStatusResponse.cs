@@ -1,12 +1,26 @@
-﻿using System;
-
-namespace Gadgeteer.Modules.GHIElectronics.Api.Wpan
+﻿namespace Gadgeteer.Modules.GHIElectronics.Api.Wpan
 {
-    public class TxStatusResponse
+    /// <summary>
+    /// When a TX Request is completed, the module sends a TX Status message. 
+    /// This message will indicate if the packet was transmitted successfully or if there was a failure.
+    /// API Identifier Value: 0x89
+    /// </summary>
+    public class TxStatusResponse : XBeeFrameIdResponse
     {
-        public TxStatusResponse()
+        public enum TxStatus
         {
-            throw new NotImplementedException();
+		    Success = 0,
+		    NoAck = 1,
+		    CcaFailure = 2,
+		    Purged = 3
+        }
+
+        public TxStatus Status { get; set; }
+
+        public override void Parse(IPacketParser parser)
+        {
+            base.Parse(parser);
+            Status = (TxStatus) parser.Read("TX Status");
         }
     }
 }

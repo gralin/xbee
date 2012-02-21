@@ -24,7 +24,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.At
 
         public override void Parse(IPacketParser parser)
         {
-            FrameId = parser.Read("AT Response Frame Id");
+            base.Parse(parser);
 
             Command = (AtCmd)UshortUtils.ToUshort(
                 parser.Read("AT Response Char 1"), 
