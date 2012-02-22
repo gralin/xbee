@@ -32,8 +32,8 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
         public const int ZNET_MAX_PAYLOAD_SIZE = 72;
         public const int DEFAULT_BROADCAST_RADIUS = 0;
 
-        public XBeeAddress64 DestAddr64 { get; set; }
-        public XBeeAddress16 DestAddr16 { get; set; }
+        public XBeeAddress64 DestinationSerial { get; set; }
+        public XBeeAddress16 DestinationAddress { get; set; }
         public int BroadcastRadius { get; set; }
         public Options Option { get; set; }
         public int[] Payload { get; set; }
@@ -56,40 +56,29 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
         ///    <item>keep a hash table mapping of 64-bit address to 16-bit network address.</item>
         /// </list>
         /// </remarks>
-        /// <param name="dest64"></param>
-        /// <param name="dest16"></param>
+        /// <param name="destination"></param>
         /// <param name="payload"></param>
         /// <param name="broadcastRadius"></param>
         /// <param name="option"></param>
         /// <param name="frameId"></param>
-        public ZNetTxRequest(XBeeAddress64 dest64, XBeeAddress16 dest16, int[] payload, 
-            int broadcastRadius = DEFAULT_BROADCAST_RADIUS, Options option = Options.UNICAST, int frameId = DEFAULT_FRAME_ID)
+        public ZNetTxRequest(XBeeAddress destination, int[] payload, int broadcastRadius = DEFAULT_BROADCAST_RADIUS, 
+            Options option = Options.UNICAST, int frameId = DEFAULT_FRAME_ID)
         {
+            if (destination is XBeeAddress16)
+            {
+                DestinationAddress = (XBeeAddress16)destination;
+                DestinationSerial = XBeeAddress64.BROADCAST;
+            }
+            else
+            {
+                DestinationAddress = XBeeAddress16.BROADCAST;
+                DestinationSerial = (XBeeAddress64)destination;
+            }
+
             FrameId = frameId;
-            DestAddr64 = dest64;
-            DestAddr16 = dest16;
             BroadcastRadius = broadcastRadius;
             Option = option;
             Payload = payload;
-        }
-
-        /// <summary>
-        /// Abbreviated constructor for sending a unicast TX packet
-        /// </summary>
-        /// <param name="dest64"></param>
-        /// <param name="payload"></param>
-        public ZNetTxRequest(XBeeAddress64 dest64, int[] payload) : this(dest64, XBeeAddress16.ZNET_BROADCAST, payload)
-        {
-        }
-
-        /// <summary>
-        /// Abbreviated constructor for sending a unicast TX packet
-        /// </summary>
-        /// <param name="dest64"></param>
-        /// <param name="payload"></param>
-        public ZNetTxRequest(XBeeAddress64 dest64, string payload)
-            : this(dest64, XBeeAddress16.ZNET_BROADCAST, Arrays.ToIntArray(payload))
-        {
         }
 
         protected OutputStream GetFrameDataAsIntArrayOutputStream()
@@ -107,10 +96,10 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
             output.Write(FrameId);
 		
 		    // add 64-bit dest address
-            output.Write(DestAddr64.Address);
+            output.Write(DestinationSerial.Address);
 		
 		    // add 16-bit dest address
-            output.Write(DestAddr16.Address);
+            output.Write(DestinationAddress.Address);
 		
 		    // write broadcast radius
             output.Write(BroadcastRadius);
@@ -123,16 +112,6 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
             return output;
         }
 
-        public override string ToString()
-        {
-            return base.ToString() +
-                ",destAddr64=" + DestAddr64 +
-                ",destAddr16=" + DestAddr16 +
-                ",broadcastRadius=" + BroadcastRadius +
-                ",option=" + Option +
-                ",payload=" + ByteUtils.ToBase16(Payload);
-        }
-
         public override ApiId ApiId
         {
             get { return ApiId.ZNET_TX_REQUEST; }
@@ -141,6 +120,16 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
         public override int[] GetFrameData()
         {
             return GetFrameDataAsIntArrayOutputStream().ToArray();
+        }
+
+        public override string ToString()
+        {
+            return base.ToString() +
+                ",destAddr64=" + DestinationSerial +
+                ",destAddr16=" + DestinationAddress +
+                ",broadcastRadius=" + BroadcastRadius +
+                ",option=" + Option +
+                ",payload=int[" + Payload.Length + "]";
         }
     }
 }

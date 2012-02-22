@@ -12,7 +12,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
     /// <remarks>
     /// Note: Series 2 XBee does not support multiple samples (IT) per packet
     /// </remarks>
-    public class ZNetRxIoSampleResponse : ZNetRxBaseResponse, INoRequestResponse
+    public class ZNetRxIoSampleResponse : ZNetRxResponse
     {
         public enum Pin
         {
@@ -64,9 +64,8 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
 
         public override void Parse(IPacketParser parser)
         {
-            ParseAddress(parser);
-            ParseOption(parser);
-            ParseIoSample((IInputStream)parser);
+            base.Parse(parser);
+            ParseIoSample(new InputStream(Payload));
         }
 
         /// <summary>

@@ -13,7 +13,6 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
     {
         private readonly IXBeeConnection _connection;
         private readonly PacketParser _parser;
-        private int _sequentialFrameId = 0xff;
 
         public LogLevel LogLevel
         {
@@ -22,6 +21,11 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         }
 
         public XBeeConfiguration Config { get; private set; }
+
+        public bool IsConnected()
+        {
+            return _connection != null && _connection.Connected;
+        }
 
         protected XBee()
         {
@@ -96,6 +100,18 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         public void RemovePacketListener(IPacketListener listener)
         {
             _parser.RemovePacketListener(listener);
+        }
+
+        public XBeeResponse Send(XBeeAddress destination, int[] payload)
+        {
+            return Config.IsSeries1() 
+                ? Send(new TxRequest(destination, payload), typeof(TxStatusResponse)) 
+                : Send(new ZNetTxRequest(destination, payload), typeof(ZNetTxStatusResponse));
+        }
+
+        public XBeeResponse Send(XBeeAddress destination, string payload)
+        {
+            return Send(destination, Arrays.ToIntArray(payload));
         }
 
         public AtResponse Send(AtCmd atCommand, int[] value = null, int timeout = PacketParser.DefaultParseTimeout)
@@ -174,14 +190,19 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             }
         }
 
+        public void SendAsync(AtCmd atCommand, int[] value = null)
+        {
+            SendAsync(new AtCommand(atCommand, value));
+        }
+
         public void SendAsync(XBeeRequest request)
         {
             if (Config != null)
             {
-                if (Config.HardwareVersion == HardwareVersions.SERIES1 && request is IZigbeePacket)
+                if (Config.IsSeries1() && request is IZigbeePacket)
                     throw new ArgumentException("You are connected to a Series 1 radio but attempting to send Series 2 requests");
 
-                if (Config.HardwareVersion == HardwareVersions.SERIES2 && request is IWpanPacket)
+                if (Config.IsSeries2() && request is IWpanPacket)
                     throw new ArgumentException("You are connected to a Series 2 radio but attempting to send Series 1 requests");
             }
 
@@ -189,6 +210,23 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
                 Logger.Debug("Sending " + request.GetType().Name + ": " + request);
             
             SendPacket(request.GetXBeePacket());
+        }
+
+        public void SendAsync(XBeeAddress destination, int[] payload)
+        {
+            if (Config.IsSeries1())
+            {
+                SendAsync(new TxRequest(destination, payload));
+            }
+            else
+            {
+                SendAsync(new ZNetTxRequest(destination, payload));
+            }
+        }
+
+        public void SendAsync(XBeeAddress destination, string payload)
+        {
+            SendAsync(destination, Arrays.ToIntArray(payload));
         }
 
         /// <summary>
@@ -225,49 +263,6 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             {
                 _parser.RemovePacketListener(listener);
             }
-        }
-
-        public int GetCurrentFrameId()
-        {
-            return _sequentialFrameId;
-        }
-
-        /// <summary>
-        /// This is useful for obtaining a frame id when composing your XBeeRequest. 
-        /// It will return frame ids in a sequential manner until the maximum is reached (0xff)
-        /// and it flips to 1 and starts over.
-        /// </summary>
-        /// <returns></returns>
-        public int GetNextFrameId()
-        {
-            if (_sequentialFrameId == 0xff)
-            {
-                // flip
-                _sequentialFrameId = 1;
-            }
-            else
-            {
-                _sequentialFrameId++;
-            }
-
-            return _sequentialFrameId;
-        }
-
-        /// <summary>
-        /// Updates the frame id.
-        /// </summary>
-        /// <param name="val">Any value between 1 and ff is valid</param>
-        public void UpdateFrameId(int val)
-        {
-            if (val <= 0 || val > 0xff)
-                throw new ArgumentException("invalid frame id");
-        
-            _sequentialFrameId = val;
-        }
-
-        public bool IsConnected()
-        {
-            return _connection != null && _connection.Connected;
         }
 
         public XBeeResponse[] CollectResponses(int wait, int maxPacketCount)

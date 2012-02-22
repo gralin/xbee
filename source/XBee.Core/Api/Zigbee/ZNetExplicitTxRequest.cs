@@ -35,10 +35,11 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
 
         // this is one big ctor ;)
 
-        public ZNetExplicitTxRequest(XBeeAddress64 dest64, XBeeAddress16 dest16, int[] payload, int srcEndpoint, int destEndpoint, ushort clusterId, ushort profileId, 
+        public ZNetExplicitTxRequest(XBeeAddress64 destSerial, XBeeAddress16 destAddress, int[] payload, int srcEndpoint, int destEndpoint, ushort clusterId, ushort profileId, 
             Options option = Options.UNICAST, int broadcastRadius = DEFAULT_BROADCAST_RADIUS, int frameId = DEFAULT_FRAME_ID) 
-            : base(dest64, dest16, payload, broadcastRadius, option, frameId)
+            : base(destSerial, payload, broadcastRadius, option, frameId)
         {
+            DestinationAddress = destAddress;
             SourceEndpoint = srcEndpoint;
             DestinationEndpoint = destEndpoint;
             ClusterId = clusterId;
@@ -57,10 +58,10 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
             frameData.Write(FrameId);
 
             // add 64-bit dest address
-            frameData.Write(DestAddr64.Address);
+            frameData.Write(DestinationSerial.Address);
 
             // add 16-bit dest address
-            frameData.Write(DestAddr16.Address);
+            frameData.Write(DestinationAddress.Address);
 
             // source endpoint
             frameData.Write(SourceEndpoint);

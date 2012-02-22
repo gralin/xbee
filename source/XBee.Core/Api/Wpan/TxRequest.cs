@@ -5,9 +5,9 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Wpan
 {
     /// <summary>
     /// Series 1 XBee.
-    /// Super class for 16 and 64 bit address Transmit packets.
+    /// Class for 16 and 64 bit address Transmit packets.
     /// </summary>
-    public abstract class TxRequest : XBeeRequest, IWpanPacket
+    public class TxRequest : XBeeRequest, IWpanPacket
     {
         public enum Options
         {
@@ -40,6 +40,24 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Wpan
 
         public XBeeAddress Destination { get; set; }
 
+        public override ApiId ApiId
+        {
+            get 
+            { 
+                return (Destination is XBeeAddress16) 
+                    ? ApiId.TX_REQUEST_16 
+                    : ApiId.TX_REQUEST_64; 
+            }
+        }
+
+        public TxRequest(XBeeAddress destination, int[] payload, Options option = Options.Unicast, int frameId = DEFAULT_FRAME_ID)
+        {
+            Destination = destination;
+            Payload = payload;
+            Option = option;
+            FrameId = frameId;
+        }
+
         public override int[] GetFrameData()
         {
             var output = new OutputStream();
@@ -60,7 +78,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Wpan
             return base.ToString() 
                 + ",destination=" + Destination
                 + ",option=" + Option 
-                + ",payload=" + ByteUtils.ToBase16(Payload);
+                + ",payload=int[" + Payload.Length + "]";
         }
     }
 }

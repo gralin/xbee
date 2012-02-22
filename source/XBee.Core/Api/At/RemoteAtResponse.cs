@@ -19,7 +19,8 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.At
 
         public override void Parse(IPacketParser parser)
         {
-            base.Parse(parser);
+            FrameId = parser.Read("Frame Id");
+
             RemoteAddress64 = parser.ParseAddress64();
             RemoteAddress16 = parser.ParseAddress16();
 

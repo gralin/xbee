@@ -14,25 +14,7 @@ namespace NETMF.Tester
     {
         public static void Main()
         {
-            Debug.Print("Waiting for USB Host device...");
-
-            var deviceConnected = new ManualResetEvent(false);
-            USBH_Device device = null;
-
-            USBHostController.DeviceConnectedEvent += d =>
-            {
-                device = d;
-                deviceConnected.Set();
-            };
-
-            if (USBHostController.GetDevices().Length > 0)
-            {
-                device = USBHostController.GetDevices()[0];
-            }
-            else
-            {
-                deviceConnected.WaitOne();
-            }
+            var device = GetUsbDevice();
 
             Debug.Print("Connecting to XBee pluged to USB...");
 
@@ -53,16 +35,16 @@ namespace NETMF.Tester
             Debug.Print("XBee 1 address: " + xbee1Address);
             Debug.Print("XBee 2 address: " + xbee2Address);
 
-            // setting Node Identifier of router
+            // setting Node Identifier of xbee2
 
             var randomIdentifier = DateTime.Now.Ticks.ToString();
             Debug.Print("Setting XBee 2 identifier to: " + randomIdentifier);
             xbee2.Config.SetNodeIdentifier(randomIdentifier);
 
-            // example of using reading configuration from remote XBee
+            // example of reading configuration from remote XBee
 
+            Debug.Print("Reading remote XBee 2 configuration...");
             var remoteConfiguration = XBeeConfiguration.Read(xbee1, xbee2Address);
-            Debug.Print("Reading remote XBee 2 configuration:");
             Debug.Print(remoteConfiguration.ToString());
 
             if (xbee1.Config.IsSeries1())
@@ -75,6 +57,32 @@ namespace NETMF.Tester
             }
 
             Thread.Sleep(Timeout.Infinite);
+        }
+
+        private static USBH_Device GetUsbDevice()
+        {
+            Debug.Print("Waiting for USB Host device...");
+
+            var deviceConnected = new ManualResetEvent(false);
+            USBH_Device device = null;
+
+            USBHostController.DeviceConnectedEvent +=
+                d =>
+                {
+                    device = d;
+                    deviceConnected.Set();
+                };
+
+            if (USBHostController.GetDevices().Length > 0)
+            {
+                device = USBHostController.GetDevices()[0];
+            }
+            else
+            {
+                deviceConnected.WaitOne();
+            }
+
+            return device;
         }
     }
 }

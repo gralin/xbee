@@ -57,17 +57,14 @@
     <Compile Include="Api\IXBeePacketHandler.cs" />
     <Compile Include="Api\ModemStatusResponse.cs" />
     <Compile Include="Api\MultiplePacketListener.cs" />
+    <Compile Include="Api\PacketIdGenerator.cs" />
     <Compile Include="Api\PacketParser.cs" />
     <Compile Include="Api\At\RemoteAtCommand.cs" />
     <Compile Include="Api\At\RemoteAtResponse.cs" />
     <Compile Include="Api\SinglePacketListener.cs" />
     <Compile Include="Api\Wpan\IWpanPacket.cs" />
-    <Compile Include="Api\Wpan\RxResponse16.cs" />
-    <Compile Include="Api\Wpan\RxResponse64.cs" />
     <Compile Include="Api\Wpan\RxResponse.cs" />
     <Compile Include="Api\Wpan\RxResponseIoSample.cs" />
-    <Compile Include="Api\Wpan\TxRequest16.cs" />
-    <Compile Include="Api\Wpan\TxRequest64.cs" />
     <Compile Include="Api\Wpan\TxRequest.cs" />
     <Compile Include="Api\Wpan\TxStatusResponse.cs" />
     <Compile Include="Api\Wpan\WpanNodeDiscover.cs" />
@@ -90,7 +87,6 @@
     <Compile Include="Api\Zigbee\ZNetExplicitRxResponse.cs" />
     <Compile Include="Api\Zigbee\ZNetExplicitTxRequest.cs" />
     <Compile Include="Api\Zigbee\ZNetNodeIdentificationResponse.cs" />
-    <Compile Include="Api\Zigbee\ZNetRxBaseResponse.cs" />
     <Compile Include="Api\Zigbee\ZNetRxIoSampleResponse.cs" />
     <Compile Include="Api\Zigbee\ZNetRxResponse.cs" />
     <Compile Include="Api\Zigbee\ZNetTxRequest.cs" />

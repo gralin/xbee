@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Gadgeteer.Modules.GHIElectronics.Api.Wpan
+﻿namespace Gadgeteer.Modules.GHIElectronics.Api.Wpan
 {
     /// <summary>
     /// Series 1 XBee.  
@@ -8,7 +6,6 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Wpan
     /// </summary>
     public abstract class RxResponse : XBeeResponse
     {
-        [Flags]
         public enum Options
         {
             None = 0,
@@ -23,18 +20,37 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Wpan
 
         public override void Parse(IPacketParser parser)
         {
+            Source = parser.ApiId == ApiId.RX_16_RESPONSE
+                         ? (XBeeAddress) parser.ParseAddress16()
+                         : parser.ParseAddress64();
+
             Rssi = -1 * parser.Read("RSSI");
             Option = (Options) parser.Read("Options");
             Payload = parser.ReadRemainingBytes();
         }
         
+        public string GetOptionName(Options option)
+        {
+            switch (option)
+            {
+                case Options.None: 
+                    return "None";
+                case Options.AddressBroadcast:
+                    return "AddressBroadcast";
+                case Options.PanBroadcast: 
+                    return "PanBroadcast";
+                default:
+                    return string.Empty;
+            }
+        }
+
         public override string ToString()
         {
             return base.ToString()
-                   + ",rssi=" + Rssi
-                   + ",options=" + Option
+                   + ",rssi=" + Rssi + "dBi"
+                   + ",option=" + GetOptionName(Option)
                    + ",source=" + Source
-                   + ",payload=" + Payload;
+                   + ",payload=int[" + Payload.Length + "]";
         }
     }
 }

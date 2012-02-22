@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Threading;
-using GHIElectronics.NETMF.USBHost;
 using Gadgeteer.Modules.GHIElectronics.Api;
 using Gadgeteer.Modules.GHIElectronics.Api.At;
 using Gadgeteer.Modules.GHIElectronics.Api.Zigbee;
@@ -15,6 +13,8 @@ namespace NETMF.Tester
         public static void Run(XBee coordinator, XBee router)
         {
             // discovering modules available in ZigBee network
+            
+            Debug.Print("Discovering nodes...");
 
             while (true)
             {
@@ -35,8 +35,8 @@ namespace NETMF.Tester
 
             // printing RSSI of connected modules
 
-            Debug.Print("Coordinator RSSI: -" + GetRssi(coordinator) + "dBi");
-            Debug.Print("Router RSSI: -" + GetRssi(router) + "dBi");
+            Debug.Print("Coordinator RSSI: " + GetRssi(coordinator) + "dBi");
+            Debug.Print("Router RSSI: " + GetRssi(router) + "dBi");
 
             // sending text messages
 
@@ -59,54 +59,86 @@ namespace NETMF.Tester
 
         private static ZBNodeDiscover[] DiscoverNodes(XBee xbee)
         {
-            xbee.SendAsync(new AtCommand(AtCmd.NodeDiscover));
+            var discoveredNodeListener = new DiscoveredNodeListener();
 
-            // wait max 3s
-            var responses = xbee.CollectResponses(5000, typeof(AtResponse));
-
-            if (responses.Length > 0)
+            try
             {
-                var foundNodes = new ArrayList();
-
-                foreach (var response in responses)
-                    if (((AtResponse)response).Command == AtCmd.NodeDiscover)
-                        foundNodes.Add(ZBNodeDiscover.Parse(response));
-
-                var result = new ZBNodeDiscover[foundNodes.Count];
-
-                for (var i = 0; i < foundNodes.Count; i++)
-                    result[i] = (ZBNodeDiscover)foundNodes[i];
-
-                return result;
+                xbee.AddPacketListener(discoveredNodeListener);
+                xbee.SendAsync(AtCmd.NodeDiscover);
+                return discoveredNodeListener.GetDiscoveredNodes(1);
             }
-
-            return new ZBNodeDiscover[0];
+            finally
+            {
+                xbee.RemovePacketListener(discoveredNodeListener);
+            }
         }
 
         private static int GetRssi(XBee xbee)
         {
             var response = xbee.Send(AtCmd.ReceivedSignalStrength);
-            return response.Value[0];
+            return -1 * response.Value[0];
         }
 
-        private static bool SendText(XBee xbee, XBeeAddress64 dest64, string message)
+        private static bool SendText(XBee xbee, XBeeAddress destination, string message)
         {
-            var request = new ZNetTxRequest(dest64, message);
-            var response = (ZNetTxStatusResponse)xbee.Send(request, typeof(ZNetTxStatusResponse));
+            var response = (ZNetTxStatusResponse)xbee.Send(destination, message);
             return response.DeliveryStatus == ZNetTxStatusResponse.DeliveryResult.SUCCESS;
+        }
+
+        class DiscoveredNodeListener : IPacketListener
+        {
+            private readonly ArrayList _responses;
+            private readonly AutoResetEvent _responseFlag;
+
+            public DiscoveredNodeListener()
+            {
+                _responses = new ArrayList();
+                _responseFlag = new AutoResetEvent(false);
+            }
+
+            public void ProcessPacket(XBeeResponse response)
+            {
+                if (!(response is AtResponse))
+                    return;
+
+                if (((AtResponse)response).Command != AtCmd.NodeDiscover) 
+                    return;
+
+                _responses.Add(response);
+                _responseFlag.Set();
+            }
+
+            public ZBNodeDiscover[] GetDiscoveredNodes(int expectedCount = int.MaxValue, int timeout = 5000)
+            {
+                while (true)
+                {
+                    if (!_responseFlag.WaitOne(timeout, false))
+                        break;
+
+                    if (_responses.Count >= expectedCount)
+                        break;
+                }
+
+                var nodes = new ZBNodeDiscover[_responses.Count];
+
+                for (var i = 0; i < _responses.Count; i++)
+                    nodes[i] = ZBNodeDiscover.Parse((XBeeResponse)_responses[i]);
+
+                return nodes;
+            }
         }
 
         class IncomingDataListener : IPacketListener
         {
             public void ProcessPacket(XBeeResponse response)
             {
-                var dataPacket = response as ZNetRxResponse;
-
-                if (dataPacket == null)
+                if (!(response is ZNetRxResponse))
                     return;
 
-                Debug.Print("Received '" + Arrays.ToString(dataPacket.Data)
-                    + "' from " + dataPacket.RemoteAddress16);
+                var dataPacket = response as ZNetRxResponse;
+
+                Debug.Print("Received '" + Arrays.ToString(dataPacket.Payload)
+                    + "' from " + dataPacket.SourceAddress);
             }
         }
     }

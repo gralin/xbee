@@ -15,13 +15,14 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
 
         public override void Parse(IPacketParser parser)
         {
-            ParseAddress(parser);
+            SourceSerial = parser.ParseAddress64();
+            SourceAddress = parser.ParseAddress16();
             SourceEndpoint = parser.Read("Reading Source Endpoint");
             DestinationEndpoint = parser.Read("Reading Destination Endpoint");
             ClusterId = UshortUtils.ToUshort(parser.Read("Reading Cluster Id MSB"), parser.Read("Reading Cluster Id LSB"));
             ProfileId = UshortUtils.ToUshort(parser.Read("Reading Profile Id MSB"), parser.Read("Reading Profile Id LSB"));
-            ParseOption(parser);
-            Data = parser.ReadRemainingBytes();
+            Option = (Options)parser.Read("ZNet RX Option");
+            Payload = parser.ReadRemainingBytes();
         }
 
         public override string ToString()
