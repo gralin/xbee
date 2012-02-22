@@ -52,7 +52,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Wpan
             return "networkAddress=" + NodeAddress
                    + ",serialNumber=" + NodeSerial
                    + ",nodeIdentifier=" + NodeIdentifier
-                   + ",rssi=" + Rssi;
+                   + ",rssi=" + Rssi + "dBi";
         }
     }
 }

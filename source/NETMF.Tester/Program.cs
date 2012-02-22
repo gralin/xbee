@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections;
 using System.Threading;
 using GHIElectronics.NETMF.USBHost;
 using Gadgeteer.Modules.GHIElectronics.Api;
 using Gadgeteer.Modules.GHIElectronics.Api.At;
-using Gadgeteer.Modules.GHIElectronics.Api.Zigbee;
 using Gadgeteer.Modules.GHIElectronics.Util;
 using Microsoft.SPOT;
 

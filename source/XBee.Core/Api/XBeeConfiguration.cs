@@ -1,5 +1,4 @@
 ﻿using Gadgeteer.Modules.GHIElectronics.Api.At;
-using Gadgeteer.Modules.GHIElectronics.Util;
 
 namespace Gadgeteer.Modules.GHIElectronics.Api
 {

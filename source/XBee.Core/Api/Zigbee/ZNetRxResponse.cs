@@ -1,5 +1,3 @@
-using Gadgeteer.Modules.GHIElectronics.Util;
-
 namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
 {
     /// <summary>
