@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Collections;
+using System.Threading;
 using Gadgeteer.Modules.GHIElectronics.Api;
 using Gadgeteer.Modules.GHIElectronics.Api.At;
 using Gadgeteer.Modules.GHIElectronics.Api.Wpan;
@@ -20,6 +21,23 @@ namespace NETMF.Tester
                 Debug.Print("Channel " + (i + 0x0B) + ": " + result[i] + "-dBi");
 
             Debug.Print("Active channel: " + xbee1.Send(AtCmd.OperatingChannel).Value[0]);
+
+            // disovering nodes
+
+            Debug.Print("Discovering nodes...");
+            var foundNodes = DiscoverNodes(xbee1);
+
+            if (foundNodes.Length == 0)
+            {
+                Debug.Print("No nodes were discovered");
+            }
+            else
+            {
+                Debug.Print("Found: " + foundNodes.Length + " nodes");
+
+                for (var i = 0; i < foundNodes.Length; i++)
+                    Debug.Print("#" + (i + 1) + " - " + foundNodes[i]);
+            }
 
             // setting address 1 to xbee1 and address 2 to xbee2 if not available
 
@@ -78,6 +96,65 @@ namespace NETMF.Tester
         private static XBeeAddress16 GetAddress(XBee xbee)
         {
             return new XBeeAddress16(xbee.Send(AtCmd.NetworkAddress).Value);
+        }
+
+        private static WpanNodeDiscover[] DiscoverNodes(XBee xbee)
+        {
+            var discoveredNodeListener = new DiscoveredNodeListener();
+
+            try
+            {
+                xbee.AddPacketListener(discoveredNodeListener);
+                xbee.SendAsync(AtCmd.NodeDiscover);
+                return discoveredNodeListener.GetDiscoveredNodes(1);
+            }
+            finally
+            {
+                xbee.RemovePacketListener(discoveredNodeListener);
+            }
+        }
+
+        class DiscoveredNodeListener : IPacketListener
+        {
+            private readonly ArrayList _responses;
+            private readonly AutoResetEvent _responseFlag;
+
+            public DiscoveredNodeListener()
+            {
+                _responses = new ArrayList();
+                _responseFlag = new AutoResetEvent(false);
+            }
+
+            public void ProcessPacket(XBeeResponse response)
+            {
+                if (!(response is AtResponse))
+                    return;
+
+                if (((AtResponse)response).Command != AtCmd.NodeDiscover)
+                    return;
+
+                _responses.Add(response);
+                _responseFlag.Set();
+            }
+
+            public WpanNodeDiscover[] GetDiscoveredNodes(int expectedCount = int.MaxValue, int timeout = 5000)
+            {
+                while (true)
+                {
+                    if (!_responseFlag.WaitOne(timeout, false))
+                        break;
+
+                    if (_responses.Count >= expectedCount)
+                        break;
+                }
+
+                var nodes = new WpanNodeDiscover[_responses.Count];
+
+                for (var i = 0; i < _responses.Count; i++)
+                    nodes[i] = WpanNodeDiscover.Parse((XBeeResponse)_responses[i]);
+
+                return nodes;
+            }
         }
 
         class IncomingDataListener : IPacketListener

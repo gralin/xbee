@@ -49,8 +49,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Wpan
 
         public override string ToString()
         {
-            return base.ToString()
-                   + ",networkAddress=" + NodeAddress
+            return "networkAddress=" + NodeAddress
                    + ",serialNumber=" + NodeSerial
                    + ",nodeIdentifier=" + NodeIdentifier
                    + ",rssi=" + Rssi;

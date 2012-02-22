@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using Gadgeteer.Modules.GHIElectronics.Api.At;
 using Gadgeteer.Modules.GHIElectronics.Util;
 
@@ -22,21 +21,26 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
         public string NodeIdentifier { get; set; }
         public XBeeAddress16 Parent { get; set; }
         public DeviceTypes DeviceType { get; set; }
-        public string DeviceTypeName { get { return (string) DeviceTypeNames[DeviceType]; } }
         public int Status { get; set; }
         public int[] ProfileId { get; set; }
         public int[] MfgId { get; set; }
 
-        private static readonly Hashtable DeviceTypeNames;
-
-        static ZBNodeDiscover()
+        public string DeviceTypeName
         {
-            DeviceTypeNames = new Hashtable
+            get
             {
-                {DeviceTypes.DEV_TYPE_COORDINATOR, "Coordinator"},
-                {DeviceTypes.DEV_TYPE_ROUTER, "Router"},
-                {DeviceTypes.DEV_TYPE_END_DEVICE, "End device"},
-            };
+                switch (DeviceType)
+                {
+                    case DeviceTypes.DEV_TYPE_COORDINATOR:
+                        return "Coordinator";
+                    case DeviceTypes.DEV_TYPE_ROUTER:
+                        return "Router";
+                    case DeviceTypes.DEV_TYPE_END_DEVICE:
+                        return "End device";
+                    default:
+                        return "Unknown";
+                }
+            }
         }
 
         public static ZBNodeDiscover Parse(XBeeResponse response)
