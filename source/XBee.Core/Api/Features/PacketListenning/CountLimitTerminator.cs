@@ -1,9 +1,6 @@
-﻿namespace Gadgeteer.Modules.GHIElectronics.Api
+﻿namespace Gadgeteer.Modules.GHIElectronics.Api.Features.PacketListenning
 {
-    /// <summary>
-    /// This class can is used to limit XBee.CollectResponses result to specified max count
-    /// </summary>
-    internal class CountLimitTerminator : ICollectTerminator
+    public class CountLimitTerminator : PacketTerminator
     {
         private int _maxPacketCount;
 
@@ -24,10 +21,15 @@
             MaxPacketCount = maxPacketCount;
         }
 
-        public bool Stop(XBeeResponse response)
+        public override bool Terminate(XBeeResponse response)
         {
             RemainingPacketCount--;
-            return RemainingPacketCount <= 0;
+
+            if (RemainingPacketCount > 0)
+                return true;
+
+            Finished.Set();
+            return false;
         }
     }
 }

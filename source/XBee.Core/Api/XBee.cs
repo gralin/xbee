@@ -1,5 +1,6 @@
 ﻿using System;
 using Gadgeteer.Modules.GHIElectronics.Api.At;
+using Gadgeteer.Modules.GHIElectronics.Api.Features.PacketListenning;
 using Gadgeteer.Modules.GHIElectronics.Api.Wpan;
 using Gadgeteer.Modules.GHIElectronics.Api.Zigbee;
 using Gadgeteer.Modules.GHIElectronics.Util;
@@ -265,35 +266,25 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             }
         }
 
-        public XBeeResponse[] CollectResponses(int wait, int maxPacketCount)
+        public XBeeResponse[] CollectResponses(int timeout = -1, int maxPacketCount = int.MaxValue, Type packetType = null)
         {
-            return CollectResponses(wait, null, new CountLimitTerminator(maxPacketCount));
+            var validator = packetType != null ? new TypeValidator(packetType) : null;
+            var terminator = maxPacketCount != int.MaxValue ? new CountLimitTerminator(maxPacketCount) : null;
+            return CollectResponses(timeout, validator, terminator);
         }
 
-        public XBeeResponse[] CollectResponses(int wait, Type packetType, int maxPacketCount)
+        public XBeeResponse[] CollectResponses(int timeout = -1, IPacketValidator validator = null, IPacketTerminator terminator = null)
         {
-            return CollectResponses(wait, packetType, new CountLimitTerminator(maxPacketCount));
-        }
-
-        /// <summary>
-        /// Collects responses until the timeout is reached or the CollectTerminator returns true
-        /// </summary>
-        /// <param name="wait"></param>
-        /// <param name="packetType"></param>
-        /// <param name="terminator"></param>
-        /// <returns></returns>
-        public XBeeResponse[] CollectResponses(int wait, Type packetType = null, ICollectTerminator terminator = null)
-        {
-            var result = new MultiplePacketListener(packetType, terminator);
+            var listener = new PacketListener(terminator, validator);
 
             try
             {
-                AddPacketListener(result);
-                return result.GetPackets(wait);
+                AddPacketListener(listener);
+                return listener.GetPackets(timeout);
             }
             finally
             {
-                RemovePacketListener(result);
+                RemovePacketListener(listener);
             }
         }
     }

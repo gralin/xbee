@@ -2,6 +2,7 @@
 using System.Threading;
 using Gadgeteer.Modules.GHIElectronics.Api;
 using Gadgeteer.Modules.GHIElectronics.Api.At;
+using Gadgeteer.Modules.GHIElectronics.Api.Features.PacketListenning;
 using Gadgeteer.Modules.GHIElectronics.Api.Wpan;
 using Gadgeteer.Modules.GHIElectronics.Util;
 using Microsoft.SPOT;
@@ -100,60 +101,22 @@ namespace NETMF.Tester
 
         private static WpanNodeDiscover[] DiscoverNodes(XBee xbee)
         {
-            var discoveredNodeListener = new DiscoveredNodeListener();
+            var listener = new NodeDiscoveryListener(1);
 
             try
             {
-                xbee.AddPacketListener(discoveredNodeListener);
+                xbee.AddPacketListener(listener);
                 xbee.SendAsync(AtCmd.NodeDiscover);
-                return discoveredNodeListener.GetDiscoveredNodes(1);
+                var nodes = listener.GetPackets(5000);
+
+                var result = new WpanNodeDiscover[nodes.Length];
+                for (var i = 0; i < result.Length; i++)
+                    result[i] = WpanNodeDiscover.Parse(nodes[i]);
+                return result;
             }
             finally
             {
-                xbee.RemovePacketListener(discoveredNodeListener);
-            }
-        }
-
-        class DiscoveredNodeListener : IPacketListener
-        {
-            private readonly ArrayList _responses;
-            private readonly AutoResetEvent _responseFlag;
-
-            public DiscoveredNodeListener()
-            {
-                _responses = new ArrayList();
-                _responseFlag = new AutoResetEvent(false);
-            }
-
-            public void ProcessPacket(XBeeResponse response)
-            {
-                if (!(response is AtResponse))
-                    return;
-
-                if (((AtResponse)response).Command != AtCmd.NodeDiscover)
-                    return;
-
-                _responses.Add(response);
-                _responseFlag.Set();
-            }
-
-            public WpanNodeDiscover[] GetDiscoveredNodes(int expectedCount = int.MaxValue, int timeout = 5000)
-            {
-                while (true)
-                {
-                    if (!_responseFlag.WaitOne(timeout, false))
-                        break;
-
-                    if (_responses.Count >= expectedCount)
-                        break;
-                }
-
-                var nodes = new WpanNodeDiscover[_responses.Count];
-
-                for (var i = 0; i < _responses.Count; i++)
-                    nodes[i] = WpanNodeDiscover.Parse((XBeeResponse)_responses[i]);
-
-                return nodes;
+                xbee.RemovePacketListener(listener);
             }
         }
 
@@ -166,10 +129,12 @@ namespace NETMF.Tester
                 _address = receiverAddress;
             }
 
-            public void ProcessPacket(XBeeResponse response)
+            public void ProcessPacket(XBeeResponse packet)
             {
-                if (!(response is RxResponse)) return;
-                var rxResponse = (RxResponse) response;
+                if (!(packet is RxResponse)) 
+                    return;
+                
+                var rxResponse = (RxResponse) packet;
                 var message = Arrays.ToString(rxResponse.Payload);
                 Debug.Print(_address + " <- " + rxResponse + " (" + message + ")");
             }

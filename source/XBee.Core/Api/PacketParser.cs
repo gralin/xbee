@@ -3,6 +3,7 @@ using System.Collections;
 using System.IO;
 using System.Threading;
 using Gadgeteer.Modules.GHIElectronics.Api.At;
+using Gadgeteer.Modules.GHIElectronics.Api.Features.PacketListenning;
 using Gadgeteer.Modules.GHIElectronics.Api.Wpan;
 using Gadgeteer.Modules.GHIElectronics.Api.Zigbee;
 using Gadgeteer.Modules.GHIElectronics.Util;
@@ -272,7 +273,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
                 _buffersAvailable.WaitOne();
             }
 
-            // this can happen if Stop() was called
+            // this can happen if Terminate() was called
             if (_buffers.Count == 0) 
                 return;
             
