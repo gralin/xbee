@@ -3,7 +3,7 @@ using System.Collections;
 using System.Threading;
 using Gadgeteer.Modules.GHIElectronics.Util;
 
-namespace Gadgeteer.Modules.GHIElectronics.Api.Features.PacketListenning
+namespace Gadgeteer.Modules.GHIElectronics.Api
 {
     public class PacketListener : IPacketListener
     {

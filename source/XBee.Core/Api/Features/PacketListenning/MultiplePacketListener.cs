@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Gadgeteer.Modules.GHIElectronics.Api.Features.PacketListenning
+namespace Gadgeteer.Modules.GHIElectronics.Api
 {
     public class MultiplePacketListener : PacketListener
     {

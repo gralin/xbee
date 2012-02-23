@@ -3,7 +3,6 @@ using System.Collections;
 using System.IO;
 using System.Threading;
 using Gadgeteer.Modules.GHIElectronics.Api.At;
-using Gadgeteer.Modules.GHIElectronics.Api.Features.PacketListenning;
 using Gadgeteer.Modules.GHIElectronics.Api.Wpan;
 using Gadgeteer.Modules.GHIElectronics.Api.Zigbee;
 using Gadgeteer.Modules.GHIElectronics.Util;

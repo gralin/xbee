@@ -1,6 +1,6 @@
 ﻿using Gadgeteer.Modules.GHIElectronics.Api.At;
 
-namespace Gadgeteer.Modules.GHIElectronics.Api.Features.PacketListenning
+namespace Gadgeteer.Modules.GHIElectronics.Api
 {
     public class NodeDiscoveryListener : MultiplePacketListener
     {

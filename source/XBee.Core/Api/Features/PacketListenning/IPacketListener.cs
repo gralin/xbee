@@ -1,4 +1,4 @@
-namespace Gadgeteer.Modules.GHIElectronics.Api.Features.PacketListenning
+namespace Gadgeteer.Modules.GHIElectronics.Api
 {
     public interface IPacketListener
     {
