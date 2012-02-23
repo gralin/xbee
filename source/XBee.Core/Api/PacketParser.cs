@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.IO;
+using System.Reflection;
 using System.Threading;
 using Gadgeteer.Modules.GHIElectronics.Api.At;
 using Gadgeteer.Modules.GHIElectronics.Api.Wpan;
@@ -215,21 +216,23 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 
         private static void SetupResponseHandlers()
         {
+            var noArgs = new Type[0];
+
             _responseHandler = new Hashtable(13)
             {
-                {ApiId.AT_RESPONSE, typeof (AtResponse)},
-                {ApiId.MODEM_STATUS_RESPONSE, typeof (ModemStatusResponse)},
-                {ApiId.REMOTE_AT_RESPONSE, typeof (RemoteAtResponse)},
-                {ApiId.RX_16_IO_RESPONSE, typeof (RxResponseIoSample)},
-                {ApiId.RX_64_IO_RESPONSE, typeof (RxResponseIoSample)},
-                {ApiId.RX_16_RESPONSE, typeof (RxResponse)},
-                {ApiId.RX_64_RESPONSE, typeof (RxResponse)},
-                {ApiId.TX_STATUS_RESPONSE, typeof (TxStatusResponse)},
-                {ApiId.ZNET_EXPLICIT_RX_RESPONSE, typeof (ZNetExplicitRxResponse)},
-                {ApiId.ZNET_IO_NODE_IDENTIFIER_RESPONSE, typeof (ZNetNodeIdentificationResponse)},
-                {ApiId.ZNET_IO_SAMPLE_RESPONSE, typeof (ZNetRxIoSampleResponse)},
-                {ApiId.ZNET_RX_RESPONSE, typeof (ZNetRxResponse)},
-                {ApiId.ZNET_TX_STATUS_RESPONSE, typeof (ZNetTxStatusResponse)}
+                {ApiId.AT_RESPONSE,                      typeof (AtResponse).GetConstructor(noArgs)},
+                {ApiId.MODEM_STATUS_RESPONSE,            typeof (ModemStatusResponse).GetConstructor(noArgs)},
+                {ApiId.REMOTE_AT_RESPONSE,               typeof (RemoteAtResponse).GetConstructor(noArgs)},
+                {ApiId.RX_16_IO_RESPONSE,                typeof (RxResponseIoSample).GetConstructor(noArgs)},
+                {ApiId.RX_64_IO_RESPONSE,                typeof (RxResponseIoSample).GetConstructor(noArgs)},
+                {ApiId.RX_16_RESPONSE,                   typeof (RxResponse).GetConstructor(noArgs)},
+                {ApiId.RX_64_RESPONSE,                   typeof (RxResponse).GetConstructor(noArgs)},
+                {ApiId.TX_STATUS_RESPONSE,               typeof (TxStatusResponse).GetConstructor(noArgs)},
+                {ApiId.ZNET_EXPLICIT_RX_RESPONSE,        typeof (ZNetExplicitRxResponse).GetConstructor(noArgs)},
+                {ApiId.ZNET_IO_NODE_IDENTIFIER_RESPONSE, typeof (ZNetNodeIdentificationResponse).GetConstructor(noArgs)},
+                {ApiId.ZNET_IO_SAMPLE_RESPONSE,          typeof (ZNetRxIoSampleResponse).GetConstructor(noArgs)},
+                {ApiId.ZNET_RX_RESPONSE,                 typeof (ZNetRxResponse).GetConstructor(noArgs)},
+                {ApiId.ZNET_TX_STATUS_RESPONSE,          typeof (ZNetTxStatusResponse).GetConstructor(noArgs)}
             };
         }
 
@@ -239,15 +242,10 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
                 SetupResponseHandlers();
 
             if (_responseHandler == null || !_responseHandler.Contains(apiId))
-                return null;
+                throw new XBeeException("No response contructor exists for apiId " + apiId);
 
-            var responseClass = (Type)_responseHandler[apiId];
-            var constructor = responseClass.GetConstructor(new Type[0]);
-
-            if (constructor == null)
-                return null;
-
-            return constructor.Invoke(null) as XBeeResponse;
+            var responseCtor = (ConstructorInfo) _responseHandler[apiId];
+            return (XBeeResponse) responseCtor.Invoke(null);
         }
 
         private int TakeFromBuffer(int timeout = 0)
