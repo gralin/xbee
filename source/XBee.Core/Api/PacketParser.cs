@@ -73,9 +73,8 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
                 return;
 
             _finished = true;
-            _buffersAvailable.Set();
 
-            if (!_parsingThread.Join(ParseTimeout))
+            if (!_parsingThread.Join(1000))
             {
                 Logger.Error("Failed to stop parsing thread!");
                 _parsingThread.Abort();
@@ -115,16 +114,16 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         {
             while (!_finished)
             {
-                var b = TakeFromBuffer();
-
-                if (_finished)
-                    return;
-
-                if (!XBeePacket.IsStartByte(b)) 
-                    continue;
-
                 try
                 {
+                    var b = TakeFromBuffer();
+
+                    if (_finished)
+                        return;
+
+                    if (!XBeePacket.IsStartByte(b))
+                        continue;
+
                     var packet = ParsePacket();
 
                     if (Logger.IsActive(LogLevel.Debug))
@@ -146,6 +145,11 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
                 catch (XBeeParseException)
                 {
                     Logger.Warn("Errors occured while parsing received packet");
+                }
+                catch (ThreadAbortException)
+                {
+                    Logger.Debug("Thread aborted");
+                    return;
                 }
                 catch (Exception e)
                 {

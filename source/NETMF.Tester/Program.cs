@@ -14,15 +14,17 @@ namespace NETMF.Tester
         {
             var device = GetUsbDevice();
 
+            Logger.Initialize(Debug.Print, LogLevel.Info);
+
             Debug.Print("Connecting to XBee pluged to USB...");
 
             var connection = new UsbHostConnection(device);
-            var xbee1 = new XBee(connection) {LogLevel = LogLevel.Info};
+            var xbee1 = new XBee(connection);
             xbee1.Open();
 
             Debug.Print("Connecting to XBee connected to UART...");
 
-            var xbee2 = new XBee("COM4", 9600) {LogLevel = LogLevel.Info};
+            var xbee2 = new XBee("COM4", 9600);
             xbee2.Open();
 
             // reading network addresses of the connected modules

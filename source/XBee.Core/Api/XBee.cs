@@ -15,12 +15,6 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         private readonly IXBeeConnection _connection;
         private readonly PacketParser _parser;
 
-        public LogLevel LogLevel
-        {
-            get { return Logger.LoggingLevel; }
-            set { Logger.LoggingLevel = value; }
-        }
-
         public XBeeConfiguration Config { get; private set; }
 
         public bool IsConnected()

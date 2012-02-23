@@ -19,6 +19,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Util
         public static LogLevel LoggingLevel { get; set; }
 
         private static readonly Hashtable LevelNames;
+        private static LogWriteDelegate _logWrite;
 
         static Logger()
         {
@@ -32,7 +33,13 @@ namespace Gadgeteer.Modules.GHIElectronics.Util
                 {LogLevel.LowDebug, "LowDebug"},
             };
         }
-        
+
+        public static void Initialize(LogWriteDelegate logWrite, LogLevel logLevel)
+        {
+            _logWrite = logWrite;
+            LoggingLevel = logLevel;
+        }
+
         public static bool IsActive(LogLevel level)
         {
             return level <= LoggingLevel;
@@ -70,8 +77,10 @@ namespace Gadgeteer.Modules.GHIElectronics.Util
 
         private static void Log(string message, LogLevel messageLevel)
         {
-            if (IsActive(messageLevel))
-                Microsoft.SPOT.Debug.Print(LevelNames[messageLevel] + "\t" + message);
+            if (IsActive(messageLevel) && _logWrite != null)
+                _logWrite.Invoke(LevelNames[messageLevel] + "\t" + message);
         }
     }
+
+    public delegate void LogWriteDelegate(string message);
 }
