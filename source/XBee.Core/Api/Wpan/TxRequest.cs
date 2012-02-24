@@ -50,12 +50,11 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Wpan
             }
         }
 
-        public TxRequest(XBeeAddress destination, int[] payload, Options option = Options.Unicast, int frameId = PacketIdGenerator.DefaultId)
+        public TxRequest(XBeeAddress destination, int[] payload, Options option = Options.Unicast)
         {
             Destination = destination;
             Payload = payload;
             Option = option;
-            FrameId = frameId;
         }
 
         public override int[] GetFrameData()

@@ -1,4 +1,5 @@
 using System;
+using Gadgeteer.Modules.GHIElectronics.Util;
 
 namespace Gadgeteer.Modules.GHIElectronics.Api
 {
@@ -6,6 +7,11 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
     {
         public abstract ApiId ApiId { get; }
         public int FrameId { get; set; }
+
+        protected XBeeRequest()
+        {
+            FrameId = PacketIdGenerator.DefaultId;
+        }
 
         // TODO create XBeePacket(XBeeRequest) constructor and move operation there
         public XBeePacket GetXBeePacket()
@@ -25,8 +31,8 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 
         public override string ToString()
         {
-            return "ApiId=" + ApiId + 
-                   ",FrameId=" + FrameId;
+            return "ApiId=" + ByteUtils.ToBase16((int)ApiId) + 
+                   ",FrameId=" + ByteUtils.ToBase16(FrameId);
         }
 
         // TODO clear method to reuse request

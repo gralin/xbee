@@ -81,9 +81,9 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 
         public override string ToString()
         {
-            return "ApiId=" + ApiId +
+            return "ApiId=" + ByteUtils.ToBase16((int)ApiId) +
                    ",Length=" + ByteUtils.ToBase16(Length) +
-                   ",Checksum=" + Checksum +
+                   ",Checksum=" + ByteUtils.ToBase16(Checksum) +
                    ",Error=" + Error;
         }
     }

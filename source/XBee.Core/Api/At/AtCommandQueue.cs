@@ -6,13 +6,8 @@
     /// </summary>
     public class AtCommandQueue : AtCommand
     {
-        public AtCommandQueue(AtCmd command)
-            : this(command, null, PacketIdGenerator.DefaultId)
-        {
-        }
-
-        public AtCommandQueue(AtCmd command, int[] value, int frameId) 
-            : base(command, value, frameId)
+        public AtCommandQueue(AtCmd command, int[] value = null) 
+            : base(command, value)
         {
         }
 

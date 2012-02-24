@@ -42,8 +42,8 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.At
         public AtCmd Command { get; set; }
         public int[] Value { get; set; }
 
-        public AtCommand(string command, int[] value = null, int frameId = PacketIdGenerator.DefaultId)
-            :this((AtCmd)UshortUtils.FromAscii(command), value, frameId)
+        public AtCommand(string command, int[] value = null)
+            :this((AtCmd)UshortUtils.FromAscii(command), value)
         {
         }
 
@@ -52,20 +52,19 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.At
         /// <param name="command"></param>
         /// <param name="value"></param>
         /// <param name="frameId">frameId must be > 0 for a response</param>
-        public AtCommand(AtCmd command, int[] value = null, int frameId = PacketIdGenerator.DefaultId)
+        public AtCommand(AtCmd command, int[] value = null)
         {
             Command = command;
             Value = value;
-            FrameId = frameId;
         }
 
-        public AtCommand(string command, int value, int frameId = PacketIdGenerator.DefaultId)
-            : this(command, new[] { value }, frameId)
+        public AtCommand(string command, int value)
+            : this(command, new[] { value })
         {
         }
 
-        public AtCommand(AtCmd command, int value, int frameId = PacketIdGenerator.DefaultId)
-            : this(command, new[] {value}, frameId)
+        public AtCommand(AtCmd command, int value)
+            : this(command, new[] {value})
         {
         }
 

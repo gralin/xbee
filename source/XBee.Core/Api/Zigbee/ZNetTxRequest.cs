@@ -62,7 +62,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
         /// <param name="option"></param>
         /// <param name="frameId"></param>
         public ZNetTxRequest(XBeeAddress destination, int[] payload, int broadcastRadius = DEFAULT_BROADCAST_RADIUS,
-            Options option = Options.UNICAST, int frameId = PacketIdGenerator.DefaultId)
+            Options option = Options.UNICAST)
         {
             if (destination is XBeeAddress16)
             {
@@ -75,7 +75,6 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
                 DestinationSerial = (XBeeAddress64)destination;
             }
 
-            FrameId = frameId;
             BroadcastRadius = broadcastRadius;
             Option = option;
             Payload = payload;
