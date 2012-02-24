@@ -131,10 +131,18 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 
                     lock (_packetListeners)
                     {
-                        foreach (var obj in _packetListeners)
+                        foreach (var obj in _packetListeners.ToArray())
                         {
                             var packetListener = (IPacketListener) obj;
-                            packetListener.ProcessPacket(packet);
+
+                            if (packetListener.Finished)
+                            {
+                                RemovePacketListener(packetListener);
+                            }
+                            else
+                            {
+                                packetListener.ProcessPacket(packet);   
+                            }
                         }
                     }
                 }

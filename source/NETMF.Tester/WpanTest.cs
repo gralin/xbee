@@ -127,6 +127,11 @@ namespace NETMF.Tester
                 _address = receiverAddress;
             }
 
+            public bool Finished
+            {
+                get { return false; }
+            }
+
             public void ProcessPacket(XBeeResponse packet)
             {
                 if (!(packet is RxResponse)) 

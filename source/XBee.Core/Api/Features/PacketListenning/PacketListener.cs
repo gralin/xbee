@@ -30,16 +30,21 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         {
         }
 
+        public bool Finished { get; protected set; }
+
         public void ProcessPacket(XBeeResponse packet)
         {
-            if (Validator != null && !Validator.Validate(packet))
+            if (Finished)
                 return;
-            
-            if (Terminator != null && Terminator.Terminate(packet))
+
+            if (Validator != null && !Validator.Validate(packet))
                 return;
 
             Packets.Add(packet);
             PacketAccepted.Set();
+
+            if (Terminator != null)
+                Finished = Terminator.Terminate(packet);
         }
 
         public XBeeResponse[] GetPackets(int timeout = -1)
