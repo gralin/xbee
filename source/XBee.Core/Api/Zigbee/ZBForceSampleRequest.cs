@@ -10,9 +10,9 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
         /// <summary>
         /// Creates a Force Sample Remote AT request
         /// </summary>
-        /// <param name="dest64"></param>
-        public ZBForceSampleRequest(XBeeAddress64 dest64)
-            : base(AtCmd.ForceSample, dest64, XBeeAddress16.ZNET_BROADCAST, null, PacketIdGenerator.DefaultId, false)
+        /// <param name="destination"></param>
+        public ZBForceSampleRequest(XBeeAddress destination)
+            : base(AtCmd.ForceSample, destination, null, PacketIdGenerator.DefaultId, false)
         {
         }
     }

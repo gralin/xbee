@@ -18,35 +18,8 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.At
         public XBeeAddress16 RemoteAddress16 { get; set; }
         public bool ApplyChanges { get; set; }
 
-        public RemoteAtCommand(string command, XBeeAddress64 remoteAddress64, XBeeAddress16 remoteAddress16, int[] value = null, int frameId = PacketIdGenerator.DefaultId, bool applyChanges = true)
-            : this((AtCmd)UshortUtils.FromAscii(command), remoteAddress64, remoteAddress16, value, frameId, applyChanges)
-        {
-        }
-
-        /// <summary>
-        /// Creates a Remote AT request for setting an AT command on a remote XBee
-        /// </summary>
-        /// <remarks>
-        /// Note: When setting a value, you must set applyChanges for the setting to
-        /// take effect.  When sending several requests, you can wait until the last
-        /// request before setting applyChanges=true.
-        /// </remarks>
-        /// <param name="command">two character AT command to set or query</param>
-        /// <param name="remoteAddress64"></param>
-        /// <param name="remoteAddress16"></param>
-        /// <param name="value">if null then the current setting will be queried</param>
-        /// <param name="frameId"></param>
-        /// <param name="applyChanges">set to true if setting a value or issuing a command that changes the state of the radio (e.g. FR); not applicable to query requests</param>
-        public RemoteAtCommand(AtCmd command, XBeeAddress64 remoteAddress64, XBeeAddress16 remoteAddress16, int[] value = null, int frameId = PacketIdGenerator.DefaultId, bool applyChanges = true) 
-            : base(command, value, frameId)
-        {
-            RemoteAddress64 = remoteAddress64;
-            RemoteAddress16 = remoteAddress16;
-            ApplyChanges = applyChanges;
-        }
-
-        public RemoteAtCommand(string command, XBeeAddress64 remoteAddress64, int[] value = null)
-            : this(command, remoteAddress64, XBeeAddress16.ZNET_BROADCAST, value)
+        public RemoteAtCommand(string command, XBeeAddress remoteAddress, int[] value = null, int frameId = PacketIdGenerator.DefaultId, bool applyChanges = true)
+            : this((AtCmd)UshortUtils.FromAscii(command), remoteAddress, value, frameId, applyChanges)
         {
         }
 
@@ -58,31 +31,25 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.At
         /// Note: the ZNET broadcast also works for series 1.  We could also use ffff but then that wouldn't work for series 2
         /// </remarks>
         /// <param name="command"></param>
-        /// <param name="remoteAddress64"></param>
+        /// <param name="remoteAddress"></param>
         /// <param name="value"></param>
-        public RemoteAtCommand(AtCmd command, XBeeAddress64 remoteAddress64, int[] value = null)
-            : this(command, remoteAddress64, XBeeAddress16.ZNET_BROADCAST, value)
+        /// <param name="frameId"> </param>
+        /// <param name="applyChanges"> </param>
+        public RemoteAtCommand(AtCmd command, XBeeAddress remoteAddress, int[] value = null, int frameId = PacketIdGenerator.DefaultId, bool applyChanges = true)
+            : base(command, value, frameId)
         {
-        }
+            if (remoteAddress is XBeeAddress16)
+            {
+                RemoteAddress16 = (XBeeAddress16)remoteAddress;
+                RemoteAddress64 = XBeeAddress64.BROADCAST;
+            }
+            else
+            {
+                RemoteAddress16 = XBeeAddress16.ZNET_BROADCAST;
+                RemoteAddress64 = (XBeeAddress64)remoteAddress;
+            }
 
-        public RemoteAtCommand(string command, XBeeAddress16 remoteAddress16, int[] value = null)
-            : this(command, XBeeAddress64.BROADCAST, remoteAddress16, value)
-        {
-        }
-
-        /// <summary>
-        /// Creates a Remote AT instance for setting the value of an AT command on a remote XBee, 
-        /// by specifying the 16-bit address and value.  Uses the broadcast address for 64-bit address (00 00 00 00 00 00 ff ff)
-        /// </summary>
-        /// <remarks>
-        /// Defaults are: frame id: 1, applyChanges: true
-        /// </remarks>
-        /// <param name="command"></param>
-        /// <param name="remoteAddress16"></param>
-        /// <param name="value"></param>
-        public RemoteAtCommand(AtCmd command, XBeeAddress16 remoteAddress16, int[] value = null)
-            : this(command, XBeeAddress64.BROADCAST, remoteAddress16, value)
-        {
+            ApplyChanges = applyChanges;
         }
 
         public override int[] GetFrameData()

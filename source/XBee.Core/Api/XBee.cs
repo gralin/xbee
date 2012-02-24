@@ -13,6 +13,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
     {
         private readonly IXBeeConnection _connection;
         private readonly PacketParser _parser;
+        private readonly PacketIdGenerator _idGenerator;
 
         public XBeeConfiguration Config { get; private set; }
 
@@ -24,6 +25,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         protected XBee()
         {
             _parser = new PacketParser();
+            _idGenerator = new PacketIdGenerator();
         }
 
         public XBee(IXBeeConnection connection) 
@@ -95,6 +97,32 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         {
             _parser.RemovePacketListener(listener);
         }
+
+        // Creating requests
+
+        public XBeeRequest CreateRequest(XBeeAddress destination, string payload)
+        {
+            return CreateRequest(destination, Arrays.ToIntArray(payload));
+        }
+
+        public XBeeRequest CreateRequest(XBeeAddress destination, int[] payload)
+        {
+            return Config.IsSeries1()
+                ? (XBeeRequest)new TxRequest(destination, payload) { FrameId = _idGenerator.GetNext() }
+                : new ZNetTxRequest(destination, payload) { FrameId = _idGenerator.GetNext() };
+        }
+
+        public XBeeRequest CreateRequest(AtCmd atCommand, int[] value = null)
+        {
+            return new AtCommand(atCommand, value) { FrameId = _idGenerator.GetNext() };
+        }
+
+        public XBeeRequest CreateRequest(AtCmd atCommand, XBeeAddress remoteXbee, int[] value = null)
+        {
+            return new RemoteAtCommand(atCommand, remoteXbee, value) { FrameId = _idGenerator.GetNext() };
+        }
+
+        // Sending requests
 
         public XBeeResponse Send(XBeeAddress destination, int[] payload)
         {
@@ -243,6 +271,8 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             Logger.LowDebug("sending packet " + ByteUtils.ToBase16(packet));
             _connection.Send(Arrays.ToByteArray(packet));
         }
+
+        // Receiving responses
 
         public XBeeResponse Receive(Type expectedType = null, int timeout = PacketParser.DefaultParseTimeout)
         {
