@@ -71,7 +71,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
             }
             else
             {
-                DestinationAddress = XBeeAddress16.BROADCAST;
+                DestinationAddress = XBeeAddress16.ZNET_BROADCAST;
                 DestinationSerial = (XBeeAddress64)destination;
             }
 
