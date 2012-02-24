@@ -167,7 +167,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         /// <returns></returns>
         public XBeeResponse Send(XBeeRequest xbeeRequest, Type expectedResponse = null, int timeout = PacketParser.DefaultParseTimeout)
         {
-            if (xbeeRequest.FrameId == XBeeRequest.NO_RESPONSE_FRAME_ID)
+            if (xbeeRequest.FrameId == PacketIdGenerator.NoResponseId)
                 throw new XBeeException("Frame Id cannot be 0 for a synchronous call -- it will always timeout as there is no response!");
 
             var listener = new SinglePacketListener(expectedResponse);

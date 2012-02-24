@@ -12,7 +12,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
         /// </summary>
         /// <param name="dest64"></param>
         public ZBForceSampleRequest(XBeeAddress64 dest64)
-            : base(AtCmd.ForceSample, dest64, XBeeAddress16.ZNET_BROADCAST, null, DEFAULT_FRAME_ID, false)
+            : base(AtCmd.ForceSample, dest64, XBeeAddress16.ZNET_BROADCAST, null, PacketIdGenerator.DefaultId, false)
         {
         }
     }

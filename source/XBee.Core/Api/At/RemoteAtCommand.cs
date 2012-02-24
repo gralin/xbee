@@ -18,7 +18,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.At
         public XBeeAddress16 RemoteAddress16 { get; set; }
         public bool ApplyChanges { get; set; }
 
-        public RemoteAtCommand(string command, XBeeAddress64 remoteAddress64, XBeeAddress16 remoteAddress16, int[] value = null, int frameId = DEFAULT_FRAME_ID, bool applyChanges = true)
+        public RemoteAtCommand(string command, XBeeAddress64 remoteAddress64, XBeeAddress16 remoteAddress16, int[] value = null, int frameId = PacketIdGenerator.DefaultId, bool applyChanges = true)
             : this((AtCmd)UshortUtils.FromAscii(command), remoteAddress64, remoteAddress16, value, frameId, applyChanges)
         {
         }
@@ -37,7 +37,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.At
         /// <param name="value">if null then the current setting will be queried</param>
         /// <param name="frameId"></param>
         /// <param name="applyChanges">set to true if setting a value or issuing a command that changes the state of the radio (e.g. FR); not applicable to query requests</param>
-        public RemoteAtCommand(AtCmd command, XBeeAddress64 remoteAddress64, XBeeAddress16 remoteAddress16, int[] value = null, int frameId = DEFAULT_FRAME_ID, bool applyChanges = true) 
+        public RemoteAtCommand(AtCmd command, XBeeAddress64 remoteAddress64, XBeeAddress16 remoteAddress16, int[] value = null, int frameId = PacketIdGenerator.DefaultId, bool applyChanges = true) 
             : base(command, value, frameId)
         {
             RemoteAddress64 = remoteAddress64;
@@ -52,7 +52,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.At
 
         /// <summary>
         /// Abbreviated Constructor for setting an AT command on a remote XBee.
-        /// This defaults to the DEFAULT_FRAME_ID, and true for apply changes
+        /// This defaults to the DefaultId, and true for apply changes
         /// </summary>
         /// <remarks>
         /// Note: the ZNET broadcast also works for series 1.  We could also use ffff but then that wouldn't work for series 2

@@ -7,44 +7,61 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
     /// </summary>
     public class PacketIdGenerator
     {
-        private int _sequentialFrameId = 0xff;
+        /// <summary>
+        /// XBee will not generate a TX Status Packet if this frame id sent
+        /// </summary>
+        public const int NoResponseId = 0;
 
-        public int GetCurrentFrameId()
+        /// <summary>
+        /// XBee will send a response to the request
+        /// </summary>
+        /// <remarks>
+        /// This value is used if the value is not generated
+        /// </remarks>
+        public const int DefaultId = 1;
+
+        private int _currentId;
+        private readonly byte _maxId;
+        private readonly byte _minId;
+
+        public PacketIdGenerator(byte minId = 2, byte maxId = 0xFF)
         {
-            return _sequentialFrameId;
+            if (minId > maxId || minId == 0)
+                throw new ArgumentOutOfRangeException("minId");
+
+            _minId = minId;
+            _maxId = maxId;
+            _currentId = minId;
         }
 
         /// <summary>
-        /// This is useful for obtaining a frame id when composing your XBeeRequest. 
-        /// It will return frame ids in a sequential manner until the maximum is reached (0xff)
-        /// and it flips to 1 and starts over.
+        /// Generates an id for XBeeRequest packet.
         /// </summary>
-        /// <returns></returns>
-        public int GetNextFrameId()
+        /// <returns>Next value in sequence between given minId and maxId</returns>
+        public int GetNext()
         {
-            if (_sequentialFrameId == 0xff)
+            if (_currentId == _maxId)
             {
-                // flip
-                _sequentialFrameId = 1;
+                _currentId = _minId;
             }
             else
             {
-                _sequentialFrameId++;
+                _currentId++;
             }
 
-            return _sequentialFrameId;
+            return _currentId;  
         }
 
         /// <summary>
-        /// Updates the frame id.
+        /// Updates the packet id.
         /// </summary>
-        /// <param name="val">Any value between 1 and ff is valid</param>
-        public void UpdateFrameId(int val)
+        /// <param name="newId">Any value between minId and maxId is valid</param>
+        public void Update(byte newId)
         {
-            if (val <= 0 || val > 0xff)
-                throw new ArgumentException("invalid frame id");
+            if (newId < _minId || newId > _maxId)
+                throw new ArgumentException("invalid id");
 
-            _sequentialFrameId = val;
+            _currentId = newId;
         }
     }
 }

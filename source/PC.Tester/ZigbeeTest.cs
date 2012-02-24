@@ -96,6 +96,11 @@ namespace PC.Tester
 
         class IncomingDataListener : IPacketListener
         {
+            public bool Finished
+            {
+                get { return false; }
+            }
+
             public void ProcessPacket(XBeeResponse packet)
             {
                 if (!(packet is ZNetRxResponse))
