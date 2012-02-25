@@ -22,22 +22,22 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
         /**
          * This is the maximum payload size for ZNet firmware, as specified in the datasheet.
          * This value is provided for reference only and is not enforced by this software unless
-         * max size unless specified in the setMaxPayloadSize(int) method.
+         * max size unless specified in the setMaxPayloadSize(byte) method.
          * Note: this size refers to the packet size prior to escaping the control bytes.
          * Note: ZB Pro firmware provides the ATNP command to determine max payload size.
          * For ZB Pro firmware, the TX Status will return a PAYLOAD_TOO_LARGE (0x74) delivery status 
          * if the payload size is exceeded
          */
 
-        public const int ZNET_MAX_PAYLOAD_SIZE = 72;
-        public const int DEFAULT_BROADCAST_RADIUS = 0;
+        public const byte ZNET_MAX_PAYLOAD_SIZE = 72;
+        public const byte DEFAULT_BROADCAST_RADIUS = 0;
 
         public XBeeAddress64 DestinationSerial { get; set; }
         public XBeeAddress16 DestinationAddress { get; set; }
-        public int BroadcastRadius { get; set; }
+        public byte BroadcastRadius { get; set; }
         public Options Option { get; set; }
-        public int[] Payload { get; set; }
-        public int MaxPayloadSize { get; set; }
+        public byte[] Payload { get; set; }
+        public byte MaxPayloadSize { get; set; }
 
         /// <summary>
         /// From manual p. 33:
@@ -61,8 +61,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
         /// <param name="broadcastRadius"></param>
         /// <param name="option"></param>
         /// <param name="frameId"></param>
-        public ZNetTxRequest(XBeeAddress destination, int[] payload, int broadcastRadius = DEFAULT_BROADCAST_RADIUS,
-            Options option = Options.UNICAST)
+        public ZNetTxRequest(XBeeAddress destination, byte[] payload, byte broadcastRadius = DEFAULT_BROADCAST_RADIUS, Options option = Options.UNICAST)
         {
             if (destination is XBeeAddress16)
             {
@@ -84,7 +83,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
         {
             if (MaxPayloadSize > 0 && Payload.Length > MaxPayloadSize)
                 throw new ArgumentException("Payload exceeds user-defined maximum payload size of " 
-                    + MaxPayloadSize + " bytes.  Please package into multiple packets");
+                    + MaxPayloadSize + " bytes. Please package into multiple packets");
 
             var output = new OutputStream();
         
@@ -116,7 +115,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
             get { return ApiId.ZNET_TX_REQUEST; }
         }
 
-        public override int[] GetFrameData()
+        public override byte[] GetFrameData()
         {
             return GetFrameDataAsIntArrayOutputStream().ToArray();
         }
@@ -128,7 +127,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
                 ",destAddr16=" + DestinationAddress +
                 ",broadcastRadius=" + BroadcastRadius +
                 ",option=" + Option +
-                ",payload=int[" + Payload.Length + "]";
+                ",payload=byte[" + Payload.Length + "]";
         }
     }
 }

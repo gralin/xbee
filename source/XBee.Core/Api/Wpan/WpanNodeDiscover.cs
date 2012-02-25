@@ -39,7 +39,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Wpan
                 Rssi = -1*input.Read()
             };
 
-            int ch;
+            byte ch;
 
             // NI is terminated with 0
             while ((ch = input.Read()) != 0)

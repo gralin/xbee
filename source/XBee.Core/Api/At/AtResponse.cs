@@ -15,7 +15,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.At
         public AtResponseStatus Status { get; protected set; }
 
         // response value msb to lsb
-        public int[] Value { get; protected set; }
+        public byte[] Value { get; protected set; }
 
         public bool IsOk
         {

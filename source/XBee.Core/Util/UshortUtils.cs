@@ -4,7 +4,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Util
 {
     public static class UshortUtils
     {
-        public static ushort ToUshort(int[] values)
+        public static ushort ToUshort(byte[] values)
         {
             if (values.Length < 2)
                 throw new ArgumentException();
@@ -30,12 +30,12 @@ namespace Gadgeteer.Modules.GHIElectronics.Util
             return ToUshort(value[0], value[1]);
         }
 
-        public static int Msb(int value)
+        public static byte Msb(ushort value)
         {
             return (byte)(value >> 8);
         }
 
-        public static int Lsb(int value)
+        public static byte Lsb(ushort value)
         {
             return (byte)value;
         }

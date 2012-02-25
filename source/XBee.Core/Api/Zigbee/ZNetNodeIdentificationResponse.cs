@@ -51,7 +51,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
             RemoteAddress16_2 = parser.ParseAddress16();
 
             var nodeIdentifier = string.Empty;
-            int ch;
+            byte ch;
 
             // NI is terminated with 0
             while ((ch = parser.Read("Node Identifier")) != 0)

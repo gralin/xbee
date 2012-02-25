@@ -16,7 +16,7 @@
         public int Rssi { get; set; }
         public Options Option { get; set; }
         public XBeeAddress Source { get; set; }
-        public int[] Payload { get; set; }
+        public byte[] Payload { get; set; }
 
         public override void Parse(IPacketParser parser)
         {
@@ -50,7 +50,7 @@
                    + ",rssi=" + Rssi + "dBi"
                    + ",option=" + GetOptionName(Option)
                    + ",source=" + Source
-                   + ",payload=int[" + Payload.Length + "]";
+                   + ",payload=byte[" + Payload.Length + "]";
         }
     }
 }

@@ -20,11 +20,11 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Wpan
         /// Maximum payload size as specified in the series 1 XBee manual.
         /// This is provided for reference only and is not used for validation
         /// </summary>
-        public static int MaxPayloadSize = 100;
+        public static byte MaxPayloadSize = 100;
 
-        private int[] _payload;
+        private byte[] _payload;
 
-        public int[] Payload
+        public byte[] Payload
         {
             get { return _payload; }
             set
@@ -50,14 +50,14 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Wpan
             }
         }
 
-        public TxRequest(XBeeAddress destination, int[] payload, Options option = Options.Unicast)
+        public TxRequest(XBeeAddress destination, byte[] payload, Options option = Options.Unicast)
         {
             Destination = destination;
             Payload = payload;
             Option = option;
         }
 
-        public override int[] GetFrameData()
+        public override byte[] GetFrameData()
         {
             var output = new OutputStream();
 
@@ -76,8 +76,8 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Wpan
         {
             return base.ToString() 
                 + ",destination=" + Destination
-                + ",option=" + Option 
-                + ",payload=int[" + Payload.Length + "]";
+                + ",option=" + Option
+                + ",payload=byte[" + Payload.Length + "]";
         }
     }
 }

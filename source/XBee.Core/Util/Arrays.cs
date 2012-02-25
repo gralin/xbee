@@ -5,7 +5,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Util
 {
     public static class Arrays
     {
-        public static bool AreEqual(int[] array1, int[] array2)
+        public static bool AreEqual(byte[] array1, byte[] array2)
         {
             if (array1.Length != array2.Length)
                 return false;
@@ -17,7 +17,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Util
             return true;
         }
 
-        public static int HashCode(int[] array)
+        public static int HashCode(byte[] array)
         {
             var result = array.Length;
 
@@ -28,35 +28,14 @@ namespace Gadgeteer.Modules.GHIElectronics.Util
             return result;
         }
 
-        public static byte[] ToByteArray(int[] array)
+        public static byte[] ToByteArray(string message, int offset = 0, int count = int.MaxValue)
         {
-            var result = new byte[array.Length];
+            var byteArray = Encoding.UTF8.GetBytes(message);
 
-            for (var i = 0; i < array.Length; i++)
-                result[i] = (byte) array[i];
-
-            return result;
-        }
-
-        public static byte[] ToByteArray(string value)
-        {
-            return Encoding.UTF8.GetBytes(value);
-        }
-
-        public static int[] ToIntArray(byte[] array)
-        {
-            var result = new int[array.Length];
-
-            for (var i = 0; i < array.Length; i++)
-                result[i] = array[i];
-
-            return result;
-        }
-
-        public static int[] ToIntArray(string message, int offset = 0, int count = int.MaxValue)
-        {
-            var byteArray = ToByteArray(message);
-            var result = new int[Math.Min(byteArray.Length, count)];
+            if (offset == 0 && byteArray.Length <= count)
+                return byteArray;
+        
+            var result = new byte[Math.Min(byteArray.Length, count)];
 
             for (var i = 0; i < result.Length; i++)
                 result[i] = byteArray[offset++];
@@ -64,14 +43,14 @@ namespace Gadgeteer.Modules.GHIElectronics.Util
             return result;
         }
 
-        public static int[] ToIntArray(ushort value)
+        public static byte[] ToByteArray(ushort value)
         {
             return new[] { UshortUtils.Msb(value), UshortUtils.Lsb(value) };
         }
 
-        public static string ToString(int[] array)
+        public static string ToString(byte[] array)
         {
-            return new string(Encoding.UTF8.GetChars(ToByteArray(array)));
+            return new string(Encoding.UTF8.GetChars(array));
         }
     }
 }

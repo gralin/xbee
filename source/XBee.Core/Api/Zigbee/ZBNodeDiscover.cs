@@ -21,9 +21,9 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
         public string NodeIdentifier { get; set; }
         public XBeeAddress16 Parent { get; set; }
         public DeviceTypes DeviceType { get; set; }
-        public int Status { get; set; }
-        public int[] ProfileId { get; set; }
-        public int[] MfgId { get; set; }
+        public byte Status { get; set; }
+        public byte[] ProfileId { get; set; }
+        public byte[] MfgId { get; set; }
 
         public string DeviceTypeName
         {
@@ -62,8 +62,8 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
             };
 
             var nodeIdentifier = string.Empty;
-            
-            int ch;
+
+            byte ch;
 
             // NI is terminated with 0
             while ((ch = input.Read()) != 0)

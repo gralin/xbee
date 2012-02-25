@@ -10,7 +10,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         /// <summary>
         /// XBee will not generate a TX Status Packet if this frame id sent
         /// </summary>
-        public const int NoResponseId = 0;
+        public const byte NoResponseId = 0;
 
         /// <summary>
         /// XBee will send a response to the request
@@ -18,9 +18,9 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         /// <remarks>
         /// This value is used if the value is not generated
         /// </remarks>
-        public const int DefaultId = 1;
+        public const byte DefaultId = 1;
 
-        private int _currentId;
+        private byte _currentId;
         private readonly byte _maxId;
         private readonly byte _minId;
 
@@ -38,7 +38,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         /// Generates an id for XBeeRequest packet.
         /// </summary>
         /// <returns>Next value in sequence between given minId and maxId</returns>
-        public int GetNext()
+        public byte GetNext()
         {
             if (_currentId == _maxId)
             {

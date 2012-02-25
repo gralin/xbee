@@ -7,7 +7,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
     /// </summary>
     public abstract class XBeeFrameIdResponse : XBeeResponse
     {
-        public int FrameId { get; set; }
+        public byte FrameId { get; set; }
 
         public override void Parse(IPacketParser parser)
         {

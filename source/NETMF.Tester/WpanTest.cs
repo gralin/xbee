@@ -16,7 +16,7 @@ namespace NETMF.Tester
             Debug.Print("XBee 2: " + (xbee2.Send(AtCmd.CoordinatorEnable).Value[0] > 0 ? "coordinator" : "end device"));
             
             Debug.Print("Performing energy scan...");
-            var result = xbee1.Send(AtCmd.EnergyScan, new[] { 3 }).Value;
+            var result = xbee1.Send(AtCmd.EnergyScan, new byte[] { 3 }).Value;
             for (var i = 0; i < result.Length; i++)
                 Debug.Print("Channel " + (i + 0x0B) + ": " + result[i] + "-dBi");
 
@@ -83,7 +83,7 @@ namespace NETMF.Tester
 
         private static void SetAddress(XBee xbee, XBeeAddress16 address)
         {
-            xbee.Send(AtCmd.NetworkAddress, Arrays.ToIntArray(address.Address));
+            xbee.Send(AtCmd.NetworkAddress, Arrays.ToByteArray(address.Address));
         }
 
         private static XBeeAddress16 GetAddress(XBee xbee)

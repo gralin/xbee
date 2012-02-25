@@ -21,7 +21,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
         public XBeeAddress64 SourceSerial { get; set; }
         public XBeeAddress16 SourceAddress { get; set; }
         public Options Option { get; set; }
-        public int[] Payload { get; set; }
+        public byte[] Payload { get; set; }
 
         public override void Parse(IPacketParser parser)
         {
@@ -37,7 +37,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
                    + ",sourceSerial=" + SourceSerial
                    + ",sourceAddress=" + SourceAddress
                    + ",option=" + Option
-                   + ",payload=int[" + Payload.Length + "]";
+                   + ",payload=byte[" + Payload.Length + "]";
         }
     }
 }

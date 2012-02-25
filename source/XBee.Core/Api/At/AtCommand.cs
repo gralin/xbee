@@ -40,9 +40,9 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.At
     public class AtCommand : XBeeRequest
     {
         public AtCmd Command { get; set; }
-        public int[] Value { get; set; }
+        public byte[] Value { get; set; }
 
-        public AtCommand(string command, int[] value = null)
+        public AtCommand(string command, byte[] value = null)
             :this((AtCmd)UshortUtils.FromAscii(command), value)
         {
         }
@@ -52,19 +52,19 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.At
         /// <param name="command"></param>
         /// <param name="value"></param>
         /// <param name="frameId">frameId must be > 0 for a response</param>
-        public AtCommand(AtCmd command, int[] value = null)
+        public AtCommand(AtCmd command, byte[] value = null)
         {
             Command = command;
             Value = value;
         }
 
-        public AtCommand(string command, int value)
+        public AtCommand(string command, byte value)
             : this(command, new[] { value })
         {
         }
 
-        public AtCommand(AtCmd command, int value)
-            : this(command, new[] {value})
+        public AtCommand(AtCmd command, byte value)
+            : this(command, new[] { value })
         {
         }
 
@@ -73,7 +73,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.At
             get { return ApiId.AT_COMMAND; }
         }
 
-        public override int[] GetFrameData()
+        public override byte[] GetFrameData()
         {
             var frameData = new OutputStream();
 

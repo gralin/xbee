@@ -37,7 +37,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.At
 
         public static void Write(XBee xbee, ApiModes mode)
         {
-            var response = xbee.Send(AtCmd.ApiEnable, new[]{(int)mode});
+            var response = xbee.Send(AtCmd.ApiEnable, new[] { (byte)mode });
 
             if (!response.IsOk)
                 throw new XBeeException("Failed to write api mode");
@@ -45,7 +45,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.At
 
         public static void Write(XBee sender, XBeeAddress16 remoteXbee, ApiModes mode)
         {
-            var response = sender.Send(AtCmd.ApiEnable, remoteXbee, new[] {(int)mode});
+            var response = sender.Send(AtCmd.ApiEnable, remoteXbee, new[] { (byte)mode });
 
             if (!response.IsOk)
                 throw new XBeeException("Failed to write api mode");
