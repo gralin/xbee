@@ -25,8 +25,8 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
             NODE_IDENTIFICATION = 0x95
         }
 
-        public int SourceEndpoint { get; set; }
-        public int DestinationEndpoint { get; set; }
+        public byte SourceEndpoint { get; set; }
+        public byte DestinationEndpoint { get; set; }
         public ushort ClusterId { get; set; }
         public ushort ProfileId { get; set; }
 
@@ -35,8 +35,8 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
 
         // this is one big ctor ;)
 
-        public ZNetExplicitTxRequest(XBeeAddress64 destSerial, XBeeAddress16 destAddress, int[] payload, int srcEndpoint, int destEndpoint, ushort clusterId, ushort profileId,
-            Options option = Options.UNICAST, int broadcastRadius = DEFAULT_BROADCAST_RADIUS) 
+        public ZNetExplicitTxRequest(XBeeAddress64 destSerial, XBeeAddress16 destAddress, byte[] payload, byte srcEndpoint, byte destEndpoint, ushort clusterId, ushort profileId,
+            Options option = Options.UNICAST, byte broadcastRadius = DEFAULT_BROADCAST_RADIUS) 
             : base(destSerial, payload, broadcastRadius, option)
         {
             DestinationAddress = destAddress;
@@ -46,7 +46,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
             ProfileId = profileId;
         }
 
-        public override int[] GetFrameData()
+        public override byte[] GetFrameData()
         {
             // get frame id from tx request
             var frameData = GetFrameDataAsIntArrayOutputStream();

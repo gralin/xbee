@@ -102,63 +102,50 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 
         public XBeeRequest CreateRequest(XBeeAddress destination, string payload)
         {
-            return CreateRequest(destination, Arrays.ToIntArray(payload));
+            return CreateRequest(destination, Arrays.ToByteArray(payload));
         }
 
-        public XBeeRequest CreateRequest(XBeeAddress destination, int[] payload)
+        public XBeeRequest CreateRequest(XBeeAddress destination, byte[] payload)
         {
             return Config.IsSeries1()
                 ? (XBeeRequest)new TxRequest(destination, payload) { FrameId = _idGenerator.GetNext() }
                 : new ZNetTxRequest(destination, payload) { FrameId = _idGenerator.GetNext() };
         }
 
-        public XBeeRequest CreateRequest(AtCmd atCommand, int[] value = null)
+        public XBeeRequest CreateRequest(AtCmd atCommand, byte[] value = null)
         {
             return new AtCommand(atCommand, value) { FrameId = _idGenerator.GetNext() };
         }
 
-        public XBeeRequest CreateRequest(AtCmd atCommand, XBeeAddress remoteXbee, int[] value = null)
+        public XBeeRequest CreateRequest(AtCmd atCommand, XBeeAddress remoteXbee, byte[] value = null)
         {
             return new RemoteAtCommand(atCommand, remoteXbee, value) { FrameId = _idGenerator.GetNext() };
         }
 
         // Sending requests
 
-        public XBeeResponse Send(XBeeAddress destination, int[] payload)
+        public XBeeResponse Send(XBeeAddress destination, byte[] payload)
         {
-            return Config.IsSeries1() 
-                ? Send(new TxRequest(destination, payload), typeof(TxStatusResponse)) 
-                : Send(new ZNetTxRequest(destination, payload), typeof(ZNetTxStatusResponse));
+            var request = CreateRequest(destination, payload);
+
+            return request is TxRequest
+                ? Send(request, typeof(TxStatusResponse))
+                : Send(request, typeof(ZNetTxStatusResponse));
         }
 
         public XBeeResponse Send(XBeeAddress destination, string payload)
         {
-            return Send(destination, Arrays.ToIntArray(payload));
+            return Send(destination, Arrays.ToByteArray(payload));
         }
 
-        public AtResponse Send(AtCmd atCommand, int[] value = null, int timeout = PacketParser.DefaultParseTimeout)
+        public AtResponse Send(AtCmd atCommand, byte[] value = null, int timeout = PacketParser.DefaultParseTimeout)
         {
-            return Send(new AtCommand(atCommand, value), timeout);
+            return (AtResponse)Send(CreateRequest(atCommand, value), typeof(AtResponse), timeout);
         }
 
-        public AtResponse Send(AtCommand atCommand, int timeout = PacketParser.DefaultParseTimeout)
+        public RemoteAtResponse Send(AtCmd atCommand, XBeeAddress remoteXbee, byte[] value = null, int timeout = PacketParser.DefaultParseTimeout)
         {
-            return (AtResponse)Send(atCommand, typeof(AtResponse), timeout);
-        }
-
-        public RemoteAtResponse Send(AtCmd atCommand, XBeeAddress16 remoteXbee, int[] value = null, int timeout = PacketParser.DefaultParseTimeout)
-        {
-            return Send(new RemoteAtCommand(atCommand, remoteXbee, value), timeout);
-        }
-
-        public RemoteAtResponse Send(AtCmd atCommand, XBeeAddress64 remoteXbee, int[] value = null, int timeout = PacketParser.DefaultParseTimeout)
-        {
-            return Send(new RemoteAtCommand(atCommand, remoteXbee, value), timeout);
-        }
-
-        public RemoteAtResponse Send(RemoteAtCommand remoteAtCommand, int timeout = PacketParser.DefaultParseTimeout)
-        {
-            return (RemoteAtResponse)Send(remoteAtCommand, typeof(RemoteAtResponse), timeout);
+            return (RemoteAtResponse)Send(CreateRequest(atCommand, remoteXbee, value), typeof(RemoteAtResponse), timeout);
         }
 
         /// <summary>
@@ -196,7 +183,10 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         public XBeeResponse Send(XBeeRequest xbeeRequest, Type expectedResponse = null, int timeout = PacketParser.DefaultParseTimeout)
         {
             if (xbeeRequest.FrameId == PacketIdGenerator.NoResponseId)
-                throw new XBeeException("Frame Id cannot be 0 for a synchronous call -- it will always timeout as there is no response!");
+            {
+                SendAsync(xbeeRequest);
+                return null;
+            }
 
             var listener = new SinglePacketListener(expectedResponse);
 
@@ -212,7 +202,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             }
         }
 
-        public void SendAsync(AtCmd atCommand, int[] value = null)
+        public void SendAsync(AtCmd atCommand, byte[] value = null)
         {
             SendAsync(new AtCommand(atCommand, value));
         }
@@ -234,7 +224,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             SendPacket(request.GetXBeePacket());
         }
 
-        public void SendAsync(XBeeAddress destination, int[] payload)
+        public void SendAsync(XBeeAddress destination, byte[] payload)
         {
             if (Config.IsSeries1())
             {
@@ -248,7 +238,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 
         public void SendAsync(XBeeAddress destination, string payload)
         {
-            SendAsync(destination, Arrays.ToIntArray(payload));
+            SendAsync(destination, Arrays.ToByteArray(payload));
         }
 
         /// <summary>
@@ -266,13 +256,42 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             SendPacket(packet.ToByteArray());
         }
 
-        public void SendPacket(int[] packet)
+        public void SendPacket(byte[] packet)
         {
             Logger.LowDebug("sending packet " + ByteUtils.ToBase16(packet));
-            _connection.Send(Arrays.ToByteArray(packet));
+            _connection.Send(packet);
+        }
+
+        public IAsyncResult BeginSend(XBeeRequest request, IPacketListener responseListener)
+        {
+            AddPacketListener(responseListener);
+            SendAsync(request);
+            return new AsyncSendResult(request, responseListener);
         }
 
         // Receiving responses
+
+        public XBeeResponse[] EndReceive(IAsyncResult asyncResult, int timeout = -1)
+        {
+            var asyncSendResult = asyncResult as AsyncSendResult;
+
+            if (asyncSendResult == null)
+                throw new ArgumentException("invalid asyncResult");
+
+            var responseListener = asyncSendResult.ResponseListener;
+
+            if (responseListener == null)
+                throw new ArgumentException("asyncResult is missing response listener");
+
+            try
+            {
+                return responseListener.GetPackets(timeout);
+            }
+            finally 
+            {
+                RemovePacketListener(responseListener);
+            }
+        }
 
         public XBeeResponse Receive(Type expectedType = null, int timeout = PacketParser.DefaultParseTimeout)
         {
@@ -289,10 +308,10 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             }
         }
 
-        public XBeeResponse[] CollectResponses(int timeout = -1, int maxPacketCount = int.MaxValue, Type packetType = null)
+        public XBeeResponse[] CollectResponses(int timeout = -1, byte maxPacketCount = byte.MaxValue, Type packetType = null)
         {
             var validator = packetType != null ? new TypeValidator(packetType) : null;
-            var terminator = maxPacketCount != int.MaxValue ? new CountLimitTerminator(maxPacketCount) : null;
+            var terminator = maxPacketCount != byte.MaxValue ? new CountLimitTerminator(maxPacketCount) : null;
             return CollectResponses(timeout, validator, terminator);
         }
 

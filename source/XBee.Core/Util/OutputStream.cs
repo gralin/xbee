@@ -25,7 +25,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Util
 
         public void Write(ushort data)
         {
-            Write(Arrays.ToIntArray(data));
+            Write(Arrays.ToByteArray(data));
         }
 
         public void Write(string data)
@@ -38,17 +38,12 @@ namespace Gadgeteer.Modules.GHIElectronics.Util
             _stream.Write(data, 0, data.Length);
         }
 
-        public void Write(int[] data)
-        {
-            Write(Arrays.ToByteArray(data));
-        }
-
-        public int[] ToArray()
+        public byte[] ToArray()
         {
             var result = new byte[_stream.Length];
             _stream.Position = 0;
             _stream.Read(result, 0, result.Length);
-            return Arrays.ToIntArray(result);
+            return result;
         }
 
         public void Dispose()

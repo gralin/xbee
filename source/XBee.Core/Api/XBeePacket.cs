@@ -16,7 +16,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             XOFF = 0x13
         }
 
-        private readonly int[] _packet;
+        private readonly byte[] _packet;
 
         /// <summary>
         /// Performs the necessary activities to construct an XBee packet from the frame data.
@@ -25,7 +25,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         /// start byte - msb length byte - lsb length byte - frame data - checksum byte
         /// </summary>
         /// <param name="frameData"></param>
-        public XBeePacket(int[] frameData)
+        public XBeePacket(byte[] frameData)
         {
             // checksum is always computed on pre-escaped packet
             var checksum = new Checksum();
@@ -36,11 +36,11 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             checksum.Compute();
 
             // packet size is frame data + start byte + 2 length bytes + checksum byte
-            _packet = new int[frameData.Length + 4];
-            _packet[0] = (int) SpecialByte.START_BYTE;
+            _packet = new byte[frameData.Length + 4];
+            _packet[0] = (byte)SpecialByte.START_BYTE;
 
             // Packet length does not include escape bytes or start, length and checksum bytes
-            var length = frameData.Length;
+            var length = (ushort)frameData.Length;
 
             // msb length (will be zero until maybe someday when > 255 bytes packets are supported)
             _packet[1] = UshortUtils.Msb(length);
@@ -85,7 +85,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         /// </summary>
         /// <param name="packet"></param>
         /// <returns></returns>
-        private static int[] EscapePacket(int[] packet)
+        private static byte[] EscapePacket(byte[] packet)
         {
             var escapeBytes = 0;
 
@@ -103,19 +103,19 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 			    return packet;
 
             Logger.LowDebug("packet requires escaping");
-			
-            var escapePacket = new int[packet.Length + escapeBytes];
+
+            var escapePacket = new byte[packet.Length + escapeBytes];
 			
             var pos = 1;
-			
-            escapePacket[0] = (int) SpecialByte.START_BYTE;
+
+            escapePacket[0] = (byte)SpecialByte.START_BYTE;
 				
             for (var i = 1; i < packet.Length; i++) 
             {
                 if (IsSpecialByte(packet[i])) 
                 {
-                    escapePacket[pos] = (int) SpecialByte.ESCAPE;
-                    escapePacket[++pos] = 0x20 ^ packet[i];
+                    escapePacket[pos] = (byte)SpecialByte.ESCAPE;
+                    escapePacket[++pos] = (byte) (0x20 ^ packet[i]);
                     Logger.LowDebug("escapeFrameData: xor'd byte is 0x" + ByteUtils.ToBase16(escapePacket[pos]));
                 } 
                 else 
@@ -129,27 +129,27 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             return escapePacket;
         }
 
-        public static int[] UnEscapePacket(int[] packet)
+        public static byte[] UnEscapePacket(byte[] packet)
         {
 		    var escapeBytes = 0;
 
             foreach (var b in packet)
-                if (b == (int)SpecialByte.ESCAPE)
+                if (b == (byte)SpecialByte.ESCAPE)
                     escapeBytes++;
 		
 		    if (escapeBytes == 0)
 			    return packet;
-		
-		    var unEscapedPacket = new int[packet.Length - escapeBytes];
+
+            var unEscapedPacket = new byte[packet.Length - escapeBytes];
 		
 		    var pos = 0;
 		
 		    for (var i = 0; i < packet.Length; i++) 
             {
-			    if (packet[i] == (int) SpecialByte.ESCAPE) 
+                if (packet[i] == (byte)SpecialByte.ESCAPE) 
                 {
 				    // discard escape byte and un-escape following byte
-				    unEscapedPacket[pos] = 0x20 ^ packet[++i];
+				    unEscapedPacket[pos] = (byte) (0x20 ^ packet[++i]);
 			    } 
                 else 
                 {
@@ -162,7 +162,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 		    return unEscapedPacket;
         }
 
-        public static bool IsSpecialByte(int b)
+        public static bool IsSpecialByte(byte b)
         {
             switch ((SpecialByte)b)
             {
@@ -176,9 +176,9 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             }
         }
 
-        public static bool IsStartByte(int b)
+        public static bool IsStartByte(byte b)
         {
-            return b == (int) SpecialByte.START_BYTE;
+            return b == (byte)SpecialByte.START_BYTE;
         }
 
         /// <summary>
@@ -186,13 +186,13 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         /// </summary>
         /// <param name="packet"></param>
         /// <returns> true if the packet is valid</returns>
-        public static bool Verify(int[] packet)
+        public static bool Verify(byte[] packet)
         {
             var valid = true;
 
             try
             {
-                if (packet[0] != (int)SpecialByte.START_BYTE)
+                if (packet[0] != (byte)SpecialByte.START_BYTE)
                     return false;
  
                 // first need to unescape packet
@@ -202,7 +202,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 
                 // stated packet length does not include start byte, length bytes, or checksum and is calculated before escaping
 
-                var frameData = new int[len];
+                var frameData = new byte[len];
 
                 var checksum = new Checksum();
 
@@ -225,7 +225,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             return valid;
         }
 
-        public int[] ToByteArray()
+        public byte[] ToByteArray()
         {
             return _packet;
         }

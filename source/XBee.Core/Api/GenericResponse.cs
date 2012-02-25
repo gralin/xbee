@@ -5,14 +5,14 @@
     /// </summary>
     public class GenericResponse : XBeeResponse
     {
-        public int GenericApiId { get; set; }
+        public byte GenericApiId { get; set; }
 
         public override void Parse(IPacketParser parser)
         {
             //eat packet bytes -- they will be save to bytearray and stored in response
             parser.ReadRemainingBytes();
             // TODO gotta save it because it isn't know to the enum apiId won't
-            GenericApiId = (int)parser.ApiId;	
+            GenericApiId = (byte)parser.ApiId;	
         }
     }
 }

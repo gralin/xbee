@@ -13,11 +13,6 @@ namespace Gadgeteer.Modules.GHIElectronics.Util
             _stream.Position = 0;
         }
 
-        public InputStream(int[] source)
-        {
-            _stream = new MemoryStream(Arrays.ToByteArray(source));
-        }
-
         public InputStream(byte[] source)
         {
             _stream = new MemoryStream(source);
@@ -25,17 +20,17 @@ namespace Gadgeteer.Modules.GHIElectronics.Util
 
         #region IInputStream Members
 
-        public int Read()
+        public byte Read()
         {
-            int result = _stream.ReadByte();
+            var result = _stream.ReadByte();
 
             if (result == -1)
                 throw new InvalidOperationException("end of input stream");
 
-            return result;
+            return (byte) result;
         }
 
-        public int Read(string message)
+        public byte Read(string message)
         {
             return Read();
         }
@@ -45,11 +40,11 @@ namespace Gadgeteer.Modules.GHIElectronics.Util
         /// </summary>
         /// <param name="count"></param>
         /// <returns></returns>
-        public int[] Read(int count)
+        public byte[] Read(int count)
         {
             var block = new byte[count];
             _stream.Read(block, 0, count);
-            return Arrays.ToIntArray(block);
+            return block;
         }
 
         public void Dispose()

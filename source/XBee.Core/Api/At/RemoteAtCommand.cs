@@ -18,7 +18,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.At
         public XBeeAddress16 RemoteAddress16 { get; set; }
         public bool ApplyChanges { get; set; }
 
-        public RemoteAtCommand(string command, XBeeAddress remoteAddress, int[] value = null, bool applyChanges = true)
+        public RemoteAtCommand(string command, XBeeAddress remoteAddress, byte[] value = null, bool applyChanges = true)
             : this((AtCmd)UshortUtils.FromAscii(command), remoteAddress, value, applyChanges)
         {
         }
@@ -35,7 +35,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.At
         /// <param name="value"></param>
         /// <param name="frameId"> </param>
         /// <param name="applyChanges"> </param>
-        public RemoteAtCommand(AtCmd command, XBeeAddress remoteAddress, int[] value = null, bool applyChanges = true)
+        public RemoteAtCommand(AtCmd command, XBeeAddress remoteAddress, byte[] value = null, bool applyChanges = true)
             : base(command, value)
         {
             if (remoteAddress is XBeeAddress16)
@@ -52,7 +52,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.At
             ApplyChanges = applyChanges;
         }
 
-        public override int[] GetFrameData()
+        public override byte[] GetFrameData()
         {
             var frameData = new OutputStream();
 

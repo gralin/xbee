@@ -4,7 +4,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.At
 {
     public class NodeIdentifier
     {
-        public const int MaxNodeIdentifierLength = 20;
+        public const byte MaxNodeIdentifierLength = 20;
 
         public static string Read(XBee xbee)
         {
@@ -26,7 +26,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.At
 
         public static void Write(XBee xbee, string nodeIdentifier)
         {
-            var value = Arrays.ToIntArray(nodeIdentifier, 0, MaxNodeIdentifierLength);
+            var value = Arrays.ToByteArray(nodeIdentifier, 0, MaxNodeIdentifierLength);
             var response = xbee.Send(AtCmd.NodeIdentifier, value);
 
             if (!response.IsOk)
@@ -35,7 +35,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.At
 
         public static void Write(XBee sender, XBeeAddress16 remoteXbee, string nodeIdentifier)
         {
-            var value = Arrays.ToIntArray(nodeIdentifier, 0, MaxNodeIdentifierLength);
+            var value = Arrays.ToByteArray(nodeIdentifier, 0, MaxNodeIdentifierLength);
             var response = sender.Send(AtCmd.NodeIdentifier, remoteXbee, value);
 
             if (!response.IsOk)

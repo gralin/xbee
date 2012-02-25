@@ -4,5 +4,6 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
     {
         bool Finished { get; }
         void ProcessPacket(XBeeResponse packet);
+        XBeeResponse[] GetPackets(int timeout);
     }
 }

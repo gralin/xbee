@@ -8,21 +8,21 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
     /// </summary>
     public class XBeeAddress64 : XBeeAddress
     {
-        public static readonly XBeeAddress64 BROADCAST = new XBeeAddress64(new[] { 0, 0, 0, 0, 0, 0, 0xff, 0xff });
-        public static readonly XBeeAddress64 ZNET_COORDINATOR = new XBeeAddress64(new[] { 0, 0, 0, 0, 0, 0, 0, 0 });
+        public static readonly XBeeAddress64 BROADCAST = new XBeeAddress64(new byte[] { 0, 0, 0, 0, 0, 0, 0xff, 0xff });
+        public static readonly XBeeAddress64 ZNET_COORDINATOR = new XBeeAddress64(new byte[] { 0, 0, 0, 0, 0, 0, 0, 0 });
 
-        public XBeeAddress64() 
-            : base(new int[8])
+        public XBeeAddress64()
+            : base(new byte[8])
         {
         }
 
-        public XBeeAddress64(int[] address) 
+        public XBeeAddress64(byte[] address) 
             : base(address)
         {
         }
 
         public XBeeAddress64(int b1, int b2, int b3, int b4, int b5, int b6, int b7, int b8)
-            : base(new[] { b1, b2, b3, b4, b5, b6, b7, b8 })
+            : base(new[] { (byte) b1, (byte) b2, (byte) b3, (byte) b4, (byte) b5, (byte) b6, (byte) b7, (byte) b8 })
         {
         }
 

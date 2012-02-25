@@ -2,9 +2,9 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 {
     public interface IPacketParser
     {
-        int Read();
-        int Read(string context);
-        int[] ReadRemainingBytes();
+        byte Read();
+        byte Read(string context);
+        byte[] ReadRemainingBytes();
         int FrameDataBytesRead { get; }
         int RemainingBytes { get; }
         int BytesRead { get; }

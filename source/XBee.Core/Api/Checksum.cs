@@ -35,9 +35,9 @@
             return 0xff == _checksum;
         }
 
-        public int GetChecksum()
+        public byte GetChecksum()
         {
-            return _checksum;
+            return (byte)_checksum;
         }
 
         /***********************************************************************/

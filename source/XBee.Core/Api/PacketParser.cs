@@ -256,12 +256,12 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             return (XBeeResponse) responseCtor.Invoke(null);
         }
 
-        private int TakeFromBuffer(int timeout = 0)
+        private byte TakeFromBuffer(int timeout = 0)
         {
             if (CurrentBufferEmpty)
                 GetNextBuffer(timeout);
 
-            return _currentBuffer.ReadByte();
+            return (byte) _currentBuffer.ReadByte();
         }
 
         private void GetNextBuffer(int timeout = 0)
@@ -337,7 +337,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         /// 2. Un-escapes bytes if necessary and verifies the checksum.
         /// </summary>
         /// <returns></returns>
-        public int Read()
+        public byte Read()
         {
             if (RemainingBytes == 0)
                 throw new XBeeParseException("Packet has read all of its bytes");
@@ -348,14 +348,14 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             {
                 Logger.LowDebug("Read special byte that needs to be unescaped");
 
-                if (b == (int)XBeePacket.SpecialByte.ESCAPE)
+                if (b == (byte)XBeePacket.SpecialByte.ESCAPE)
                 {
                     Logger.LowDebug("found escape byte");
                     // read next byte
                     b = TakeFromBuffer(ParseTimeLeft);
 
                     Logger.LowDebug("next byte is " + ByteUtils.FormatByte(b));
-                    b = 0x20 ^ b;
+                    b = (byte) (0x20 ^ b);
                     Logger.LowDebug("unescaped (xor) byte is " + ByteUtils.FormatByte(b));
 
                     _escapedBytes++;
@@ -405,7 +405,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
-        public int Read(string context)
+        public byte Read(string context)
         {
             var b = Read();
             Logger.LowDebug("Read " + context + " byte, val is " + b);
@@ -416,11 +416,11 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         /// Reads all remaining bytes except for checksum
         /// </summary>
         /// <returns></returns>
-        public int[] ReadRemainingBytes()
+        public byte[] ReadRemainingBytes()
         {
             // minus one since we don't read the checksum
             var valueLength = RemainingBytes - 1;
-            var value = new int[valueLength];
+            var value = new byte[valueLength];
 
             Logger.LowDebug("There should be " + valueLength + " remaining bytes");
 

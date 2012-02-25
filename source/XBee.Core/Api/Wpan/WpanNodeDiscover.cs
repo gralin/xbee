@@ -25,9 +25,11 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Wpan
             if (response.Command != AtCmd.NodeDiscover)
                 throw new ArgumentException("This method is only applicable for the ND command");
 
+            // empty response is received after the last disovered node
+            // this happens only with Wpan nodes, not Zigbee
             if (response.Value == null || response.Value.Length == 0)
-			    throw new ArgumentException("ND command has no value");
-                        
+                return null;
+
             var input = new InputStream(response.Value);
 
             var frame = new WpanNodeDiscover
@@ -37,7 +39,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Wpan
                 Rssi = -1*input.Read()
             };
 
-            int ch;
+            byte ch;
 
             // NI is terminated with 0
             while ((ch = input.Read()) != 0)

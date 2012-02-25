@@ -14,7 +14,7 @@ namespace PC.Tester
             // discovering modules available in ZigBee network
 
             Debug.Print("Discovering nodes...");
-            ZBNodeDiscover foundNode;
+            ZBNodeDiscover foundNode = null;
 
             while (true)
             {
@@ -22,12 +22,15 @@ namespace PC.Tester
 
                 if (foundNodes.Length > 0)
                 {
-                    foundNode = foundNodes[0];
-
                     Debug.Print("Found: " + foundNodes.Length + " nodes");
 
                     for (var i = 0; i < foundNodes.Length; i++)
+                    {
                         Debug.Print("#" + (i + 1) + " - " + foundNodes[i]);
+
+                        if (foundNodes[i].NodeAddress64 != xbee.Config.SerialNumber)
+                            foundNode = foundNodes[i];
+                    }
 
                     break;
                 }
@@ -42,7 +45,8 @@ namespace PC.Tester
             // reading supply voltage
 
             var voltage = UshortUtils.ToUshort(xbee.Send(AtCmd.SupplyVoltage).Value);
-            Debug.Print("Supply voltage: " + (voltage / 1024.0).ToString("F2") + "V");
+            var voltageVolts = (voltage*1200/1024.0) / 1000.0;
+            Debug.Print("Supply voltage: " + voltageVolts.ToString("F2") + "V");
 
             // sending text messages
 
@@ -63,23 +67,18 @@ namespace PC.Tester
 
         private static ZBNodeDiscover[] DiscoverNodes(XBee xbee)
         {
-            var listener = new NodeDiscoveryListener(1);
+            var asyncResult = xbee.BeginSend(xbee.CreateRequest(AtCmd.NodeDiscover), new NodeDiscoveryListener());
 
-            try
-            {
-                xbee.AddPacketListener(listener);
-                xbee.SendAsync(AtCmd.NodeDiscover);
-                var nodes = listener.GetPackets(5000);
+            // max discovery time is NC * 100 ms (by default is 6s)
+            const int discoveryTimeout = 0x3C * 100;
 
-                var result = new ZBNodeDiscover[nodes.Length];
-                for (var i = 0; i < result.Length; i++)
-                    result[i] = ZBNodeDiscover.Parse(nodes[i]);
-                return result;
-            }
-            finally
-            {
-                xbee.RemovePacketListener(listener);
-            }
+            var nodes = xbee.EndReceive(asyncResult, discoveryTimeout);
+            var result = new ZBNodeDiscover[nodes.Length];
+
+            for (var i = 0; i < result.Length; i++)
+                result[i] = ZBNodeDiscover.Parse(nodes[i]);
+
+            return result;
         }
 
         private static int GetRssi(XBee xbee)
@@ -110,6 +109,11 @@ namespace PC.Tester
 
                 Debug.Print("Received '" + Arrays.ToString(dataPacket.Payload)
                     + "' from " + dataPacket.SourceAddress);
+            }
+
+            public XBeeResponse[] GetPackets(int timeout)
+            {
+                throw new NotSupportedException();
             }
         }
     }

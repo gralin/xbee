@@ -6,7 +6,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Util
     {
         private const string Hex = "0123456789ABCDEF";
 
-        public static string ToBase16(int[] value)
+        public static string ToBase16(byte[] value)
         {
             var result = "";
 
@@ -61,13 +61,10 @@ namespace Gadgeteer.Modules.GHIElectronics.Util
             return (byte) (lowDigit + (highDigit << 4));
         }
 
-        public static bool GetBit(int value, int bit)
+        public static bool GetBit(byte value, int bit)
         {
             if (bit < 1 || bit > 8)
                 throw new ArgumentException("Bit is out of range");
-
-            if (value > 0xff)
-                throw new ArgumentException("input value [" + value + "] is larger than a byte");
 
             return ((value >> (--bit)) & 0x1) == 0x1;
         }
@@ -79,18 +76,10 @@ namespace Gadgeteer.Modules.GHIElectronics.Util
             return Parse10BitAnalog(adcMsb, adcLsb);
         }
 
-        public static int Parse10BitAnalog(int msb, int lsb)
+        public static int Parse10BitAnalog(byte msb, byte lsb)
         {
-            msb = msb & 0xff;
-
             // shift up bits 9 and 10 of the msb
-            msb = (msb & 0x3) << 8;
-
-            // log.debug("shifted msb is " + msb);
-
-            lsb = lsb & 0xff;
-
-            return msb + lsb;
+            return ((msb & 0x3) << 8) + lsb;
         }
 
         public static string FormatByte(int value)

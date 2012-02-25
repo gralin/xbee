@@ -39,10 +39,10 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
             D12 = 12
         }
 
-        private const int SUPPLY_VOLTAGE_INDEX = 4;
+        private const byte SUPPLY_VOLTAGE_INDEX = 4;
 
         public ushort DigitalChannelMask { get; protected set; }
-        public int AnalogChannelMask { get; protected set; }
+        public byte AnalogChannelMask { get; protected set; }
         public ushort Digital { get; protected set; }
         public int[] Analog { get; protected set; }
 
@@ -103,7 +103,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
                 if (!IsAnalogEnabled(pin))
                     continue;
 
-                Analog[(int)pin] = ByteUtils.Parse10BitAnalog(parser, enabledCount);
+                Analog[(byte)pin] = ByteUtils.Parse10BitAnalog(parser, enabledCount);
                 enabledCount++;
             }
 
@@ -113,7 +113,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
 
         public bool IsAnalogEnabled(Pin pin)
         {
-            var pinNumber = (int) pin;
+            var pinNumber = (byte)pin;
 
             if ((pinNumber >= 0 && pinNumber <= 3) || pin == Pin.SupplyVoltage)
                 return ByteUtils.GetBit(AnalogChannelMask, pinNumber + 1);
@@ -123,7 +123,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
 
         public bool IsDigitalEnabled(Pin pin)
         {
-            var pinNumber = (int)pin;
+            var pinNumber = (byte)pin;
 
             if (pinNumber >= 0 && pinNumber <= 7)
                 return ByteUtils.GetBit(UshortUtils.Lsb(DigitalChannelMask), pinNumber + 1);
@@ -147,9 +147,9 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
         public bool IsDigitalOn(Pin pin)
         {
             if (!IsDigitalEnabled(pin))
-                return false; 
+                return false;
 
-            var pinNumber = (int)pin;
+            var pinNumber = (byte)pin;
 
             if (pinNumber >= 0 && pinNumber <= 7)
                 return ByteUtils.GetBit(UshortUtils.Lsb(Digital), pinNumber + 1);
@@ -178,7 +178,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
 
             // analog pins are 0-3 and Pin.SupplyVoltage is 7
             // we need to adjust the pinNumber to use it as array index
-            var pinNumber = pin == Pin.SupplyVoltage ? SUPPLY_VOLTAGE_INDEX : (int)pin;
+            var pinNumber = pin == Pin.SupplyVoltage ? SUPPLY_VOLTAGE_INDEX : (byte)pin;
 
             return Analog[pinNumber];
         }

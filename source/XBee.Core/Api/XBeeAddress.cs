@@ -4,15 +4,15 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 {
     public abstract class XBeeAddress
     {
-        public int[] Address { get; protected set; }
+        public byte[] Address { get; protected set; }
 
-        public int this[int index]
+        public byte this[int index]
         {
             get { return Address[index]; }
             set { Address[index] = value; }
         }
 
-        protected XBeeAddress(int[] address)
+        protected XBeeAddress(byte[] address)
         {
             Address = address;
         }

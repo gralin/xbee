@@ -8,8 +8,8 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
     /// </summary>
     public class ZNetExplicitRxResponse : ZNetRxResponse
     {
-        public int SourceEndpoint { get; set; }
-        public int DestinationEndpoint { get; set; }
+        public byte SourceEndpoint { get; set; }
+        public byte DestinationEndpoint { get; set; }
         public ushort ClusterId { get; set; }
         public ushort ProfileId { get; set; }
 

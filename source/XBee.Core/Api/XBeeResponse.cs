@@ -11,12 +11,12 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         // this is the most compact representation of the packet;
         // useful for sending the packet over a wire (e.g. xml),
         // for later reconstitution
-        private int[] _rawPacketBytes;
-        private int[] _processedPacketBytes;
+        private byte[] _rawPacketBytes;
+        private byte[] _processedPacketBytes;
 
         public ushort Length { get; set; }
         public ApiId ApiId { get; set; }
-        public int Checksum { get; set; }
+        public byte Checksum { get; set; }
 
         /// <summary>
         /// Indicates an error occurred during the parsing of the packet.
@@ -31,7 +31,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         /// Returns an array all bytes (as received off radio, including escape bytes)
         /// in packet except the start byte.  
         /// </summary>
-        public int[] RawPacketBytes
+        public byte[] RawPacketBytes
         {
             get { return _rawPacketBytes; }
             set
@@ -81,7 +81,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 
         public override string ToString()
         {
-            return "ApiId=" + ByteUtils.ToBase16((int)ApiId) +
+            return "ApiId=" + ByteUtils.ToBase16((byte)ApiId) +
                    ",Length=" + ByteUtils.ToBase16(Length) +
                    ",Checksum=" + ByteUtils.ToBase16(Checksum) +
                    ",Error=" + Error;

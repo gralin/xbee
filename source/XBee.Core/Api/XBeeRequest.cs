@@ -6,7 +6,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
     public abstract class XBeeRequest
     {
         public abstract ApiId ApiId { get; }
-        public int FrameId { get; set; }
+        public byte FrameId { get; set; }
 
         protected XBeeRequest()
         {
@@ -27,11 +27,11 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             return packet;
         }
 
-        public abstract int[] GetFrameData();
+        public abstract byte[] GetFrameData();
 
         public override string ToString()
         {
-            return "ApiId=" + ByteUtils.ToBase16((int)ApiId) + 
+            return "ApiId=" + ByteUtils.ToBase16((byte)ApiId) + 
                    ",FrameId=" + ByteUtils.ToBase16(FrameId);
         }
 

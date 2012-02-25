@@ -1,4 +1,5 @@
-﻿using Gadgeteer.Modules.GHIElectronics.Api;
+﻿using System;
+using Gadgeteer.Modules.GHIElectronics.Api;
 using Gadgeteer.Modules.GHIElectronics.Api.At;
 using Gadgeteer.Modules.GHIElectronics.Api.Zigbee;
 using Gadgeteer.Modules.GHIElectronics.Util;
@@ -51,29 +52,27 @@ namespace NETMF.Tester
 
             var voltage1 = UshortUtils.ToUshort(coordinator.Send(AtCmd.SupplyVoltage).Value);
             var voltage2 = UshortUtils.ToUshort(router.Send(AtCmd.SupplyVoltage).Value);
-            Debug.Print("Supply voltage of coordinator: " + (voltage1 / 1024.0).ToString("F2") + "V");
-            Debug.Print("Supply voltage of router: " + (voltage2 / 1024.0).ToString("F2") + "V");
+            var voltage1Volts = (voltage1 * 1200 / 1024.0) / 1000.0;
+            var voltage2Volts = (voltage2 * 1200 / 1024.0) / 1000.0;
+
+            Debug.Print("Supply voltage of coordinator: " + voltage1Volts.ToString("F2") + "V");
+            Debug.Print("Supply voltage of router: " + voltage2Volts.ToString("F2") + "V");
         }
 
         private static ZBNodeDiscover[] DiscoverNodes(XBee xbee)
         {
-            var listener = new NodeDiscoveryListener(1);
+            var asyncResult = xbee.BeginSend(xbee.CreateRequest(AtCmd.NodeDiscover), new NodeDiscoveryListener());
 
-            try
-            {
-                xbee.AddPacketListener(listener);
-                xbee.SendAsync(AtCmd.NodeDiscover);
-                var nodes = listener.GetPackets(5000);
+            // max discovery time is NC * 100 ms (by default is 6s)
+            const int discoveryTimeout = 0x3C*100;
 
-                var result = new ZBNodeDiscover[nodes.Length];
-                for (var i = 0; i < result.Length; i++)
-                    result[i] = ZBNodeDiscover.Parse(nodes[i]);
-                return result;
-            }
-            finally
-            {
-                xbee.RemovePacketListener(listener);
-            }
+            var nodes = xbee.EndReceive(asyncResult, discoveryTimeout);
+            var result = new ZBNodeDiscover[nodes.Length];
+
+            for (var i = 0; i < result.Length; i++)
+                result[i] = ZBNodeDiscover.Parse(nodes[i]);
+
+            return result;
         }
 
         private static int GetRssi(XBee xbee)
@@ -104,6 +103,11 @@ namespace NETMF.Tester
 
                 Debug.Print("Received '" + Arrays.ToString(dataPacket.Payload)
                     + "' from " + dataPacket.SourceAddress);
+            }
+
+            public XBeeResponse[] GetPackets(int timeout)
+            {
+                throw new NotSupportedException();
             }
         }
     }

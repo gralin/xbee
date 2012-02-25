@@ -2,9 +2,9 @@
 {
     public class CountLimitTerminator : PacketTerminator
     {
-        private int _maxPacketCount;
+        private byte _maxPacketCount;
 
-        public int MaxPacketCount
+        public byte MaxPacketCount
         {
             get { return _maxPacketCount; }
             set
@@ -16,7 +16,7 @@
 
         public int RemainingPacketCount { get; private set; }
 
-        public CountLimitTerminator(int maxPacketCount)
+        public CountLimitTerminator(byte maxPacketCount)
         {
             MaxPacketCount = maxPacketCount;
         }
@@ -26,10 +26,10 @@
             RemainingPacketCount--;
 
             if (RemainingPacketCount > 0)
-                return true;
+                return false;
 
             Finished.Set();
-            return false;
+            return true;
         }
     }
 }

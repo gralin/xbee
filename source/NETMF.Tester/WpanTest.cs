@@ -1,4 +1,6 @@
-﻿using System.Threading;
+﻿using System;
+using System.Collections;
+using System.Threading;
 using Gadgeteer.Modules.GHIElectronics.Api;
 using Gadgeteer.Modules.GHIElectronics.Api.At;
 using Gadgeteer.Modules.GHIElectronics.Api.Wpan;
@@ -15,7 +17,7 @@ namespace NETMF.Tester
             Debug.Print("XBee 2: " + (xbee2.Send(AtCmd.CoordinatorEnable).Value[0] > 0 ? "coordinator" : "end device"));
             
             Debug.Print("Performing energy scan...");
-            var result = xbee1.Send(AtCmd.EnergyScan, new[] { 3 }).Value;
+            var result = xbee1.Send(AtCmd.EnergyScan, new byte[] { 3 }).Value;
             for (var i = 0; i < result.Length; i++)
                 Debug.Print("Channel " + (i + 0x0B) + ": " + result[i] + "-dBi");
 
@@ -26,17 +28,10 @@ namespace NETMF.Tester
             Debug.Print("Discovering nodes...");
             var foundNodes = DiscoverNodes(xbee1);
 
-            if (foundNodes.Length == 0)
-            {
-                Debug.Print("No nodes were discovered");
-            }
-            else
-            {
-                Debug.Print("Found: " + foundNodes.Length + " nodes");
+            Debug.Print("Found: " + foundNodes.Length + " nodes");
 
-                for (var i = 0; i < foundNodes.Length; i++)
-                    Debug.Print("#" + (i + 1) + " - " + foundNodes[i]);
-            }
+            for (var i = 0; i < foundNodes.Length; i++)
+                Debug.Print("#" + (i + 1) + " - " + foundNodes[i]);
 
             // setting address 1 to xbee1 and address 2 to xbee2 if not available
 
@@ -89,7 +84,7 @@ namespace NETMF.Tester
 
         private static void SetAddress(XBee xbee, XBeeAddress16 address)
         {
-            xbee.Send(AtCmd.NetworkAddress, Arrays.ToIntArray(address.Address));
+            xbee.Send(AtCmd.NetworkAddress, Arrays.ToByteArray(address.Address));
         }
 
         private static XBeeAddress16 GetAddress(XBee xbee)
@@ -99,23 +94,19 @@ namespace NETMF.Tester
 
         private static WpanNodeDiscover[] DiscoverNodes(XBee xbee)
         {
-            var listener = new NodeDiscoveryListener(1);
+            var asyncResult = xbee.BeginSend(xbee.CreateRequest(AtCmd.NodeDiscover), new NodeDiscoveryListener());
 
-            try
-            {
-                xbee.AddPacketListener(listener);
-                xbee.SendAsync(AtCmd.NodeDiscover);
-                var nodes = listener.GetPackets(5000);
+            var nodes = xbee.EndReceive(asyncResult, 5000);
+            var result = new ArrayList();
 
-                var result = new WpanNodeDiscover[nodes.Length];
-                for (var i = 0; i < result.Length; i++)
-                    result[i] = WpanNodeDiscover.Parse(nodes[i]);
-                return result;
-            }
-            finally
+            foreach (var node in nodes)
             {
-                xbee.RemovePacketListener(listener);
+                var foundNode = WpanNodeDiscover.Parse(node);
+                if (foundNode != null)
+                    result.Add(foundNode);
             }
+
+            return (WpanNodeDiscover[])result.ToArray(typeof(WpanNodeDiscover));
         }
 
         class IncomingDataListener : IPacketListener
@@ -140,6 +131,11 @@ namespace NETMF.Tester
                 var rxResponse = (RxResponse) packet;
                 var message = Arrays.ToString(rxResponse.Payload);
                 Debug.Print(_address + " <- " + rxResponse + " (" + message + ")");
+            }
+
+            public XBeeResponse[] GetPackets(int timeout)
+            {
+                throw new NotSupportedException();
             }
         }
     }

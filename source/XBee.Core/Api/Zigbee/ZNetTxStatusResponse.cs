@@ -31,7 +31,7 @@
         }
 
         public XBeeAddress16 RemoteAddress16 { get; set; }
-        public int RetryCount { get; set; }
+        public byte RetryCount { get; set; }
         public DeliveryResult DeliveryStatus { get; set; }
         public DiscoveryResult DiscoveryStatus { get; set; }
 
