@@ -26,10 +26,10 @@
             RemainingPacketCount--;
 
             if (RemainingPacketCount > 0)
-                return true;
+                return false;
 
             Finished.Set();
-            return false;
+            return true;
         }
     }
 }

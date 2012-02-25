@@ -14,7 +14,7 @@ namespace PC.Tester
             // discovering modules available in ZigBee network
 
             Debug.Print("Discovering nodes...");
-            ZBNodeDiscover foundNode;
+            ZBNodeDiscover foundNode = null;
 
             while (true)
             {
@@ -22,12 +22,15 @@ namespace PC.Tester
 
                 if (foundNodes.Length > 0)
                 {
-                    foundNode = foundNodes[0];
-
                     Debug.Print("Found: " + foundNodes.Length + " nodes");
 
                     for (var i = 0; i < foundNodes.Length; i++)
+                    {
                         Debug.Print("#" + (i + 1) + " - " + foundNodes[i]);
+
+                        if (foundNodes[i].NodeAddress64 != xbee.Config.SerialNumber)
+                            foundNode = foundNodes[i];
+                    }
 
                     break;
                 }
@@ -42,7 +45,8 @@ namespace PC.Tester
             // reading supply voltage
 
             var voltage = UshortUtils.ToUshort(xbee.Send(AtCmd.SupplyVoltage).Value);
-            Debug.Print("Supply voltage: " + (voltage / 1024.0).ToString("F2") + "V");
+            var voltageVolts = (voltage*1200/1024.0) / 1000.0;
+            Debug.Print("Supply voltage: " + voltageVolts.ToString("F2") + "V");
 
             // sending text messages
 
@@ -63,7 +67,9 @@ namespace PC.Tester
 
         private static ZBNodeDiscover[] DiscoverNodes(XBee xbee)
         {
-            var listener = new NodeDiscoveryListener(1);
+            var listener = new NodeDiscoveryListener(2);
+
+            Logger.LoggingLevel = LogLevel.Debug;
 
             try
             {
@@ -79,6 +85,7 @@ namespace PC.Tester
             finally
             {
                 xbee.RemovePacketListener(listener);
+                Logger.LoggingLevel = LogLevel.Info;
             }
         }
 

@@ -42,7 +42,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Util
 
         public static string ToAscii(ushort value)
         {
-            return new string(new[] { (char)Lsb(value), (char)Msb(value)});
+            return new string(new[] { (char)Msb(value), (char)Lsb(value) });
         }
     }
 }

@@ -65,12 +65,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 
         protected XBeeResponse[] GetPacketsAsArray()
         {
-            var responses = new XBeeResponse[Packets.Count];
-
-            for (var i = 0; i < responses.Length; i++)
-                responses[i] = (XBeeResponse) Packets[i];
-
-            return responses;
+            return (XBeeResponse[])Packets.ToArray(typeof(XBeeResponse));
         }
     }
 }

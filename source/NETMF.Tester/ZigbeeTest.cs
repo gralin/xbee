@@ -51,13 +51,16 @@ namespace NETMF.Tester
 
             var voltage1 = UshortUtils.ToUshort(coordinator.Send(AtCmd.SupplyVoltage).Value);
             var voltage2 = UshortUtils.ToUshort(router.Send(AtCmd.SupplyVoltage).Value);
-            Debug.Print("Supply voltage of coordinator: " + (voltage1 / 1024.0).ToString("F2") + "V");
-            Debug.Print("Supply voltage of router: " + (voltage2 / 1024.0).ToString("F2") + "V");
+            var voltage1Volts = (voltage1 * 1200 / 1024.0) / 1000.0;
+            var voltage2Volts = (voltage2 * 1200 / 1024.0) / 1000.0;
+
+            Debug.Print("Supply voltage of coordinator: " + voltage1Volts.ToString("F2") + "V");
+            Debug.Print("Supply voltage of router: " + voltage2Volts.ToString("F2") + "V");
         }
 
         private static ZBNodeDiscover[] DiscoverNodes(XBee xbee)
         {
-            var listener = new NodeDiscoveryListener(1);
+            var listener = new NodeDiscoveryListener(2);
 
             try
             {

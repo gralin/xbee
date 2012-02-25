@@ -99,7 +99,7 @@ namespace NETMF.Tester
 
         private static WpanNodeDiscover[] DiscoverNodes(XBee xbee)
         {
-            var listener = new NodeDiscoveryListener(1);
+            var listener = new NodeDiscoveryListener(2);
 
             try
             {
