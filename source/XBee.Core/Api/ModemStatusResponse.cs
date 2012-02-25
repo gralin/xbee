@@ -10,13 +10,13 @@
 
         public enum Status
         {
-            HARDWARE_RESET = 0,
-            WATCHDOG_TMER_RESET = 1,
-            ASSOCIATED = 2,
-            DISASSOCIATED = 3,
-            SYNCHRONIZATION_LOST = 4,
-            COORDINATOR_REALIGMENT = 5,
-            COORDINATOR_STARTED = 6
+            HardwareReset = 0,
+            WatchdogTmerReset = 1,
+            Associated = 2,
+            Disassociated = 3,
+            SynchronizationLost = 4,
+            CoordinatorRealigment = 5,
+            CoordinatorStarted = 6
         }
 
         #endregion

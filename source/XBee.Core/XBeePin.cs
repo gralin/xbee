@@ -13,37 +13,37 @@
         /// </summary>
         public enum Capability
         {
-            NONE = -1,
-            DISABLED = 0,
-            RTS_FLOW_CTRL = 1,
-            CTS_FLOW_CTRL = 1,
-            RSSI_PWM = 1,
-            ASSOC_LED = 1,
-            ANALOG_INPUT = 2,
-            PWM_OUTPUT = 2,
-            DIGITAL_INPUT = 3,
-            DIGITAL_OUTPUT_LOW = 4,
-            DIGITAL_OUTPUT_HIGH = 5,
+            None = -1,
+            Disabled = 0,
+            RtsFlowCtrl = 1,
+            CtsFlowCtrl = 1,
+            RssiPwm = 1,
+            AssocLed = 1,
+            AnalogInput = 2,
+            PwmOutput = 2,
+            DigitalInput = 3,
+            DigitalOutputLow = 4,
+            DigitalOutputHigh = 5,
 
             /// <summary>
             /// only zigbee
             /// </summary>
-            UNMONITORED_INPUT = 0,
+            UnmonitoredInput = 0,
 
             /// <summary>
             /// only zigbee
             /// </summary>
-            NODE_ID_ENABLED = 1,
+            NodeIdEnabled = 1,
 
             /// <summary>
             /// only zigbee
             /// </summary>
-            RS485_TX_LOW = 6,
+            Rs485TxLow = 6,
 
             /// <summary>
             /// only zigbee
             /// </summary>
-            RS485_TX_HIGH = 7
+            Rs485TxHigh = 7
         }
 
         #endregion
@@ -94,119 +94,119 @@
 
             _zigBeePins = new[]
             {
-                new XBeePin("PWM0/RSSI/DIO10", 6, "P0", 10, Capability.RSSI_PWM, "PWM Output 0 / RX Signal Strength Indicator / Digital IO", new[]
+                new XBeePin("PWM0/RSSI/DIO10", 6, "P0", 10, Capability.RssiPwm, "PWM Output 0 / RX Signal Strength Indicator / Digital IO", new[]
                 {
-                    Capability.DISABLED, 
-                    Capability.RSSI_PWM,
-                    Capability.DIGITAL_INPUT, 
-                    Capability.DIGITAL_OUTPUT_LOW,
-                    Capability.DIGITAL_OUTPUT_HIGH
+                    Capability.Disabled, 
+                    Capability.RssiPwm,
+                    Capability.DigitalInput, 
+                    Capability.DigitalOutputLow,
+                    Capability.DigitalOutputHigh
                 }),
 
-                new XBeePin("PWM/DIO11", 7, "P1", 1, Capability.UNMONITORED_INPUT, "Digital I/O 11", new [] 
+                new XBeePin("PWM/DIO11", 7, "P1", 1, Capability.UnmonitoredInput, "Digital I/O 11", new [] 
                 {
-                    Capability.UNMONITORED_INPUT,
-                    Capability.DIGITAL_INPUT,
-                    Capability.DIGITAL_OUTPUT_LOW, 
-                    Capability.DIGITAL_OUTPUT_HIGH
+                    Capability.UnmonitoredInput,
+                    Capability.DigitalInput,
+                    Capability.DigitalOutputLow, 
+                    Capability.DigitalOutputHigh
                 }),
 
-                new XBeePin("DIO12", 4, "P2", 2, Capability.UNMONITORED_INPUT, "Digital I/O 12", new[] 
+                new XBeePin("DIO12", 4, "P2", 2, Capability.UnmonitoredInput, "Digital I/O 12", new[] 
                 {
-                    Capability.UNMONITORED_INPUT, 
-				    Capability.DIGITAL_INPUT, 
-                    Capability.DIGITAL_OUTPUT_LOW, 
-                    Capability.DIGITAL_OUTPUT_HIGH
+                    Capability.UnmonitoredInput, 
+				    Capability.DigitalInput, 
+                    Capability.DigitalOutputLow, 
+                    Capability.DigitalOutputHigh
                 }),
 
-                new XBeePin("AD0/DIO0/Commissioning Button", 20, "D0", 0, Capability.NODE_ID_ENABLED, "Analog Input 0, Digital IO 0, or Commissioning Button", new[] 
+                new XBeePin("AD0/DIO0/Commissioning Button", 20, "D0", 0, Capability.NodeIdEnabled, "Analog Input 0, Digital IO 0, or Commissioning Button", new[] 
                 {
-                    Capability.DISABLED, 
-                    Capability.NODE_ID_ENABLED, 
-				    Capability.ANALOG_INPUT, 
-                    Capability.DIGITAL_INPUT, 
-                    Capability.DIGITAL_OUTPUT_LOW, 
-                    Capability.DIGITAL_OUTPUT_HIGH
+                    Capability.Disabled, 
+                    Capability.NodeIdEnabled, 
+				    Capability.AnalogInput, 
+                    Capability.DigitalInput, 
+                    Capability.DigitalOutputLow, 
+                    Capability.DigitalOutputHigh
                 }),
 
-                new XBeePin("AD1/DIO1", 19, "D1", 1, Capability.DISABLED, "Analog Input 1 or Digital I/O 1", new[] 
+                new XBeePin("AD1/DIO1", 19, "D1", 1, Capability.Disabled, "Analog Input 1 or Digital I/O 1", new[] 
                 {
-                    Capability.DISABLED, 
-                    Capability.ANALOG_INPUT, 
-                    Capability.DIGITAL_INPUT, 
-                    Capability.DIGITAL_OUTPUT_LOW, 
-                    Capability.DIGITAL_OUTPUT_HIGH
+                    Capability.Disabled, 
+                    Capability.AnalogInput, 
+                    Capability.DigitalInput, 
+                    Capability.DigitalOutputLow, 
+                    Capability.DigitalOutputHigh
                 }),
 
-                new XBeePin("AD2/DIO2", 18, "D2", 2, Capability.DISABLED, "Analog Input 2 or Digital I/O 2", new[] 
+                new XBeePin("AD2/DIO2", 18, "D2", 2, Capability.Disabled, "Analog Input 2 or Digital I/O 2", new[] 
                 {
-                    Capability.DISABLED,
-                    Capability.ANALOG_INPUT,
-                    Capability.DIGITAL_INPUT, 
-                    Capability.DIGITAL_OUTPUT_LOW, 
-                    Capability.DIGITAL_OUTPUT_HIGH
+                    Capability.Disabled,
+                    Capability.AnalogInput,
+                    Capability.DigitalInput, 
+                    Capability.DigitalOutputLow, 
+                    Capability.DigitalOutputHigh
                 }),
 
-                new XBeePin("AD3/DIO3", 17, "D3", 3, Capability.DISABLED, "Analog Input 3 or Digital I/O 3", new[] 
+                new XBeePin("AD3/DIO3", 17, "D3", 3, Capability.Disabled, "Analog Input 3 or Digital I/O 3", new[] 
                 {
-                    Capability.DISABLED, 
-				    Capability.ANALOG_INPUT,
-                    Capability.DIGITAL_INPUT, 
-                    Capability.DIGITAL_OUTPUT_LOW, 
-                    Capability.DIGITAL_OUTPUT_HIGH
+                    Capability.Disabled, 
+				    Capability.AnalogInput,
+                    Capability.DigitalInput, 
+                    Capability.DigitalOutputLow, 
+                    Capability.DigitalOutputHigh
                 }),
 
-                new XBeePin("DIO4", 11, "D4", 4, Capability.DISABLED, "Digital I/O 4", new[] 
+                new XBeePin("DIO4", 11, "D4", 4, Capability.Disabled, "Digital I/O 4", new[] 
                 {
-                    Capability.DISABLED, 
-                    Capability.DIGITAL_INPUT, 
-                    Capability.DIGITAL_OUTPUT_LOW,
-                    Capability.DIGITAL_OUTPUT_HIGH
+                    Capability.Disabled, 
+                    Capability.DigitalInput, 
+                    Capability.DigitalOutputLow,
+                    Capability.DigitalOutputHigh
                 }),
 
-                new XBeePin("Associate/DIO5", 15, "D5", 5, Capability.ASSOC_LED, "Associated Indicator, Digital I/O 5", new[] 
+                new XBeePin("Associate/DIO5", 15, "D5", 5, Capability.AssocLed, "Associated Indicator, Digital I/O 5", new[] 
                 {
-				    Capability.DISABLED,
-                    Capability.ASSOC_LED,
-                    Capability.DIGITAL_INPUT, 
-                    Capability.DIGITAL_OUTPUT_LOW, 
-				    Capability.DIGITAL_OUTPUT_HIGH
+				    Capability.Disabled,
+                    Capability.AssocLed,
+                    Capability.DigitalInput, 
+                    Capability.DigitalOutputLow, 
+				    Capability.DigitalOutputHigh
                 }),
 
-                new XBeePin("CTS/DIO7", 12, "D7", 7, Capability.CTS_FLOW_CTRL, "Clear-to-Send Flow Control or Digital I/O 7", new[] 
+                new XBeePin("CTS/DIO7", 12, "D7", 7, Capability.CtsFlowCtrl, "Clear-to-Send Flow Control or Digital I/O 7", new[] 
                 {
-				    Capability.DISABLED, 
-                    Capability.CTS_FLOW_CTRL,
-                    Capability.DIGITAL_INPUT,
-                    Capability.DIGITAL_OUTPUT_LOW, 
-				    Capability.DIGITAL_OUTPUT_HIGH, 
-                    Capability.RS485_TX_LOW, 
-                    Capability.RS485_TX_HIGH
+				    Capability.Disabled, 
+                    Capability.CtsFlowCtrl,
+                    Capability.DigitalInput,
+                    Capability.DigitalOutputLow, 
+				    Capability.DigitalOutputHigh, 
+                    Capability.Rs485TxLow, 
+                    Capability.Rs485TxHigh
                 }),
 
                 // TODO manual lists only RTS and disabled but x-ctu lists all digital capabilities
 
-                new XBeePin("RTS/DIO6", 16, "D6", 6, Capability.DISABLED, "Request-to-Send Flow Control, Digital I/O 6", new[] 
+                new XBeePin("RTS/DIO6", 16, "D6", 6, Capability.Disabled, "Request-to-Send Flow Control, Digital I/O 6", new[] 
 				{
-                    Capability.DISABLED,
-                    Capability.RTS_FLOW_CTRL,
-                    Capability.DIGITAL_INPUT, 
-                    Capability.DIGITAL_OUTPUT_LOW, 
-				    Capability.DIGITAL_OUTPUT_HIGH
+                    Capability.Disabled,
+                    Capability.RtsFlowCtrl,
+                    Capability.DigitalInput, 
+                    Capability.DigitalOutputLow, 
+				    Capability.DigitalOutputHigh
                 }),
 
                 // other pins
-                new XBeePin("VCC", 1, "", -1, Capability.NONE, "Power Supply", null),
-                new XBeePin("DOUT", 2, "", -1, Capability.NONE, "UART Data Out", null),
-                new XBeePin("DIN", 3, "", -1, Capability.NONE, "UART Data In", null),
-                new XBeePin("RESET", 5, "", -1, Capability.NONE, "Module Reset (reset pulse must be at least 200 ns)", null),
-                new XBeePin("[reserved]", 8, "", -1, Capability.NONE, "Do not connect", null),
+                new XBeePin("VCC", 1, "", -1, Capability.None, "Power Supply", null),
+                new XBeePin("DOUT", 2, "", -1, Capability.None, "UART Data Out", null),
+                new XBeePin("DIN", 3, "", -1, Capability.None, "UART Data In", null),
+                new XBeePin("RESET", 5, "", -1, Capability.None, "Module Reset (reset pulse must be at least 200 ns)", null),
+                new XBeePin("[reserved]", 8, "", -1, Capability.None, "Do not connect", null),
                 // DIO8 not supported according to manual
-                new XBeePin("DTR/SLEEP_RQ", 9, "", -1, Capability.NONE, "Pin Sleep Control Line", null),
-                new XBeePin("GND", 10, "", -1, Capability.NONE, "Ground", null),
+                new XBeePin("DTR/SLEEP_RQ", 9, "", -1, Capability.None, "Pin Sleep Control Line", null),
+                new XBeePin("GND", 10, "", -1, Capability.None, "Ground", null),
                 // DIO9 not supported according to manual
-                new XBeePin("ON/SLEEP", 13, "", -1, Capability.NONE, "Module Status Indicator", null),
-                new XBeePin("VREF", 14, "", -1, Capability.NONE, "Not used on this module. For compatibility with other XBee modules, we recommend connecting this pin to a voltage reference if Analog sampling is desired. Otherwise, connect to GND", null)
+                new XBeePin("ON/SLEEP", 13, "", -1, Capability.None, "Module Status Indicator", null),
+                new XBeePin("VREF", 14, "", -1, Capability.None, "Not used on this module. For compatibility with other XBee modules, we recommend connecting this pin to a voltage reference if Analog sampling is desired. Otherwise, connect to GND", null)
             };
         }
 

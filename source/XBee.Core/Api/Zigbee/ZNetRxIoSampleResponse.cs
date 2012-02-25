@@ -39,7 +39,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
             D12 = 12
         }
 
-        private const byte SUPPLY_VOLTAGE_INDEX = 4;
+        private const byte SupplyVoltageIndex = 4;
 
         public ushort DigitalChannelMask { get; protected set; }
         public byte AnalogChannelMask { get; protected set; }
@@ -108,7 +108,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
             }
 
             if (IsAnalogEnabled(Pin.SupplyVoltage))
-                Analog[SUPPLY_VOLTAGE_INDEX] = ByteUtils.Parse10BitAnalog(parser, enabledCount);
+                Analog[SupplyVoltageIndex] = ByteUtils.Parse10BitAnalog(parser, enabledCount);
         }
 
         public bool IsAnalogEnabled(Pin pin)
@@ -178,7 +178,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
 
             // analog pins are 0-3 and Pin.SupplyVoltage is 7
             // we need to adjust the pinNumber to use it as array index
-            var pinNumber = pin == Pin.SupplyVoltage ? SUPPLY_VOLTAGE_INDEX : (byte)pin;
+            var pinNumber = pin == Pin.SupplyVoltage ? SupplyVoltageIndex : (byte)pin;
 
             return Analog[pinNumber];
         }

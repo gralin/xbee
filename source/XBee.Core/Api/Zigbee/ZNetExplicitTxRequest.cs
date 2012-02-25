@@ -11,18 +11,18 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
     {
         public enum Endpoint
         {
-            ZDO_ENDPOINT = 0,
-            COMMAND = 0xe6,
-            DATA = 0xe8
+            ZdoEndpoint = 0,
+            Command = 0xe6,
+            Data = 0xe8
         }
 
         public enum ClusterIds
         {
-            TRANSPARENT_SERIAL = 0x11,
-            SERIAL_LOOPBACK = 0x12,
-            IO_SAMPLE = 0x92,
-            XBEE_SENSOR = 0x94,
-            NODE_IDENTIFICATION = 0x95
+            TransparentSerial = 0x11,
+            SerialLoopback = 0x12,
+            IOSample = 0x92,
+            XbeeSensor = 0x94,
+            NodeIdentification = 0x95
         }
 
         public byte SourceEndpoint { get; set; }
@@ -36,7 +36,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
         // this is one big ctor ;)
 
         public ZNetExplicitTxRequest(XBeeAddress64 destSerial, XBeeAddress16 destAddress, byte[] payload, byte srcEndpoint, byte destEndpoint, ushort clusterId, ushort profileId,
-            Options option = Options.UNICAST, byte broadcastRadius = DEFAULT_BROADCAST_RADIUS) 
+            Options option = Options.Unicast, byte broadcastRadius = DefaultBroadcastRadius) 
             : base(destSerial, payload, broadcastRadius, option)
         {
             DestinationAddress = destAddress;
@@ -85,7 +85,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
 
         public override ApiId ApiId
         {
-            get { return ApiId.ZNET_EXPLICIT_TX_REQUEST; }
+            get { return ApiId.ZnetExplicitTxRequest; }
         }
 
         public override string ToString()

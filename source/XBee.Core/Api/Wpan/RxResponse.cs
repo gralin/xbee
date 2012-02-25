@@ -20,7 +20,7 @@
 
         public override void Parse(IPacketParser parser)
         {
-            Source = parser.ApiId == ApiId.RX_16_RESPONSE
+            Source = parser.ApiId == ApiId.Rx16Response
                          ? (XBeeAddress) parser.ParseAddress16()
                          : parser.ParseAddress64();
 

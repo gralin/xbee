@@ -104,8 +104,8 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         {
             switch (HardwareVersion)
             {
-                case HardwareVersions.SERIES1:
-                case HardwareVersions.SERIES1_PRO:
+                case HardwareVersions.Series1:
+                case HardwareVersions.Series1Pro:
                     return true;
                 default:
                     return false;
@@ -116,9 +116,9 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         {
             switch (HardwareVersion)
             {
-                case HardwareVersions.SERIES2:
-                case HardwareVersions.SERIES2_PRO:
-                case HardwareVersions.SERIES2B_PRO:
+                case HardwareVersions.Series2:
+                case HardwareVersions.Series2Pro:
+                case HardwareVersions.Series2BPro:
                     return true;
                 default:
                     return false;

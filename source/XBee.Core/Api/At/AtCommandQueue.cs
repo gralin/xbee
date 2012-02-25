@@ -13,7 +13,7 @@
 
         public override ApiId ApiId
         {
-            get { return ApiId.AT_COMMAND_QUEUE; }
+            get { return ApiId.AtCommandQueue; }
         }
     }
 }

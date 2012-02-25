@@ -7,8 +7,8 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
     /// </summary>
     public class XBeeAddress16 : XBeeAddress
     {
-        public static readonly XBeeAddress16 BROADCAST = new XBeeAddress16(new byte[] { 0xFF, 0xFF });
-        public static readonly XBeeAddress16 ZNET_BROADCAST = new XBeeAddress16(new byte[] { 0xFF, 0xFE });
+        public static readonly XBeeAddress16 Broadcast = new XBeeAddress16(0xFF, 0xFF);
+        public static readonly XBeeAddress16 ZnetBroadcast = new XBeeAddress16(0xFF, 0xFE);
 
         public new ushort Address
         {

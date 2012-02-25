@@ -228,19 +228,19 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 
             _responseHandler = new Hashtable(13)
             {
-                {ApiId.AT_RESPONSE,                      typeof (AtResponse).GetConstructor(noArgs)},
-                {ApiId.MODEM_STATUS_RESPONSE,            typeof (ModemStatusResponse).GetConstructor(noArgs)},
-                {ApiId.REMOTE_AT_RESPONSE,               typeof (RemoteAtResponse).GetConstructor(noArgs)},
-                {ApiId.RX_16_IO_RESPONSE,                typeof (RxResponseIoSample).GetConstructor(noArgs)},
-                {ApiId.RX_64_IO_RESPONSE,                typeof (RxResponseIoSample).GetConstructor(noArgs)},
-                {ApiId.RX_16_RESPONSE,                   typeof (RxResponse).GetConstructor(noArgs)},
-                {ApiId.RX_64_RESPONSE,                   typeof (RxResponse).GetConstructor(noArgs)},
-                {ApiId.TX_STATUS_RESPONSE,               typeof (TxStatusResponse).GetConstructor(noArgs)},
-                {ApiId.ZNET_EXPLICIT_RX_RESPONSE,        typeof (ZNetExplicitRxResponse).GetConstructor(noArgs)},
-                {ApiId.ZNET_IO_NODE_IDENTIFIER_RESPONSE, typeof (ZNetNodeIdentificationResponse).GetConstructor(noArgs)},
-                {ApiId.ZNET_IO_SAMPLE_RESPONSE,          typeof (ZNetRxIoSampleResponse).GetConstructor(noArgs)},
-                {ApiId.ZNET_RX_RESPONSE,                 typeof (ZNetRxResponse).GetConstructor(noArgs)},
-                {ApiId.ZNET_TX_STATUS_RESPONSE,          typeof (ZNetTxStatusResponse).GetConstructor(noArgs)}
+                {ApiId.AtResponse,                      typeof (AtResponse).GetConstructor(noArgs)},
+                {ApiId.ModemStatusResponse,            typeof (ModemStatusResponse).GetConstructor(noArgs)},
+                {ApiId.RemoteAtResponse,               typeof (RemoteAtResponse).GetConstructor(noArgs)},
+                {ApiId.Rx16IOResponse,                typeof (RxResponseIoSample).GetConstructor(noArgs)},
+                {ApiId.Rx64IOResponse,                typeof (RxResponseIoSample).GetConstructor(noArgs)},
+                {ApiId.Rx16Response,                   typeof (RxResponse).GetConstructor(noArgs)},
+                {ApiId.Rx64Response,                   typeof (RxResponse).GetConstructor(noArgs)},
+                {ApiId.TxStatusResponse,               typeof (TxStatusResponse).GetConstructor(noArgs)},
+                {ApiId.ZnetExplicitRxResponse,        typeof (ZNetExplicitRxResponse).GetConstructor(noArgs)},
+                {ApiId.ZnetIONodeIdentifierResponse, typeof (ZNetNodeIdentificationResponse).GetConstructor(noArgs)},
+                {ApiId.ZnetIOSampleResponse,          typeof (ZNetRxIoSampleResponse).GetConstructor(noArgs)},
+                {ApiId.ZnetRxResponse,                 typeof (ZNetRxResponse).GetConstructor(noArgs)},
+                {ApiId.ZnetTxStatusResponse,          typeof (ZNetTxStatusResponse).GetConstructor(noArgs)}
             };
         }
 
@@ -348,7 +348,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             {
                 Logger.LowDebug("Read special byte that needs to be unescaped");
 
-                if (b == (byte)XBeePacket.SpecialByte.ESCAPE)
+                if (b == (byte)XBeePacket.SpecialByte.Escape)
                 {
                     Logger.LowDebug("found escape byte");
                     // read next byte

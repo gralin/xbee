@@ -45,8 +45,8 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Wpan
             get 
             { 
                 return (Destination is XBeeAddress16) 
-                    ? ApiId.TX_REQUEST_16 
-                    : ApiId.TX_REQUEST_64; 
+                    ? ApiId.TxRequest16 
+                    : ApiId.TxRequest64; 
             }
         }
 

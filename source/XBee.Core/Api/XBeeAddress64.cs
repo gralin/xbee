@@ -8,8 +8,8 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
     /// </summary>
     public class XBeeAddress64 : XBeeAddress
     {
-        public static readonly XBeeAddress64 BROADCAST = new XBeeAddress64(new byte[] { 0, 0, 0, 0, 0, 0, 0xff, 0xff });
-        public static readonly XBeeAddress64 ZNET_COORDINATOR = new XBeeAddress64(new byte[] { 0, 0, 0, 0, 0, 0, 0, 0 });
+        public static readonly XBeeAddress64 Broadcast = new XBeeAddress64(0, 0, 0, 0, 0, 0, 0xff, 0xff);
+        public static readonly XBeeAddress64 ZnetCoordinator = new XBeeAddress64(0, 0, 0, 0, 0, 0, 0, 0);
 
         public XBeeAddress64()
             : base(new byte[8])

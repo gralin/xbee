@@ -12,8 +12,8 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
     {
 	    public enum Options
         {
-		    UNICAST = 0,
-		    BROADCAST = 8
+		    Unicast = 0,
+		    Broadcast = 8
 	    }
 
         // 10/28/08 the datasheet states 72 is maximum payload size but I was able to push 75 through successfully, 
@@ -29,8 +29,8 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
          * if the payload size is exceeded
          */
 
-        public const byte ZNET_MAX_PAYLOAD_SIZE = 72;
-        public const byte DEFAULT_BROADCAST_RADIUS = 0;
+        public const byte ZnetMaxPayloadSize = 72;
+        public const byte DefaultBroadcastRadius = 0;
 
         public XBeeAddress64 DestinationSerial { get; set; }
         public XBeeAddress16 DestinationAddress { get; set; }
@@ -61,16 +61,16 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
         /// <param name="broadcastRadius"></param>
         /// <param name="option"></param>
         /// <param name="frameId"></param>
-        public ZNetTxRequest(XBeeAddress destination, byte[] payload, byte broadcastRadius = DEFAULT_BROADCAST_RADIUS, Options option = Options.UNICAST)
+        public ZNetTxRequest(XBeeAddress destination, byte[] payload, byte broadcastRadius = DefaultBroadcastRadius, Options option = Options.Unicast)
         {
             if (destination is XBeeAddress16)
             {
                 DestinationAddress = (XBeeAddress16)destination;
-                DestinationSerial = XBeeAddress64.BROADCAST;
+                DestinationSerial = XBeeAddress64.Broadcast;
             }
             else
             {
-                DestinationAddress = XBeeAddress16.ZNET_BROADCAST;
+                DestinationAddress = XBeeAddress16.ZnetBroadcast;
                 DestinationSerial = (XBeeAddress64)destination;
             }
 
@@ -112,7 +112,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
 
         public override ApiId ApiId
         {
-            get { return ApiId.ZNET_TX_REQUEST; }
+            get { return ApiId.ZnetTxRequest; }
         }
 
         public override byte[] GetFrameData()

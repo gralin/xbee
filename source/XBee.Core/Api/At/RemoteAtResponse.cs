@@ -14,7 +14,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.At
 
         public bool IsSixteenBitAddressUnknown
         {
-            get { return RemoteAddress16 == XBeeAddress16.ZNET_BROADCAST; }
+            get { return RemoteAddress16 == XBeeAddress16.ZnetBroadcast; }
         }
 
         public override void Parse(IPacketParser parser)

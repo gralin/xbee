@@ -11,9 +11,9 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
     {
         public enum DeviceTypes
         {
-            DEV_TYPE_COORDINATOR = 0,
-            DEV_TYPE_ROUTER = 1,
-            DEV_TYPE_END_DEVICE = 2
+            Coordinator = 0,
+            Router = 1,
+            EndDevice = 2
         }
 
         public XBeeAddress64 NodeAddress64 { get; set; }
@@ -31,11 +31,11 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
             {
                 switch (DeviceType)
                 {
-                    case DeviceTypes.DEV_TYPE_COORDINATOR:
+                    case DeviceTypes.Coordinator:
                         return "Coordinator";
-                    case DeviceTypes.DEV_TYPE_ROUTER:
+                    case DeviceTypes.Router:
                         return "Router";
-                    case DeviceTypes.DEV_TYPE_END_DEVICE:
+                    case DeviceTypes.EndDevice:
                         return "End device";
                     default:
                         return "Unknown";

@@ -90,7 +90,7 @@ namespace PC.Tester
         private static bool SendText(XBee xbee, XBeeAddress destination, string message)
         {
             var response = (ZNetTxStatusResponse)xbee.Send(destination, message);
-            return response.DeliveryStatus == ZNetTxStatusResponse.DeliveryResult.SUCCESS;
+            return response.DeliveryStatus == ZNetTxStatusResponse.DeliveryResult.Success;
         }
 
         class IncomingDataListener : IPacketListener

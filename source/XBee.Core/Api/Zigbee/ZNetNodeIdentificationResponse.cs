@@ -6,22 +6,22 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
     {
         public enum Options
         {
-            PACKET_ACKNOWLEDGED = 0x01,
-            BROADCAST_PACKET = 0x02
+            PacketAcknowledged = 0x01,
+            BroadcastPacket = 0x02
         }
 
         // TODO this is repeated in NodeDiscover
         public enum DeviceTypes
         {
-            COORDINATOR = 0x1,
-            ROUTER = 0x2,
-            END_DEVICE = 0x3
+            Coordinator = 0x1,
+            Router = 0x2,
+            EndDevice = 0x3
         }
 
         public enum SourceActions
         {
-            PUSHBUTTON = 0x1,
-            JOINING = 0x2
+            Pushbutton = 0x1,
+            Joining = 0x2
         }
 
         public XBeeAddress64 RemoteAddress64 { get; set; }

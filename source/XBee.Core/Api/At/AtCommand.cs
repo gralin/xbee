@@ -70,7 +70,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.At
 
         public override ApiId ApiId
         {
-            get { return ApiId.AT_COMMAND; }
+            get { return ApiId.AtCommand; }
         }
 
         public override byte[] GetFrameData()
