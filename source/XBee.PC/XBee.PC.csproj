@@ -43,6 +43,9 @@
     <Compile Include="..\XBee.Core\Api\ApiId.cs">
       <Link>Api\ApiId.cs</Link>
     </Compile>
+    <Compile Include="..\XBee.Core\Api\AsyncSendResult.cs">
+      <Link>Api\AsyncSendResult.cs</Link>
+    </Compile>
     <Compile Include="..\XBee.Core\Api\At\ApiMode.cs">
       <Link>Api\At\ApiMode.cs</Link>
     </Compile>

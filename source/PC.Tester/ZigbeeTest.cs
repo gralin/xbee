@@ -67,26 +67,18 @@ namespace PC.Tester
 
         private static ZBNodeDiscover[] DiscoverNodes(XBee xbee)
         {
-            var listener = new NodeDiscoveryListener(2);
+            var asyncResult = xbee.BeginSend(xbee.CreateRequest(AtCmd.NodeDiscover), new NodeDiscoveryListener());
 
-            Logger.LoggingLevel = LogLevel.Debug;
+            // max discovery time is NC * 100 ms (by default is 6s)
+            const int discoveryTimeout = 0x3C * 100;
 
-            try
-            {
-                xbee.AddPacketListener(listener);
-                xbee.SendAsync(AtCmd.NodeDiscover);
-                var nodes = listener.GetPackets(5000);
+            var nodes = xbee.EndReceive(asyncResult, discoveryTimeout);
+            var result = new ZBNodeDiscover[nodes.Length];
 
-                var result = new ZBNodeDiscover[nodes.Length];
-                for (var i = 0; i < result.Length; i++)
-                    result[i] = ZBNodeDiscover.Parse(nodes[i]);
-                return result;
-            }
-            finally
-            {
-                xbee.RemovePacketListener(listener);
-                Logger.LoggingLevel = LogLevel.Info;
-            }
+            for (var i = 0; i < result.Length; i++)
+                result[i] = ZBNodeDiscover.Parse(nodes[i]);
+
+            return result;
         }
 
         private static int GetRssi(XBee xbee)
@@ -117,6 +109,11 @@ namespace PC.Tester
 
                 Debug.Print("Received '" + Arrays.ToString(dataPacket.Payload)
                     + "' from " + dataPacket.SourceAddress);
+            }
+
+            public XBeeResponse[] GetPackets(int timeout)
+            {
+                throw new NotSupportedException();
             }
         }
     }

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Threading;
 using Gadgeteer.Modules.GHIElectronics.Api;
 using Gadgeteer.Modules.GHIElectronics.Api.At;
@@ -93,32 +94,19 @@ namespace NETMF.Tester
 
         private static WpanNodeDiscover[] DiscoverNodes(XBee xbee)
         {
-            var listener = new NodeDiscoveryListener();
+            var asyncResult = xbee.BeginSend(xbee.CreateRequest(AtCmd.NodeDiscover), new NodeDiscoveryListener());
 
-            try
+            var nodes = xbee.EndReceive(asyncResult, 5000);
+            var result = new ArrayList();
+
+            foreach (var node in nodes)
             {
-                xbee.AddPacketListener(listener);
-                xbee.SendAsync(AtCmd.NodeDiscover);
-
-                // this should actualy be limited not by time
-                // but by the fact of receiving an empty ND response
-                var nodes = listener.GetPackets(5000);
-
-                var result = new ArrayList();
-
-                foreach (var node in nodes)
-                {
-                    var foundNode = WpanNodeDiscover.Parse(node);
-                    if (foundNode != null)
-                        result.Add(foundNode);
-                }
-
-                return (WpanNodeDiscover[]) result.ToArray(typeof (WpanNodeDiscover));
+                var foundNode = WpanNodeDiscover.Parse(node);
+                if (foundNode != null)
+                    result.Add(foundNode);
             }
-            finally
-            {
-                xbee.RemovePacketListener(listener);
-            }
+
+            return (WpanNodeDiscover[])result.ToArray(typeof(WpanNodeDiscover));
         }
 
         class IncomingDataListener : IPacketListener
@@ -143,6 +131,11 @@ namespace NETMF.Tester
                 var rxResponse = (RxResponse) packet;
                 var message = Arrays.ToString(rxResponse.Payload);
                 Debug.Print(_address + " <- " + rxResponse + " (" + message + ")");
+            }
+
+            public XBeeResponse[] GetPackets(int timeout)
+            {
+                throw new NotSupportedException();
             }
         }
     }

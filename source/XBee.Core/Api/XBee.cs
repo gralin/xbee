@@ -262,7 +262,36 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             _connection.Send(packet);
         }
 
+        public IAsyncResult BeginSend(XBeeRequest request, IPacketListener responseListener)
+        {
+            AddPacketListener(responseListener);
+            SendAsync(request);
+            return new AsyncSendResult(request, responseListener);
+        }
+
         // Receiving responses
+
+        public XBeeResponse[] EndReceive(IAsyncResult asyncResult, int timeout = -1)
+        {
+            var asyncSendResult = asyncResult as AsyncSendResult;
+
+            if (asyncSendResult == null)
+                throw new ArgumentException("invalid asyncResult");
+
+            var responseListener = asyncSendResult.ResponseListener;
+
+            if (responseListener == null)
+                throw new ArgumentException("asyncResult is missing response listener");
+
+            try
+            {
+                return responseListener.GetPackets(timeout);
+            }
+            finally 
+            {
+                RemovePacketListener(responseListener);
+            }
+        }
 
         public XBeeResponse Receive(Type expectedType = null, int timeout = PacketParser.DefaultParseTimeout)
         {
