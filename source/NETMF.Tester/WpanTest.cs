@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Collections;
+using System.Threading;
 using Gadgeteer.Modules.GHIElectronics.Api;
 using Gadgeteer.Modules.GHIElectronics.Api.At;
 using Gadgeteer.Modules.GHIElectronics.Api.Wpan;
@@ -26,17 +27,10 @@ namespace NETMF.Tester
             Debug.Print("Discovering nodes...");
             var foundNodes = DiscoverNodes(xbee1);
 
-            if (foundNodes.Length == 0)
-            {
-                Debug.Print("No nodes were discovered");
-            }
-            else
-            {
-                Debug.Print("Found: " + foundNodes.Length + " nodes");
+            Debug.Print("Found: " + foundNodes.Length + " nodes");
 
-                for (var i = 0; i < foundNodes.Length; i++)
-                    Debug.Print("#" + (i + 1) + " - " + foundNodes[i]);
-            }
+            for (var i = 0; i < foundNodes.Length; i++)
+                Debug.Print("#" + (i + 1) + " - " + foundNodes[i]);
 
             // setting address 1 to xbee1 and address 2 to xbee2 if not available
 
@@ -99,18 +93,27 @@ namespace NETMF.Tester
 
         private static WpanNodeDiscover[] DiscoverNodes(XBee xbee)
         {
-            var listener = new NodeDiscoveryListener(2);
+            var listener = new NodeDiscoveryListener();
 
             try
             {
                 xbee.AddPacketListener(listener);
                 xbee.SendAsync(AtCmd.NodeDiscover);
+
+                // this should actualy be limited not by time
+                // but by the fact of receiving an empty ND response
                 var nodes = listener.GetPackets(5000);
 
-                var result = new WpanNodeDiscover[nodes.Length];
-                for (var i = 0; i < result.Length; i++)
-                    result[i] = WpanNodeDiscover.Parse(nodes[i]);
-                return result;
+                var result = new ArrayList();
+
+                foreach (var node in nodes)
+                {
+                    var foundNode = WpanNodeDiscover.Parse(node);
+                    if (foundNode != null)
+                        result.Add(foundNode);
+                }
+
+                return (WpanNodeDiscover[]) result.ToArray(typeof (WpanNodeDiscover));
             }
             finally
             {

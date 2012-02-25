@@ -126,9 +126,11 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 
         public XBeeResponse Send(XBeeAddress destination, int[] payload)
         {
-            return Config.IsSeries1() 
-                ? Send(new TxRequest(destination, payload), typeof(TxStatusResponse)) 
-                : Send(new ZNetTxRequest(destination, payload), typeof(ZNetTxStatusResponse));
+            var request = CreateRequest(destination, payload);
+
+            return request is TxRequest
+                ? Send(request, typeof(TxStatusResponse))
+                : Send(request, typeof(ZNetTxStatusResponse));
         }
 
         public XBeeResponse Send(XBeeAddress destination, string payload)
@@ -138,27 +140,12 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 
         public AtResponse Send(AtCmd atCommand, int[] value = null, int timeout = PacketParser.DefaultParseTimeout)
         {
-            return Send(new AtCommand(atCommand, value), timeout);
+            return (AtResponse)Send(CreateRequest(atCommand, value), typeof(AtResponse), timeout);
         }
 
-        public AtResponse Send(AtCommand atCommand, int timeout = PacketParser.DefaultParseTimeout)
+        public RemoteAtResponse Send(AtCmd atCommand, XBeeAddress remoteXbee, int[] value = null, int timeout = PacketParser.DefaultParseTimeout)
         {
-            return (AtResponse)Send(atCommand, typeof(AtResponse), timeout);
-        }
-
-        public RemoteAtResponse Send(AtCmd atCommand, XBeeAddress16 remoteXbee, int[] value = null, int timeout = PacketParser.DefaultParseTimeout)
-        {
-            return Send(new RemoteAtCommand(atCommand, remoteXbee, value), timeout);
-        }
-
-        public RemoteAtResponse Send(AtCmd atCommand, XBeeAddress64 remoteXbee, int[] value = null, int timeout = PacketParser.DefaultParseTimeout)
-        {
-            return Send(new RemoteAtCommand(atCommand, remoteXbee, value), timeout);
-        }
-
-        public RemoteAtResponse Send(RemoteAtCommand remoteAtCommand, int timeout = PacketParser.DefaultParseTimeout)
-        {
-            return (RemoteAtResponse)Send(remoteAtCommand, typeof(RemoteAtResponse), timeout);
+            return (RemoteAtResponse)Send(CreateRequest(atCommand, remoteXbee, value), typeof(RemoteAtResponse), timeout);
         }
 
         /// <summary>
@@ -196,7 +183,10 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         public XBeeResponse Send(XBeeRequest xbeeRequest, Type expectedResponse = null, int timeout = PacketParser.DefaultParseTimeout)
         {
             if (xbeeRequest.FrameId == PacketIdGenerator.NoResponseId)
-                throw new XBeeException("Frame Id cannot be 0 for a synchronous call -- it will always timeout as there is no response!");
+            {
+                SendAsync(xbeeRequest);
+                return null;
+            }
 
             var listener = new SinglePacketListener(expectedResponse);
 

@@ -51,8 +51,10 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         {
             if (Terminator == null)
             {
+                // if there is no terminator and timeout has been specified
+                // it will cause the method to block for given timeout time
                 if (timeout != -1)
-                    throw new InvalidOperationException("Timeout can't be used without terminator provided");
+                    Thread.Sleep(timeout);
 
                 return GetPacketsAsArray();   
             }

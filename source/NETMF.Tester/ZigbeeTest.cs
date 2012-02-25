@@ -66,7 +66,9 @@ namespace NETMF.Tester
             {
                 xbee.AddPacketListener(listener);
                 xbee.SendAsync(AtCmd.NodeDiscover);
-                var nodes = listener.GetPackets(5000);
+
+                // max discovery time is NC * 100 ms (by default is 6s)
+                var nodes = listener.GetPackets(0x3C * 100);
 
                 var result = new ZBNodeDiscover[nodes.Length];
                 for (var i = 0; i < result.Length; i++)
