@@ -193,7 +193,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 
                 if (_response == null)
                 {
-                    Logger.Warn("Did not find a response handler for ApiId [" + ByteUtils.ToBase16((int)ApiId));
+                    Logger.Warn("Did not find a response handler for ApiId [" + ByteUtils.ToBase16((byte)ApiId));
                     _response = new GenericResponse();
                 }
 

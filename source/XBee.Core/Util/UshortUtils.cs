@@ -17,7 +17,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Util
             return ToUshort((byte) msb, (byte) lsb);
         }
 
-        public static ushort ToUshort(byte msb, int lsb)
+        public static ushort ToUshort(byte msb, byte lsb)
         {
             return (ushort) ((msb << 8) + lsb);
         }
