@@ -2,11 +2,11 @@
 
 namespace Gadgeteer.Modules.GHIElectronics.Api
 {
-    public class TypeValidator : IPacketValidator
+    public class PacketTypeFilter : IPacketFilter
     {
         private readonly Type _expectedType;
-
-        public TypeValidator(Type expectedType)
+        
+        public PacketTypeFilter(Type expectedType)
         {
             if (expectedType == null)
                 throw new ArgumentException("expectedType needs to be specified");
@@ -14,9 +14,14 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             _expectedType = expectedType;
         }
 
-        public bool Validate(XBeeResponse packet)
+        public virtual bool Accepted(XBeeResponse packet)
         {
             return _expectedType.IsInstanceOfType(packet);
+        }
+
+        public virtual bool Finished()
+        {
+            return false;
         }
     }
 }

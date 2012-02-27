@@ -1,15 +1,16 @@
 ﻿using System;
+using Gadgeteer.Modules.GHIElectronics.Api.At;
 
 namespace Gadgeteer.Modules.GHIElectronics.Api
 {
-    public class SinglePacketListener : PacketListener
+    public class AtResponseListener : PacketListener
     {
-        public SinglePacketListener(IPacketFilter filter)
-            : base(filter)
+        public AtResponseListener(XBeeRequest request) 
+            : base(new PacketIdFilter(request))
         {
         }
 
-        public XBeeResponse GetResponse(int timeout = -1)
+        public AtResponse GetAtResponse(int timeout = -1)
         {
             while (!Finished)
             {
@@ -31,7 +32,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
                     throw new XBeeTimeoutException();
             }
 
-            return (XBeeResponse)Packets[0];
+            return (AtResponse) Packets[0];
         }
     }
 }

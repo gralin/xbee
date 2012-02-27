@@ -13,24 +13,23 @@ namespace NETMF.Tester
         {
             // discovering modules available in ZigBee network
             
-            Debug.Print("Discovering nodes...");
+            Debug.Print("Discovering from coordinator...");
 
-            while (true)
-            {
-                var foundNodes = coordinator.DiscoverNodes();
+            var foundNodes = coordinator.DiscoverNodes();
 
-                if (foundNodes.Length > 0)
-                {
-                    Debug.Print("Found: " + foundNodes.Length + " nodes");
+            Debug.Print("Found: " + foundNodes.Length + " nodes");
 
-                    for (var i = 0; i < foundNodes.Length; i++)
-                        Debug.Print("#" + (i + 1) + " - " + foundNodes[i]);
+            for (var i = 0; i < foundNodes.Length; i++)
+                Debug.Print("#" + (i + 1) + " - " + foundNodes[i]);
 
-                    break;
-                }
+            Debug.Print("Discovering from router...");
 
-                Debug.Print("No nodes where discovered");
-            }
+            foundNodes = router.DiscoverNodes();
+
+            Debug.Print("Found: " + foundNodes.Length + " nodes");
+
+            for (var i = 0; i < foundNodes.Length; i++)
+                Debug.Print("#" + (i + 1) + " - " + foundNodes[i]);
 
             // printing RSSI of connected modules
 
