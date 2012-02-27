@@ -18,24 +18,26 @@ namespace PC.Tester
 
             while (true)
             {
-                var foundNodes = DiscoverNodes(xbee);
+                var foundNodes = xbee.DiscoverNodes();
 
-                if (foundNodes.Length > 0)
+                if (foundNodes.Length == 0)
                 {
-                    Debug.Print("Found: " + foundNodes.Length + " nodes");
-
-                    for (var i = 0; i < foundNodes.Length; i++)
-                    {
-                        Debug.Print("#" + (i + 1) + " - " + foundNodes[i]);
-
-                        if (foundNodes[i].NodeAddress64 != xbee.Config.SerialNumber)
-                            foundNode = foundNodes[i];
-                    }
-
-                    break;
+                    Debug.Print("No nodes where discovered");
+                    continue;
                 }
 
-                Debug.Print("No nodes where discovered");
+                Debug.Print("Found: " + foundNodes.Length + " nodes");
+
+                for (var i = 0; i < foundNodes.Length; i++)
+                {
+                    Debug.Print("#" + (i + 1) + " - " + foundNodes[i]);
+
+                    if (foundNodes[i].SerialNumber != xbee.Config.SerialNumber)
+                        foundNode = (ZBNodeDiscover)foundNodes[i];
+                }
+
+                if (foundNode != null)
+                    break;
             }
 
             // printing RSSI of connected module
@@ -60,25 +62,9 @@ namespace PC.Tester
                 if (key.Key != ConsoleKey.Enter)
                     return;
 
-                if (!SendText(xbee, foundNode.NodeAddress64, "Hello world!"))
+                if (!SendText(xbee, foundNode.SerialNumber, "Hello world!"))
                     Console.WriteLine("Failed to send message!");
             }
-        }
-
-        private static ZBNodeDiscover[] DiscoverNodes(XBee xbee)
-        {
-            var asyncResult = xbee.BeginSend(xbee.CreateRequest(AtCmd.NodeDiscover), new NodeDiscoveryListener());
-
-            // max discovery time is NC * 100 ms (by default is 6s)
-            const int discoveryTimeout = 0x3C * 100;
-
-            var nodes = xbee.EndReceive(asyncResult, discoveryTimeout);
-            var result = new ZBNodeDiscover[nodes.Length];
-
-            for (var i = 0; i < result.Length; i++)
-                result[i] = ZBNodeDiscover.Parse(nodes[i]);
-
-            return result;
         }
 
         private static int GetRssi(XBee xbee)

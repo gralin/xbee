@@ -8,11 +8,8 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Wpan
     /// Series 1 XBee.
     /// Parses a Node Discover (ND) AT Command Response
     /// </summary>
-    public class WpanNodeDiscover
+    public class WpanNodeDiscover : NodeInfo
     {
-        public XBeeAddress16 NodeAddress { get; set; }
-        public XBeeAddress64 NodeSerial { get; set; }
-        public string NodeIdentifier { get; set; }
         public int Rssi { get; set; }
 
         public static WpanNodeDiscover Parse(XBeeResponse response)
@@ -34,8 +31,8 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Wpan
 
             var frame = new WpanNodeDiscover
             {
-                NodeAddress = new XBeeAddress16(input.Read(2)),
-                NodeSerial = new XBeeAddress64(input.Read(8)),
+                NetworkAddress = new XBeeAddress16(input.Read(2)),
+                SerialNumber = new XBeeAddress64(input.Read(8)),
                 Rssi = -1*input.Read()
             };
 
@@ -51,8 +48,8 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Wpan
 
         public override string ToString()
         {
-            return "networkAddress=" + NodeAddress
-                   + ",serialNumber=" + NodeSerial
+            return "networkAddress=" + NetworkAddress
+                   + ",serialNumber=" + SerialNumber
                    + ",nodeIdentifier=" + NodeIdentifier
                    + ",rssi=" + Rssi + "dBi";
         }

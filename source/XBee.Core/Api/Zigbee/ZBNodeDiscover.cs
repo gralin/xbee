@@ -7,7 +7,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
     /// <summary>
     /// Series 2 XBee. Parses a Node Discover (ND) AT Command Response
     /// </summary>
-    public class ZBNodeDiscover
+    public class ZBNodeDiscover : NodeInfo
     {
         public enum DeviceTypes
         {
@@ -16,9 +16,6 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
             EndDevice = 2
         }
 
-        public XBeeAddress64 NodeAddress64 { get; set; }
-        public XBeeAddress16 NodeAddress16 { get; set; }
-        public string NodeIdentifier { get; set; }
         public XBeeAddress16 Parent { get; set; }
         public DeviceTypes DeviceType { get; set; }
         public byte Status { get; set; }
@@ -57,8 +54,8 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
 
             var frame = new ZBNodeDiscover
             {
-                NodeAddress16 = new XBeeAddress16(input.Read(2)),
-                NodeAddress64 = new XBeeAddress64(input.Read(8))
+                NetworkAddress = new XBeeAddress16(input.Read(2)),
+                SerialNumber = new XBeeAddress64(input.Read(8))
             };
 
             var nodeIdentifier = string.Empty;
@@ -86,8 +83,8 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
         public override string ToString()
         {
             return DeviceTypeName 
-                + ", SerialNumber = " + NodeAddress64 
-                + ", NetworkAddress = " + NodeAddress16;
+                + ", SerialNumber = " + SerialNumber 
+                + ", NetworkAddress = " + NetworkAddress;
         }
     }
 }

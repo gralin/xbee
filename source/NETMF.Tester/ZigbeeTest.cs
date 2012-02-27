@@ -17,7 +17,7 @@ namespace NETMF.Tester
 
             while (true)
             {
-                var foundNodes = DiscoverNodes(coordinator);
+                var foundNodes = coordinator.DiscoverNodes();
 
                 if (foundNodes.Length > 0)
                 {
@@ -57,22 +57,6 @@ namespace NETMF.Tester
 
             Debug.Print("Supply voltage of coordinator: " + voltage1Volts.ToString("F2") + "V");
             Debug.Print("Supply voltage of router: " + voltage2Volts.ToString("F2") + "V");
-        }
-
-        private static ZBNodeDiscover[] DiscoverNodes(XBee xbee)
-        {
-            var asyncResult = xbee.BeginSend(xbee.CreateRequest(AtCmd.NodeDiscover), new NodeDiscoveryListener());
-
-            // max discovery time is NC * 100 ms (by default is 6s)
-            const int discoveryTimeout = 0x3C*100;
-
-            var nodes = xbee.EndReceive(asyncResult, discoveryTimeout);
-            var result = new ZBNodeDiscover[nodes.Length];
-
-            for (var i = 0; i < result.Length; i++)
-                result[i] = ZBNodeDiscover.Parse(nodes[i]);
-
-            return result;
         }
 
         private static int GetRssi(XBee xbee)

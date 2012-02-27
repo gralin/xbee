@@ -148,6 +148,9 @@
     <Compile Include="..\XBee.Core\Api\ModemStatusResponse.cs">
       <Link>Api\ModemStatusResponse.cs</Link>
     </Compile>
+    <Compile Include="..\XBee.Core\Api\NodeInfo.cs">
+      <Link>Api\NodeInfo.cs</Link>
+    </Compile>
     <Compile Include="..\XBee.Core\Api\PacketIdGenerator.cs">
       <Link>Api\PacketIdGenerator.cs</Link>
     </Compile>

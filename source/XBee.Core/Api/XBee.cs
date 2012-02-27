@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using Gadgeteer.Modules.GHIElectronics.Api.At;
 using Gadgeteer.Modules.GHIElectronics.Api.Wpan;
 using Gadgeteer.Modules.GHIElectronics.Api.Zigbee;
@@ -96,6 +97,27 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         public void RemovePacketListener(IPacketListener listener)
         {
             _parser.RemovePacketListener(listener);
+        }
+
+        public NodeInfo[] DiscoverNodes()
+        {
+            var timeout = Send(AtCmd.NodeDiscoverTimeout).Value[0]*100;
+            var asyncResult = BeginSend(CreateRequest(AtCmd.NodeDiscover), new NodeDiscoveryListener());
+            var responses = EndReceive(asyncResult, timeout);
+            var result = new NodeInfo[responses.Length];
+
+            if (Config.IsSeries1())
+            {
+                for (var i = 0; i < responses.Length; i++)
+                    result[i] = WpanNodeDiscover.Parse(responses[i]);
+            }
+            else
+            {
+                for (var i = 0; i < responses.Length; i++)
+                    result[i] = ZBNodeDiscover.Parse(responses[i]);
+            }
+
+            return result;
         }
 
         // Creating requests

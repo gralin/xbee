@@ -62,6 +62,7 @@
     <Compile Include="Api\IXBeePacketHandler.cs" />
     <Compile Include="Api\ModemStatusResponse.cs" />
     <Compile Include="Api\Features\PacketListenning\MultiplePacketListener.cs" />
+    <Compile Include="Api\NodeInfo.cs" />
     <Compile Include="Api\PacketIdGenerator.cs" />
     <Compile Include="Api\Features\PacketListenning\PacketListener.cs" />
     <Compile Include="Api\PacketParser.cs" />
