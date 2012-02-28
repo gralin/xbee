@@ -43,7 +43,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != typeof (XBeeAddress)) return false;
+            if (!(obj is XBeeAddress)) return false;
             return Equals((XBeeAddress) obj);
         }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using Gadgeteer.Modules.GHIElectronics.Api.At;
 using Gadgeteer.Modules.GHIElectronics.Api.Wpan;
 using Gadgeteer.Modules.GHIElectronics.Api.Zigbee;
@@ -14,7 +15,11 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         private readonly IXBeeConnection _connection;
         private readonly PacketParser _parser;
         private readonly PacketIdGenerator _idGenerator;
+        
+        private AddressLookupListener _addressLookupListener;
+        private bool _addressLookupEnabled;
 
+        public Hashtable AddressLookup { get; private set; }
         public XBeeConfiguration Config { get; private set; }
 
         public bool IsConnected()
@@ -115,18 +120,44 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             var responses = EndReceive(asyncResult, timeout);
             var result = new NodeInfo[responses.Length];
 
-            if (Config.IsSeries1())
+            for (var i = 0; i < responses.Length; i++)
             {
-                for (var i = 0; i < responses.Length; i++)
-                    result[i] = WpanNodeDiscover.Parse(responses[i]);
-            }
-            else
-            {
-                for (var i = 0; i < responses.Length; i++)
-                    result[i] = ZBNodeDiscover.Parse(responses[i]);
+                var foundNode = Config.IsSeries1()
+                    ? (NodeInfo) WpanNodeDiscover.Parse(responses[i])
+                    : ZBNodeDiscover.Parse(responses[i]);
+
+                if (_addressLookupEnabled)
+                    AddressLookup[foundNode.SerialNumber] = foundNode.NetworkAddress;
+                
+                result[i] = foundNode;
             }
 
             return result;
+        }
+
+        public void EnableAddressLookup()
+        {
+            if (_addressLookupEnabled)
+                return;
+
+            if (AddressLookup == null)
+                AddressLookup = new Hashtable();
+
+            if (_addressLookupListener == null)                 
+                _addressLookupListener = new AddressLookupListener(AddressLookup);
+            
+            AddPacketListener(_addressLookupListener);
+            _addressLookupEnabled = true;
+        }
+
+        public void DisableAddressLookup()
+        {
+            if (!_addressLookupEnabled)
+                return;
+
+            AddressLookup.Clear();
+            RemovePacketListener(_addressLookupListener);
+            _addressLookupEnabled = false;
         }
 
         // Creating requests
@@ -172,7 +203,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 
         public RemoteAtResponse Send(AtCmd atCommand, XBeeAddress remoteXbee, byte[] value = null, int timeout = PacketParser.DefaultParseTimeout)
         {
-            return (RemoteAtResponse)Send(CreateRequest(atCommand, remoteXbee, value), timeout);
+            return (RemoteAtResponse) Send(CreateRequest(atCommand, remoteXbee, value), timeout);
         }
 
         /// <summary>
@@ -223,6 +254,9 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 
             try
             {
+                if (_addressLookupListener != null)
+                    _addressLookupListener.CurrentRequest = xbeeRequest;
+
                 AddPacketListener(listener);
                 SendAsync(xbeeRequest);
                 return listener.GetResponse(timeout);

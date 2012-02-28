@@ -30,7 +30,7 @@
             AddressAndRouteDiscovery = 3
         }
 
-        public XBeeAddress16 RemoteAddress16 { get; set; }
+        public XBeeAddress16 DestinationAddress { get; set; }
         public byte RetryCount { get; set; }
         public DeliveryResult DeliveryStatus { get; set; }
         public DiscoveryResult DiscoveryStatus { get; set; }
@@ -43,7 +43,7 @@
         public override void Parse(IPacketParser parser)
         {
             base.Parse(parser);
-            RemoteAddress16 = parser.ParseAddress16();
+            DestinationAddress = parser.ParseAddress16();
             RetryCount = parser.Read("ZNet Tx Status Tx Count");
             DeliveryStatus = (DeliveryResult) parser.Read("ZNet Tx Status Delivery Status");
             DiscoveryStatus = (DiscoveryResult) parser.Read("ZNet Tx Status Discovery Status");
@@ -52,7 +52,7 @@
         public override string ToString()
         {
             return base.ToString() +
-            ",remoteAddress16=" + RemoteAddress16 +
+            ",destinationAddress=" + DestinationAddress +
             ",retryCount=" + RetryCount +
             ",deliveryStatus=" + DeliveryStatus +
             ",discoveryStatus=" + DiscoveryStatus;

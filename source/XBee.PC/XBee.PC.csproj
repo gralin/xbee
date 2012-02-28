@@ -97,6 +97,9 @@
     <Compile Include="..\XBee.Core\Api\ErrorResponse.cs">
       <Link>Api\ErrorResponse.cs</Link>
     </Compile>
+    <Compile Include="..\XBee.Core\Api\Features\PacketListenning\AddressLookupListener.cs">
+      <Link>Api\Features\PacketListenning\AddressLookupListener.cs</Link>
+    </Compile>
     <Compile Include="..\XBee.Core\Api\Features\PacketListenning\AtResponseFilter.cs">
       <Link>Api\Features\PacketListenning\AtResponseFilter.cs</Link>
     </Compile>

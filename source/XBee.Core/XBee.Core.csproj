@@ -48,6 +48,7 @@
     <Compile Include="Api\Checksum.cs" />
     <Compile Include="Api\ErrorResponse.cs" />
     <Compile Include="Api\Features\PacketListenning\AtResponseFilter.cs" />
+    <Compile Include="Api\Features\PacketListenning\AddressLookupListener.cs" />
     <Compile Include="Api\Features\PacketListenning\PacketCountFilter.cs" />
     <Compile Include="Api\Features\PacketListenning\PacketIdFilter.cs" />
     <Compile Include="Api\Features\PacketListenning\NodeDiscoveryFilter.cs" />
