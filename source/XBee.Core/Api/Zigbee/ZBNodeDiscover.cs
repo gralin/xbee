@@ -9,15 +9,8 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
     /// </summary>
     public class ZBNodeDiscover : NodeInfo
     {
-        public enum DeviceTypes
-        {
-            Coordinator = 0,
-            Router = 1,
-            EndDevice = 2
-        }
-
         public XBeeAddress16 Parent { get; set; }
-        public DeviceTypes DeviceType { get; set; }
+        public DeviceType DeviceType { get; set; }
         public byte Status { get; set; }
         public byte[] ProfileId { get; set; }
         public byte[] MfgId { get; set; }
@@ -28,11 +21,11 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
             {
                 switch (DeviceType)
                 {
-                    case DeviceTypes.Coordinator:
+                    case DeviceType.Coordinator:
                         return "Coordinator";
-                    case DeviceTypes.Router:
+                    case DeviceType.Router:
                         return "Router";
-                    case DeviceTypes.EndDevice:
+                    case DeviceType.EndDevice:
                         return "End device";
                     default:
                         return "Unknown";
@@ -71,7 +64,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
 
             frame.NodeIdentifier = nodeIdentifier;
             frame.Parent = new XBeeAddress16(input.Read(2));
-            frame.DeviceType = (DeviceTypes) input.Read();
+            frame.DeviceType = (DeviceType) input.Read();
             // TODO: this is being reported as 1 (router) for my end device
             frame.Status = input.Read();
             frame.ProfileId = input.Read(2);

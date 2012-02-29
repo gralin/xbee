@@ -217,6 +217,9 @@
     <Compile Include="..\XBee.Core\Api\Zigbee\AssociationStatus.cs">
       <Link>Api\Zigbee\AssociationStatus.cs</Link>
     </Compile>
+    <Compile Include="..\XBee.Core\Api\Zigbee\DeviceType.cs">
+      <Link>Api\Zigbee\DeviceType.cs</Link>
+    </Compile>
     <Compile Include="..\XBee.Core\Api\Zigbee\IZigbeePacket.cs">
       <Link>Api\Zigbee\IZigbeePacket.cs</Link>
     </Compile>

@@ -11,7 +11,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.At
             return Parse(sl, sh);
         }
 
-        public static XBeeAddress64 Read(XBee sender, XBeeAddress16 remoteXbee)
+        public static XBeeAddress64 Read(XBee sender, XBeeAddress remoteXbee)
         {
             var sh = sender.Send(AtCmd.SerialNumberHigh, remoteXbee);
             var sl = sender.Send(AtCmd.SerialNumberLow, remoteXbee);

@@ -24,7 +24,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.At
             return Parse(xbee.Send(AtCmd.HardwareVersion));
         }
 
-        public static HardwareVersions Read(XBee sender, XBeeAddress16 remoteXBee)
+        public static HardwareVersions Read(XBee sender, XBeeAddress remoteXBee)
         {
             return Parse(sender.Send(AtCmd.HardwareVersion, remoteXBee));
         }

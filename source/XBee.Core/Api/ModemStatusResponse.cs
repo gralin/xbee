@@ -31,7 +31,7 @@
         public override string ToString()
         {
             return base.ToString()
-                   + ",status=" + ResponseStatus;
+                   + ", status=" + ResponseStatus;
         }
     }
 }

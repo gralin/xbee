@@ -38,8 +38,8 @@ namespace NETMF.Tester
 
             // sending text messages
 
-            coordinator.AddPacketListener(new IncomingDataListener());
-            router.AddPacketListener(new IncomingDataListener());
+            coordinator.AddPacketListener(new IncomingDataListener(coordinator.Config.SerialNumber));
+            router.AddPacketListener(new IncomingDataListener(router.Config.SerialNumber));
 
             if (!SendText(router, coordinator.Config.SerialNumber, "Hello coordinator"))
                 Debug.Print("Failed to send message to coordinator");
@@ -72,9 +72,16 @@ namespace NETMF.Tester
 
         class IncomingDataListener : IPacketListener
         {
+            private readonly XBeeAddress _receiver;
+
             public bool Finished
             {
                 get { return false; }
+            }
+
+            public IncomingDataListener(XBeeAddress receiver)
+            {
+                _receiver = receiver;
             }
 
             public void ProcessPacket(XBeeResponse packet)
@@ -84,7 +91,7 @@ namespace NETMF.Tester
 
                 var dataPacket = packet as ZNetRxResponse;
 
-                Debug.Print("Received '" + Arrays.ToString(dataPacket.Payload)
+                Debug.Print(_receiver + " <- '" + Arrays.ToString(dataPacket.Payload)
                     + "' from " + dataPacket.SourceAddress);
             }
 

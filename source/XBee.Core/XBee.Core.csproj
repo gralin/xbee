@@ -90,6 +90,7 @@
     <Compile Include="Api\XBeeResponse.cs" />
     <Compile Include="Api\XBeeTimeoutException.cs" />
     <Compile Include="Api\Zigbee\AssociationStatus.cs" />
+    <Compile Include="Api\Zigbee\DeviceType.cs" />
     <Compile Include="Api\Zigbee\IZigbeePacket.cs" />
     <Compile Include="Api\Zigbee\ZBForceSampleRequest.cs" />
     <Compile Include="Api\Zigbee\ZBNodeDiscover.cs" />

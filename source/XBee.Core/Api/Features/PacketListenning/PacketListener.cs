@@ -52,7 +52,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
                 // wait max timeout time for any packet to be processed
                 if (!PacketProcessed.WaitOne(timeout, false))
                 {
-                    Logger.Debug("Packet listener failed to finish");
+                    Logger.LowDebug("Packet listener timeout");
                     break;
                 }
 

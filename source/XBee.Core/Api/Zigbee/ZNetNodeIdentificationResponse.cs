@@ -1,54 +1,88 @@
-﻿using Gadgeteer.Modules.GHIElectronics.Util;
+﻿using Gadgeteer.Modules.GHIElectronics.Api.At;
+using Gadgeteer.Modules.GHIElectronics.Util;
 
 namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
 {
+    /// <summary>
+    /// This frame is received when a module transmits a node identification message to identify itself (when AO=0).
+    /// The data portion of this frame is similar to a network discovery response frame (see <see cref="ZBNodeDiscover"/>).
+    /// </summary>
+    /// <example>
+    /// If the commissioning push button is pressed on a remote router device with 64-bit address 0x0013A20040522BAA, 
+    /// 16-bit address 0x7D84, and default NI string, the preceding node identification indicator would be received. 
+    /// Please note that 00 03 00 00 appears before the checksum with the DD value only if ATNO & 0x01.
+    /// </example>
     public class ZNetNodeIdentificationResponse : XBeeResponse
     {
-        public enum Options
+        public enum PacketOption
         {
-            PacketAcknowledged = 0x01,
-            BroadcastPacket = 0x02
-        }
+            /// <summary>
+            /// Packet Acknowledged
+            /// </summary>
+            Ack = 0x01,
 
-        // TODO this is repeated in NodeDiscover
-        public enum DeviceTypes
-        {
-            Coordinator = 0x1,
-            Router = 0x2,
-            EndDevice = 0x3
+            /// <summary>
+            /// Packet was a broadcast packet
+            /// </summary>
+            Broadcast = 0x02
         }
 
         public enum SourceActions
         {
-            Pushbutton = 0x1,
-            Joining = 0x2
+            /// <summary>
+            /// Frame sent by node identific ation pushbutton event (see D0 command)
+            /// </summary>
+            Pushbutton = 1,
+
+            /// <summary>
+            /// Frame sent after joining event occurred (see <see cref="AtCmd.JoinNotification"/>).
+            /// </summary>
+            Joining = 2,
+
+            /// <summary>
+            /// Frame sent after power cycle event occurred (see <see cref="AtCmd.JoinNotification"/>).
+            /// </summary>
+            PowerCycle = 3
         }
 
-        public XBeeAddress64 RemoteAddress64 { get; set; }
-        public XBeeAddress16 RemoteAddress16 { get; set; }
-        public Options Option { get; set; }
+        // serial and network address of node that transmited this packet
+        // this will be equal to remote serial and address if there were
+        // not hops in between
+        public XBeeAddress64 SenderSerial { get; set; }
+        public XBeeAddress16 SenderAddress { get; set; }
 
-        // TODO Digi WTF why duplicated?? p.70
-        public XBeeAddress64 RemoteAddress64_2 { get; set; }
-        public XBeeAddress16 RemoteAddress16_2 { get; set; }
+        // serial and netowork address of remote node that was identified
+        public XBeeAddress64 RemoteSerial { get; set; }
+        public XBeeAddress16 RemoteAddress { get; set; }
 
+        public PacketOption Option { get; set; }
+        
+        // these properties are all regarding the remote node
         public string NodeIdentifier { get; set; }
         public XBeeAddress16 ParentAddress { get; set; }
-        public DeviceTypes DeviceType { get; set; }
+        public DeviceType DeviceType { get; set; }
         public SourceActions SourceAction { get; set; }
+
+        /// <summary>
+        /// Set to Digi's application profile ID.
+        /// </summary>
         public ushort ProfileId { get; set; }
+
+        /// <summary>
+        /// Set to Digi's Manufacturer ID.
+        /// </summary>
         public ushort MfgId { get; set; }
 
         public override void Parse(IPacketParser parser)
         {
-            RemoteAddress64 = parser.ParseAddress64();
-            RemoteAddress16 = parser.ParseAddress16();
+            SenderSerial = parser.ParseAddress64();
+            SenderAddress = parser.ParseAddress16();
 
-            Option = (Options) parser.Read("Option");
+            Option = (PacketOption) parser.Read("Option");
 
             // again with the addresses
-            RemoteAddress64_2 = parser.ParseAddress64();
-            RemoteAddress16_2 = parser.ParseAddress16();
+            RemoteSerial = parser.ParseAddress64();
+            RemoteAddress = parser.ParseAddress16();
 
             var nodeIdentifier = string.Empty;
             byte ch;
@@ -62,7 +96,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
 
             NodeIdentifier = nodeIdentifier;
             ParentAddress = parser.ParseAddress16();
-            DeviceType = (DeviceTypes) parser.Read("Device Type");
+            DeviceType = (DeviceType) parser.Read("Device Type");
             SourceAction = (SourceActions) parser.Read("Source Action");
             ProfileId = UshortUtils.ToUshort(parser.Read("Profile MSB"), parser.Read("Profile LSB"));
             MfgId = UshortUtils.ToUshort(parser.Read("MFG MSB"), parser.Read("MFG LSB"));
@@ -70,18 +104,18 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
 
         public override string ToString()
         {
-            return "ZNetNodeIdentificationResponse [deviceType=" + DeviceType
-                   + ", mfgId=" + MfgId 
+            return base.ToString()
+                   + ", senderAddress=" + SenderAddress
+                   + ", senderSerial=" + SenderSerial
+                   + ", remoteAddress=" + RemoteAddress
+                   + ", remoteSerial=" + RemoteSerial
+                   + ", deviceType=" + DeviceType
+                   + ", mfgId=" + MfgId
                    + ", nodeIdentifier=" + NodeIdentifier
-                   + ", option=" + Option 
+                   + ", option=" + Option
                    + ", parentAddress=" + ParentAddress
-                   + ", profileId=" + ProfileId 
-                   + ", remoteAddress16=" + RemoteAddress16 
-                   + ", remoteAddress16_2=" + RemoteAddress16_2
-                   + ", remoteAddress64=" + RemoteAddress64
-                   + ", remoteAddress64_2=" + RemoteAddress64_2
-                   + ", sourceAction=" + SourceAction + "]" 
-                   + base.ToString();
+                   + ", profileId=" + ProfileId
+                   + ", sourceAction=" + SourceAction;
         }
     }
 }

@@ -42,7 +42,17 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             {
                 var request = CurrentRequest as ZNetTxRequest;
                 var response = packet as ZNetTxStatusResponse;
-                _addressLookup[request.DestinationSerial] = response.DestinationAddress;
+
+                _addressLookup[request.DestinationSerial] = 
+                    response.DeliveryStatus == ZNetTxStatusResponse.DeliveryResult.Success
+                        ? response.DestinationAddress
+                        : XBeeAddress16.ZnetBroadcast;
+            }
+            else if (packet is ZNetNodeIdentificationResponse)
+            {
+                var identPacket = packet as ZNetNodeIdentificationResponse;
+                _addressLookup[identPacket.SenderSerial] = identPacket.SenderAddress;
+                _addressLookup[identPacket.RemoteSerial] = identPacket.RemoteAddress;
             }
         }
     }

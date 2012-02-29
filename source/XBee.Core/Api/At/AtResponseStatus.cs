@@ -11,6 +11,6 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.At
         /// Series 1 remote AT only according to spec.
         /// Also series 2 in 2x64 zb pro firmware
         /// </summary>
-        NoResponse = 4
+        TransmissionFailed = 4
     }
 }
