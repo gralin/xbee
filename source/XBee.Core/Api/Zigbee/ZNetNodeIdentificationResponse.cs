@@ -80,9 +80,8 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
 
             Option = (PacketOption) parser.Read("Option");
 
-            // again with the addresses
-            RemoteSerial = parser.ParseAddress64();
             RemoteAddress = parser.ParseAddress16();
+            RemoteSerial = parser.ParseAddress64();
 
             var nodeIdentifier = string.Empty;
             byte ch;
