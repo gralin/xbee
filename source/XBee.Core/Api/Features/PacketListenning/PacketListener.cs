@@ -7,27 +7,15 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 {
     public class PacketListener : IPacketListener
     {
-        protected IPacketValidator Validator;
-        protected IPacketTerminator Terminator;
+        protected IPacketFilter Filter;
         protected readonly ArrayList Packets;
-        public AutoResetEvent PacketAccepted { get; set; }
+        protected AutoResetEvent PacketProcessed;
 
-        public PacketListener()
+        public PacketListener(IPacketFilter filter)
         {
-            PacketAccepted = new AutoResetEvent(false);
+            Filter = filter;
             Packets = new ArrayList();
-        }
-
-        public PacketListener(IPacketTerminator terminator = null, IPacketValidator validator = null)
-            : this()
-        {
-            Validator = validator;
-            Terminator = terminator;
-        }
-
-        public PacketListener(IPacketValidator validator = null, IPacketTerminator terminator = null)
-            : this(terminator, validator)
-        {
+            PacketProcessed = new AutoResetEvent(false);
         }
 
         public bool Finished { get; protected set; }
@@ -37,21 +25,19 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             if (Finished)
                 return;
 
-            if (Validator != null && !Validator.Validate(packet))
-                return;
+            if (Filter == null || Filter.Accepted(packet))
+                Packets.Add(packet);
 
-            Packets.Add(packet);
-            PacketAccepted.Set();
+            Finished = (Filter != null && Filter.Finished());
 
-            if (Terminator != null)
-                Finished = Terminator.Terminate(packet);
+            PacketProcessed.Set();
         }
 
         public XBeeResponse[] GetPackets(int timeout = -1)
         {
-            if (Terminator == null)
+            if (Filter == null)
             {
-                // if there is no terminator and timeout has been specified
+                // if there is no Filter and timeout has been specified
                 // it will cause the method to block for given timeout time
                 if (timeout != -1)
                     Thread.Sleep(timeout);
@@ -59,8 +45,28 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
                 return GetPacketsAsArray();   
             }
 
-            if (!Terminator.Finished.WaitOne(timeout, false))
-                Logger.Debug("Failed to receive expected number of responses");
+            while (!Finished)
+            {
+                var startTime = DateTime.Now;
+
+                // wait max timeout time for any packet to be processed
+                if (!PacketProcessed.WaitOne(timeout, false))
+                {
+                    Logger.LowDebug("Packet listener timeout");
+                    break;
+                }
+
+                // -1 means timeout is not used
+                if (timeout == -1) 
+                    continue;
+                
+                // decrement next iteration timeout value by elasped time
+                timeout -= (int) (DateTime.Now.Subtract(startTime).Ticks/TimeSpan.TicksPerMillisecond);
+                    
+                // end waiting if no timeout time is left
+                if (timeout <= 0)
+                    break;
+            }
 
             return GetPacketsAsArray();
         }

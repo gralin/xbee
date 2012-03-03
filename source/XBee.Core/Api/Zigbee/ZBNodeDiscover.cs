@@ -7,20 +7,10 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
     /// <summary>
     /// Series 2 XBee. Parses a Node Discover (ND) AT Command Response
     /// </summary>
-    public class ZBNodeDiscover
+    public class ZBNodeDiscover : NodeInfo
     {
-        public enum DeviceTypes
-        {
-            DEV_TYPE_COORDINATOR = 0,
-            DEV_TYPE_ROUTER = 1,
-            DEV_TYPE_END_DEVICE = 2
-        }
-
-        public XBeeAddress64 NodeAddress64 { get; set; }
-        public XBeeAddress16 NodeAddress16 { get; set; }
-        public string NodeIdentifier { get; set; }
         public XBeeAddress16 Parent { get; set; }
-        public DeviceTypes DeviceType { get; set; }
+        public DeviceType DeviceType { get; set; }
         public byte Status { get; set; }
         public byte[] ProfileId { get; set; }
         public byte[] MfgId { get; set; }
@@ -31,11 +21,11 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
             {
                 switch (DeviceType)
                 {
-                    case DeviceTypes.DEV_TYPE_COORDINATOR:
+                    case DeviceType.Coordinator:
                         return "Coordinator";
-                    case DeviceTypes.DEV_TYPE_ROUTER:
+                    case DeviceType.Router:
                         return "Router";
-                    case DeviceTypes.DEV_TYPE_END_DEVICE:
+                    case DeviceType.EndDevice:
                         return "End device";
                     default:
                         return "Unknown";
@@ -57,8 +47,8 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
 
             var frame = new ZBNodeDiscover
             {
-                NodeAddress16 = new XBeeAddress16(input.Read(2)),
-                NodeAddress64 = new XBeeAddress64(input.Read(8))
+                NetworkAddress = new XBeeAddress16(input.Read(2)),
+                SerialNumber = new XBeeAddress64(input.Read(8))
             };
 
             var nodeIdentifier = string.Empty;
@@ -74,7 +64,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
 
             frame.NodeIdentifier = nodeIdentifier;
             frame.Parent = new XBeeAddress16(input.Read(2));
-            frame.DeviceType = (DeviceTypes) input.Read();
+            frame.DeviceType = (DeviceType) input.Read();
             // TODO: this is being reported as 1 (router) for my end device
             frame.Status = input.Read();
             frame.ProfileId = input.Read(2);
@@ -86,8 +76,8 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
         public override string ToString()
         {
             return DeviceTypeName 
-                + ", SerialNumber = " + NodeAddress64 
-                + ", NetworkAddress = " + NodeAddress16;
+                + ", SerialNumber = " + SerialNumber 
+                + ", NetworkAddress = " + NetworkAddress;
         }
     }
 }

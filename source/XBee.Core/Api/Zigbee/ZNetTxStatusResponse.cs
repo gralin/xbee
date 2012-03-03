@@ -8,29 +8,29 @@
     {
         public enum DeliveryResult
         {
-            SUCCESS = 0,
-            CCA_FAILURE = 0x02,
-            INVALID_DESTINATION_ENDPOINT = 0x15,
-            NETWORK_ACK_FAILURE = 0x21,
-            NOT_JOINED_TO_NETWORK = 0x22,
-            SELF_ADDRESSED = 0x23,
-            ADDRESS_NOT_FOUND = 0x24,
-            ROUTE_NOT_FOUND = 0x25,
+            Success = 0,
+            CcaFailure = 0x02,
+            InvalidDestinationEndpoint = 0x15,
+            NetworkAckFailure = 0x21,
+            NotJoinedToNetwork = 0x22,
+            SelfAddressed = 0x23,
+            AddressNotFound = 0x24,
+            RouteNotFound = 0x25,
             /// <summary>
             /// ZB Pro firmware only
             /// </summary>
-            PAYLOAD_TOO_LARGE = 0x74
+            PayloadTooLarge = 0x74
         }
 
         public enum DiscoveryResult
         {
-            NO_DISCOVERY = 0,
-            ADDRESS_DISCOVERY = 1,
-            ROUTE_DISCOVERY = 2,
-            ADDRESS_AND_ROUTE_DISCOVERY = 3
+            NoDiscovery = 0,
+            AddressDiscovery = 1,
+            RouteDiscovery = 2,
+            AddressAndRouteDiscovery = 3
         }
 
-        public XBeeAddress16 RemoteAddress16 { get; set; }
+        public XBeeAddress16 DestinationAddress { get; set; }
         public byte RetryCount { get; set; }
         public DeliveryResult DeliveryStatus { get; set; }
         public DiscoveryResult DiscoveryStatus { get; set; }
@@ -38,12 +38,12 @@
         /// <summary>
         /// Returns true if the delivery status is SUCCESS
         /// </summary>
-        public bool IsSuccess { get { return DeliveryStatus == DeliveryResult.SUCCESS; } }
+        public bool IsSuccess { get { return DeliveryStatus == DeliveryResult.Success; } }
 
         public override void Parse(IPacketParser parser)
         {
             base.Parse(parser);
-            RemoteAddress16 = parser.ParseAddress16();
+            DestinationAddress = parser.ParseAddress16();
             RetryCount = parser.Read("ZNet Tx Status Tx Count");
             DeliveryStatus = (DeliveryResult) parser.Read("ZNet Tx Status Delivery Status");
             DiscoveryStatus = (DiscoveryResult) parser.Read("ZNet Tx Status Discovery Status");
@@ -52,7 +52,7 @@
         public override string ToString()
         {
             return base.ToString() +
-            ",remoteAddress16=" + RemoteAddress16 +
+            ",destinationAddress=" + DestinationAddress +
             ",retryCount=" + RetryCount +
             ",deliveryStatus=" + DeliveryStatus +
             ",discoveryStatus=" + DiscoveryStatus;

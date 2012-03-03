@@ -8,8 +8,8 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
     /// </summary>
     public class XBeeAddress64 : XBeeAddress
     {
-        public static readonly XBeeAddress64 BROADCAST = new XBeeAddress64(new byte[] { 0, 0, 0, 0, 0, 0, 0xff, 0xff });
-        public static readonly XBeeAddress64 ZNET_COORDINATOR = new XBeeAddress64(new byte[] { 0, 0, 0, 0, 0, 0, 0, 0 });
+        public static readonly XBeeAddress64 Broadcast = new XBeeAddress64(0, 0, 0, 0, 0, 0, 0xff, 0xff);
+        public static readonly XBeeAddress64 ZnetCoordinator = new XBeeAddress64(0, 0, 0, 0, 0, 0, 0, 0);
 
         public XBeeAddress64()
             : base(new byte[8])
@@ -30,18 +30,31 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         /// Parses an 64-bit XBee address from a string representation
         /// </summary>
         /// <param name="addressStr">
-        /// Must be in the format "## ## ## ## ## ## ## ##" (i.e. don't use 0x prefix)
+        /// Don't use '0x' prefix. Allowed formats:
+        /// <c>0000000000000000</c>
+        /// <c>00 00 00 00 00 00 00 00</c>
         /// </param>
         public XBeeAddress64(string addressStr) 
             : this()
         {
-            var addressParts = addressStr.Split(' ');
+            if (addressStr.IndexOf(' ') > 0)
+            {
+                var addressParts = addressStr.Split(' ');
 
-            if (addressParts.Length != Address.Length)
-                throw new ArgumentException("Address string format is invalid");
+                if (addressParts.Length != Address.Length)
+                    throw new ArgumentException("Address string format is invalid");
 
-            for (var i = 0; i < Address.Length; i++)
-                Address[i] = ByteUtils.FromBase16(addressParts[i]);
+                for (var i = 0; i < Address.Length; i++)
+                    Address[i] = ByteUtils.FromBase16(addressParts[i]);
+            }
+            else
+            {
+                if (addressStr.Length / 2 != Address.Length)
+                    throw new ArgumentException("Address string format is invalid");
+
+                for (var i = 0; i < Address.Length; i++)
+                    Address[i] = ByteUtils.FromBase16(addressStr.Substring(i*2, 2));
+            }
         }
     }
 }

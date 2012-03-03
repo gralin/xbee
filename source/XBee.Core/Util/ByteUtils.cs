@@ -16,7 +16,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Util
             return result;
         }
 
-        public static string ToBase16(int b)
+        public static string ToBase16(ushort b)
         {
             return b <= byte.MaxValue
                        ? new string(new[] {Hex[b >> 4], Hex[b & 0x0F]})
@@ -82,7 +82,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Util
             return ((msb & 0x3) << 8) + lsb;
         }
 
-        public static string FormatByte(int value)
+        public static string FormatByte(byte value)
         {
             return "0x" + ToBase16(value);
         }

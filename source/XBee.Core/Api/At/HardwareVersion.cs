@@ -10,12 +10,12 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.At
         {
             HardwareVersionNames = new Hashtable
             {
-                {HardwareVersions.UNKNOWN,"Unknown"},
-                {HardwareVersions.SERIES1,"Series 1"},
-                {HardwareVersions.SERIES1_PRO,"Series 1 Pro"},
-                {HardwareVersions.SERIES2,"Series 2"},
-                {HardwareVersions.SERIES2_PRO,"Series 2 Pro"},
-                {HardwareVersions.SERIES2B_PRO,"Series 2B Pro"},
+                {HardwareVersions.Unknown,"Unknown"},
+                {HardwareVersions.Series1,"Series 1"},
+                {HardwareVersions.Series1Pro,"Series 1 Pro"},
+                {HardwareVersions.Series2,"Series 2"},
+                {HardwareVersions.Series2Pro,"Series 2 Pro"},
+                {HardwareVersions.Series2BPro,"Series 2B Pro"},
             };
         }
 
@@ -24,7 +24,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.At
             return Parse(xbee.Send(AtCmd.HardwareVersion));
         }
 
-        public static HardwareVersions Read(XBee sender, XBeeAddress16 remoteXBee)
+        public static HardwareVersions Read(XBee sender, XBeeAddress remoteXBee)
         {
             return Parse(sender.Send(AtCmd.HardwareVersion, remoteXBee));
         }

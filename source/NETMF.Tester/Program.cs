@@ -27,6 +27,11 @@ namespace NETMF.Tester
             var xbee2 = new XBee("COM4", 9600);
             xbee2.Open();
 
+            // enabling address lookup tables
+
+            xbee1.EnableAddressLookup();
+            xbee2.EnableAddressLookup();
+
             // reading network addresses of the connected modules
 
             var xbee1Address = new XBeeAddress16(xbee1.Send(AtCmd.NetworkAddress).Value);
@@ -55,6 +60,16 @@ namespace NETMF.Tester
             {
                 ZigbeeTest.Run(xbee1, xbee2);
             }
+
+            // printing lookup tables
+
+            Debug.Print("XBee 1 lookup table");
+            foreach (var serial in xbee1.AddressLookup.Keys)
+                Debug.Print(serial + " -> " + xbee1.AddressLookup[serial]);
+
+            Debug.Print("XBee 2 lookup table");
+            foreach (var serial in xbee2.AddressLookup.Keys)
+                Debug.Print(serial + " -> " + xbee2.AddressLookup[serial]);
 
             Thread.Sleep(Timeout.Infinite);
         }

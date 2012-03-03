@@ -8,7 +8,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
     public class XBeeConfiguration
     {
         private readonly XBee _xbee;
-        private readonly XBeeAddress16 _remoteXbee;
+        private readonly XBeeAddress _remoteXbee;
 
         public HardwareVersions HardwareVersion { get; private set; }
         public string Firmware { get; private set; }
@@ -16,7 +16,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         public ApiModes ApiMode { get; private set; }
         public string NodeIdentifier { get; private set; }
 
-        private XBeeConfiguration(XBee xbee, XBeeAddress16 remoteXbee = null)
+        private XBeeConfiguration(XBee xbee, XBeeAddress remoteXbee = null)
         {
             _xbee = xbee;
             _remoteXbee = remoteXbee;
@@ -45,7 +45,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         /// <param name="sender">XBee module that will send AT command to remote target</param>
         /// <param name="remoteXbee">XBee module which infomation will be retrieved</param>
         /// <returns>Remote XBee basic infomation</returns>
-        public static XBeeConfiguration Read(XBee sender, XBeeAddress16 remoteXbee)
+        public static XBeeConfiguration Read(XBee sender, XBeeAddress remoteXbee)
         {
             return new XBeeConfiguration(sender, remoteXbee)
             {
@@ -104,8 +104,8 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         {
             switch (HardwareVersion)
             {
-                case HardwareVersions.SERIES1:
-                case HardwareVersions.SERIES1_PRO:
+                case HardwareVersions.Series1:
+                case HardwareVersions.Series1Pro:
                     return true;
                 default:
                     return false;
@@ -116,9 +116,9 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         {
             switch (HardwareVersion)
             {
-                case HardwareVersions.SERIES2:
-                case HardwareVersions.SERIES2_PRO:
-                case HardwareVersions.SERIES2B_PRO:
+                case HardwareVersions.Series2:
+                case HardwareVersions.Series2Pro:
+                case HardwareVersions.Series2BPro:
                     return true;
                 default:
                     return false;

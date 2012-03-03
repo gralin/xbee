@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using Gadgeteer.Modules.GHIElectronics.Api.At;
 using Gadgeteer.Modules.GHIElectronics.Api.Wpan;
 using Gadgeteer.Modules.GHIElectronics.Api.Zigbee;
@@ -14,7 +15,11 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         private readonly IXBeeConnection _connection;
         private readonly PacketParser _parser;
         private readonly PacketIdGenerator _idGenerator;
+        
+        private AddressLookupListener _addressLookupListener;
+        private bool _addressLookupEnabled;
 
+        public Hashtable AddressLookup { get; private set; }
         public XBeeConfiguration Config { get; private set; }
 
         public bool IsConnected()
@@ -98,6 +103,63 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             _parser.RemovePacketListener(listener);
         }
 
+        public NodeInfo[] DiscoverNodes()
+        {
+            var discoveryTimeout = Send(AtCmd.NodeDiscoverTimeout);
+
+            // it seems that Zigbee modules have longer timeout (2 bytes)
+            int timeout = discoveryTimeout.Value.Length == 1
+                              ? discoveryTimeout.Value[0]
+                              : UshortUtils.ToUshort(discoveryTimeout.Value);
+
+            // ms + 1 extra second
+            timeout = timeout * 100 + 1000;
+
+            var request = CreateRequest(AtCmd.NodeDiscover);
+            var asyncResult = BeginSend(request, new NodeDiscoveryListener());
+            var responses = EndReceive(asyncResult, timeout);
+            var result = new NodeInfo[responses.Length];
+
+            for (var i = 0; i < responses.Length; i++)
+            {
+                var foundNode = Config.IsSeries1()
+                    ? (NodeInfo) WpanNodeDiscover.Parse(responses[i])
+                    : ZBNodeDiscover.Parse(responses[i]);
+
+                if (_addressLookupEnabled)
+                    AddressLookup[foundNode.SerialNumber] = foundNode.NetworkAddress;
+                
+                result[i] = foundNode;
+            }
+
+            return result;
+        }
+
+        public void EnableAddressLookup()
+        {
+            if (_addressLookupEnabled)
+                return;
+
+            if (AddressLookup == null)
+                AddressLookup = new Hashtable();
+
+            if (_addressLookupListener == null)                 
+                _addressLookupListener = new AddressLookupListener(AddressLookup);
+            
+            AddPacketListener(_addressLookupListener);
+            _addressLookupEnabled = true;
+        }
+
+        public void DisableAddressLookup()
+        {
+            if (!_addressLookupEnabled)
+                return;
+
+            AddressLookup.Clear();
+            RemovePacketListener(_addressLookupListener);
+            _addressLookupEnabled = false;
+        }
+
         // Creating requests
 
         public XBeeRequest CreateRequest(XBeeAddress destination, string payload)
@@ -112,12 +174,12 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
                 : new ZNetTxRequest(destination, payload) { FrameId = _idGenerator.GetNext() };
         }
 
-        public XBeeRequest CreateRequest(AtCmd atCommand, byte[] value = null)
+        public AtCommand CreateRequest(AtCmd atCommand, byte[] value = null)
         {
             return new AtCommand(atCommand, value) { FrameId = _idGenerator.GetNext() };
         }
 
-        public XBeeRequest CreateRequest(AtCmd atCommand, XBeeAddress remoteXbee, byte[] value = null)
+        public RemoteAtCommand CreateRequest(AtCmd atCommand, XBeeAddress remoteXbee, byte[] value = null)
         {
             return new RemoteAtCommand(atCommand, remoteXbee, value) { FrameId = _idGenerator.GetNext() };
         }
@@ -126,26 +188,22 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 
         public XBeeResponse Send(XBeeAddress destination, byte[] payload)
         {
-            var request = CreateRequest(destination, payload);
-
-            return request is TxRequest
-                ? Send(request, typeof(TxStatusResponse))
-                : Send(request, typeof(ZNetTxStatusResponse));
+            return Send(CreateRequest(destination, payload));
         }
 
         public XBeeResponse Send(XBeeAddress destination, string payload)
         {
-            return Send(destination, Arrays.ToByteArray(payload));
+            return Send(CreateRequest(destination, payload));
         }
 
         public AtResponse Send(AtCmd atCommand, byte[] value = null, int timeout = PacketParser.DefaultParseTimeout)
         {
-            return (AtResponse)Send(CreateRequest(atCommand, value), typeof(AtResponse), timeout);
+            return (AtResponse)Send(CreateRequest(atCommand, value), timeout);
         }
 
         public RemoteAtResponse Send(AtCmd atCommand, XBeeAddress remoteXbee, byte[] value = null, int timeout = PacketParser.DefaultParseTimeout)
         {
-            return (RemoteAtResponse)Send(CreateRequest(atCommand, remoteXbee, value), typeof(RemoteAtResponse), timeout);
+            return (RemoteAtResponse) Send(CreateRequest(atCommand, remoteXbee, value), timeout);
         }
 
         /// <summary>
@@ -180,7 +238,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         /// XBeeTimeoutException thrown if no matching response is identified
         /// </exception>
         /// <returns></returns>
-        public XBeeResponse Send(XBeeRequest xbeeRequest, Type expectedResponse = null, int timeout = PacketParser.DefaultParseTimeout)
+        public XBeeResponse Send(XBeeRequest xbeeRequest, int timeout = PacketParser.DefaultParseTimeout)
         {
             if (xbeeRequest.FrameId == PacketIdGenerator.NoResponseId)
             {
@@ -188,13 +246,20 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
                 return null;
             }
 
-            var listener = new SinglePacketListener(expectedResponse);
+            var filter = xbeeRequest is AtCommand
+                            ? new AtResponseFilter((AtCommand)xbeeRequest)
+                            : new PacketIdFilter(xbeeRequest);
+
+            var listener = new SinglePacketListener(filter);
 
             try
             {
+                if (_addressLookupListener != null)
+                    _addressLookupListener.CurrentRequest = xbeeRequest;
+
                 AddPacketListener(listener);
                 SendAsync(xbeeRequest);
-                return listener.GetPacket(timeout);
+                return listener.GetResponse(timeout);
             }
             finally
             {
@@ -295,12 +360,15 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 
         public XBeeResponse Receive(Type expectedType = null, int timeout = PacketParser.DefaultParseTimeout)
         {
-            var listener = new SinglePacketListener(expectedType);
+            if (expectedType == null)
+                expectedType = typeof (XBeeResponse);
+
+            var listener = new SinglePacketListener(new PacketTypeFilter(expectedType));
 
             try
             {
                 AddPacketListener(listener);
-                return listener.GetPacket(timeout);
+                return listener.GetResponse(timeout);
             }
             finally
             {
@@ -308,16 +376,17 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             }
         }
 
-        public XBeeResponse[] CollectResponses(int timeout = -1, byte maxPacketCount = byte.MaxValue, Type packetType = null)
+        public XBeeResponse[] CollectResponses(int timeout = -1, Type expectedPacketType = null, byte maxPacketCount = byte.MaxValue)
         {
-            var validator = packetType != null ? new TypeValidator(packetType) : null;
-            var terminator = maxPacketCount != byte.MaxValue ? new CountLimitTerminator(maxPacketCount) : null;
-            return CollectResponses(timeout, validator, terminator);
+            if (expectedPacketType == null)
+                expectedPacketType = typeof (XBeeResponse);
+
+            return CollectResponses(timeout, new PacketCountFilter(maxPacketCount, expectedPacketType));
         }
 
-        public XBeeResponse[] CollectResponses(int timeout = -1, IPacketValidator validator = null, IPacketTerminator terminator = null)
+        public XBeeResponse[] CollectResponses(int timeout = -1, IPacketFilter filter = null)
         {
-            var listener = new PacketListener(terminator, validator);
+            var listener = new PacketListener(filter);
 
             try
             {

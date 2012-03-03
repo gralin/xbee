@@ -14,7 +14,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 
         public ErrorResponse()
         {
-            ApiId = ApiId.ERROR_RESPONSE;
+            ApiId = ApiId.ErrorResponse;
             Error = true;
         }
 

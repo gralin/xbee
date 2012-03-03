@@ -7,7 +7,7 @@
             Parse(xbee.Send(AtCmd.Write));
         }
 
-        public static void Write(XBee sender, XBeeAddress16 remoteXbee)
+        public static void Write(XBee sender, XBeeAddress remoteXbee)
         {
             Parse(sender.Send(AtCmd.Write, remoteXbee));
         }

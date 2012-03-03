@@ -14,8 +14,8 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
     {
         public enum Options
         {
-            PACKET_ACKNOWLEDGED = 0x01,
-            BROADCAST_PACKET = 0x02
+            PacketAcknowledged = 0x01,
+            BroadcastPacket = 0x02
         }
 
         public XBeeAddress64 SourceSerial { get; set; }

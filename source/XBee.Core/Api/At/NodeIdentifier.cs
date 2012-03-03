@@ -11,7 +11,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.At
             return Parse(xbee.Send(AtCmd.NodeIdentifier));
         }
 
-        public static string Read(XBee sender, XBeeAddress16 remoteXbee)
+        public static string Read(XBee sender, XBeeAddress remoteXbee)
         {
             return Parse(sender.Send(AtCmd.NodeIdentifier, remoteXbee));
         }
@@ -33,7 +33,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.At
                 throw new XBeeException("Failed to write node identifier");
         }
 
-        public static void Write(XBee sender, XBeeAddress16 remoteXbee, string nodeIdentifier)
+        public static void Write(XBee sender, XBeeAddress remoteXbee, string nodeIdentifier)
         {
             var value = Arrays.ToByteArray(nodeIdentifier, 0, MaxNodeIdentifierLength);
             var response = sender.Send(AtCmd.NodeIdentifier, remoteXbee, value);

@@ -1,13 +1,10 @@
-﻿using Gadgeteer.Modules.GHIElectronics.Api.At;
-
-namespace Gadgeteer.Modules.GHIElectronics.Api
+﻿namespace Gadgeteer.Modules.GHIElectronics.Api
 {
-    public class NodeDiscoveryListener : MultiplePacketListener
+    public class NodeDiscoveryListener : PacketListener
     {
-        public NodeDiscoveryListener(byte maxNodes = byte.MaxValue)
-            : base(maxNodes, null)
+        public NodeDiscoveryListener(byte packetId = PacketIdGenerator.DefaultId)
+            : base(new NodeDiscoveryFilter(packetId))
         {
-            Validator = new AtCommandValidator(AtCmd.NodeDiscover);
         }
     }
 }

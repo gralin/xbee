@@ -19,7 +19,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.At
 
         public bool IsOk
         {
-            get { return Status == AtResponseStatus.OK; }
+            get { return Status == AtResponseStatus.Ok; }
         }
 
         public override void Parse(IPacketParser parser)

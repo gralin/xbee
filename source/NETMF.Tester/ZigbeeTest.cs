@@ -13,24 +13,23 @@ namespace NETMF.Tester
         {
             // discovering modules available in ZigBee network
             
-            Debug.Print("Discovering nodes...");
+            Debug.Print("Discovering from coordinator...");
 
-            while (true)
-            {
-                var foundNodes = DiscoverNodes(coordinator);
+            var foundNodes = coordinator.DiscoverNodes();
 
-                if (foundNodes.Length > 0)
-                {
-                    Debug.Print("Found: " + foundNodes.Length + " nodes");
+            Debug.Print("Found: " + foundNodes.Length + " nodes");
 
-                    for (var i = 0; i < foundNodes.Length; i++)
-                        Debug.Print("#" + (i + 1) + " - " + foundNodes[i]);
+            for (var i = 0; i < foundNodes.Length; i++)
+                Debug.Print("#" + (i + 1) + " - " + foundNodes[i]);
 
-                    break;
-                }
+            Debug.Print("Discovering from router...");
 
-                Debug.Print("No nodes where discovered");
-            }
+            foundNodes = router.DiscoverNodes();
+
+            Debug.Print("Found: " + foundNodes.Length + " nodes");
+
+            for (var i = 0; i < foundNodes.Length; i++)
+                Debug.Print("#" + (i + 1) + " - " + foundNodes[i]);
 
             // printing RSSI of connected modules
 
@@ -39,8 +38,8 @@ namespace NETMF.Tester
 
             // sending text messages
 
-            coordinator.AddPacketListener(new IncomingDataListener());
-            router.AddPacketListener(new IncomingDataListener());
+            coordinator.AddPacketListener(new IncomingDataListener(coordinator.Config.SerialNumber));
+            router.AddPacketListener(new IncomingDataListener(router.Config.SerialNumber));
 
             if (!SendText(router, coordinator.Config.SerialNumber, "Hello coordinator"))
                 Debug.Print("Failed to send message to coordinator");
@@ -59,22 +58,6 @@ namespace NETMF.Tester
             Debug.Print("Supply voltage of router: " + voltage2Volts.ToString("F2") + "V");
         }
 
-        private static ZBNodeDiscover[] DiscoverNodes(XBee xbee)
-        {
-            var asyncResult = xbee.BeginSend(xbee.CreateRequest(AtCmd.NodeDiscover), new NodeDiscoveryListener());
-
-            // max discovery time is NC * 100 ms (by default is 6s)
-            const int discoveryTimeout = 0x3C*100;
-
-            var nodes = xbee.EndReceive(asyncResult, discoveryTimeout);
-            var result = new ZBNodeDiscover[nodes.Length];
-
-            for (var i = 0; i < result.Length; i++)
-                result[i] = ZBNodeDiscover.Parse(nodes[i]);
-
-            return result;
-        }
-
         private static int GetRssi(XBee xbee)
         {
             var response = xbee.Send(AtCmd.ReceivedSignalStrength);
@@ -84,14 +67,21 @@ namespace NETMF.Tester
         private static bool SendText(XBee xbee, XBeeAddress destination, string message)
         {
             var response = (ZNetTxStatusResponse)xbee.Send(destination, message);
-            return response.DeliveryStatus == ZNetTxStatusResponse.DeliveryResult.SUCCESS;
+            return response.DeliveryStatus == ZNetTxStatusResponse.DeliveryResult.Success;
         }
 
         class IncomingDataListener : IPacketListener
         {
+            private readonly XBeeAddress _receiver;
+
             public bool Finished
             {
                 get { return false; }
+            }
+
+            public IncomingDataListener(XBeeAddress receiver)
+            {
+                _receiver = receiver;
             }
 
             public void ProcessPacket(XBeeResponse packet)
@@ -101,7 +91,7 @@ namespace NETMF.Tester
 
                 var dataPacket = packet as ZNetRxResponse;
 
-                Debug.Print("Received '" + Arrays.ToString(dataPacket.Payload)
+                Debug.Print(_receiver + " <- '" + Arrays.ToString(dataPacket.Payload)
                     + "' from " + dataPacket.SourceAddress);
             }
 

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Threading;
 using Gadgeteer.Modules.GHIElectronics.Api;
 using Gadgeteer.Modules.GHIElectronics.Api.At;
@@ -25,8 +24,16 @@ namespace NETMF.Tester
 
             // disovering nodes
 
-            Debug.Print("Discovering nodes...");
-            var foundNodes = DiscoverNodes(xbee1);
+            Debug.Print("Discovering nodes from xbee 1...");
+            var foundNodes = xbee1.DiscoverNodes();
+
+            Debug.Print("Found: " + foundNodes.Length + " nodes");
+
+            for (var i = 0; i < foundNodes.Length; i++)
+                Debug.Print("#" + (i + 1) + " - " + foundNodes[i]);
+
+            Debug.Print("Discovering nodes from xbee 2...");
+            foundNodes = xbee2.DiscoverNodes();
 
             Debug.Print("Found: " + foundNodes.Length + " nodes");
 
@@ -72,41 +79,24 @@ namespace NETMF.Tester
             // performing broadcast message sending
 
             const string message3 = "serial broadcast";
-            Debug.Print(xbee1Address + " -> " + XBeeAddress64.BROADCAST + " (" + message3 + ")");
-            xbee1.SendAsync(XBeeAddress64.BROADCAST, message3);
+            Debug.Print(xbee1Address + " -> " + XBeeAddress64.Broadcast + " (" + message3 + ")");
+            xbee1.SendAsync(XBeeAddress64.Broadcast, message3);
 
             Thread.Sleep(1000);
 
             const string message4 = "address broadcast";
-            Debug.Print(xbee1Address + " -> "+ XBeeAddress16.BROADCAST + " (" + message4 + ")");
-            xbee1.SendAsync(XBeeAddress16.BROADCAST, message4);
+            Debug.Print(xbee1Address + " -> "+ XBeeAddress16.Broadcast + " (" + message4 + ")");
+            xbee1.SendAsync(XBeeAddress16.Broadcast, message4);
         }
 
         private static void SetAddress(XBee xbee, XBeeAddress16 address)
         {
-            xbee.Send(AtCmd.NetworkAddress, Arrays.ToByteArray(address.Address));
+            xbee.Send(AtCmd.NetworkAddress, (address as XBeeAddress).Address);
         }
 
         private static XBeeAddress16 GetAddress(XBee xbee)
         {
             return new XBeeAddress16(xbee.Send(AtCmd.NetworkAddress).Value);
-        }
-
-        private static WpanNodeDiscover[] DiscoverNodes(XBee xbee)
-        {
-            var asyncResult = xbee.BeginSend(xbee.CreateRequest(AtCmd.NodeDiscover), new NodeDiscoveryListener());
-
-            var nodes = xbee.EndReceive(asyncResult, 5000);
-            var result = new ArrayList();
-
-            foreach (var node in nodes)
-            {
-                var foundNode = WpanNodeDiscover.Parse(node);
-                if (foundNode != null)
-                    result.Add(foundNode);
-            }
-
-            return (WpanNodeDiscover[])result.ToArray(typeof(WpanNodeDiscover));
         }
 
         class IncomingDataListener : IPacketListener

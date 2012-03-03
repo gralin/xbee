@@ -41,11 +41,11 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.At
             if (remoteAddress is XBeeAddress16)
             {
                 RemoteAddress16 = (XBeeAddress16)remoteAddress;
-                RemoteAddress64 = XBeeAddress64.BROADCAST;
+                RemoteAddress64 = XBeeAddress64.Broadcast;
             }
             else
             {
-                RemoteAddress16 = XBeeAddress16.ZNET_BROADCAST;
+                RemoteAddress16 = XBeeAddress16.ZnetBroadcast;
                 RemoteAddress64 = (XBeeAddress64)remoteAddress;
             }
 
@@ -77,7 +77,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.At
 
         public override ApiId ApiId
         {
-            get { return ApiId.REMOTE_AT_REQUEST; }
+            get { return ApiId.RemoteAtRequest; }
         }
 
         public override string ToString()
