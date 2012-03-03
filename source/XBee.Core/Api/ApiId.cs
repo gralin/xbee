@@ -105,13 +105,13 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         /// API ID: 0x82
         /// <para>I/O data received from 64-bit sender.</para>
         /// </summary>
-        Rx64IOResponse = 0x82,
+        Rx64IoResponse = 0x82,
 
         /// <summary>
         /// API ID: 0x83
         /// <para>I/O data received from 16-bit sender.</para>
         /// </summary>
-        Rx16IOResponse = 0x83,
+        Rx16IoResponse = 0x83,
 
         /// <summary>
         /// API ID: 0x88
@@ -171,7 +171,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         /// API ID: 0x92
         /// <para>I/O packet received from remote sender.</para>
         /// </summary>
-        ZnetIOSampleResponse = 0x92,
+        ZnetIoSampleResponse = 0x92,
 
         /// <summary>
         /// API ID: 0x94

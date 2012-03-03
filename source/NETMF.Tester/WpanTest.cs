@@ -56,6 +56,36 @@ namespace NETMF.Tester
             Debug.Print("XBee 1 new address: " + xbee1Address);
             Debug.Print("XBee 2 new address: " + xbee2Address);
 
+            // checking xbee I/O
+            // after we send AtCommand we receive AtResponse followed by IoSampleResponse
+            // the second response occurs only if the module has any I/O enabled (?)
+
+            Debug.Print("Checking I/O of both XBee");
+
+            var listener = new PacketListener(new PacketCountFilter(2, typeof(IoSampleResponse)));
+
+            xbee1.AddPacketListener(listener);
+            xbee2.AddPacketListener(listener);
+
+            xbee1.SendAsync(AtCmd.ForceSample);
+            xbee2.SendAsync(AtCmd.ForceSample);
+
+            var packets = listener.GetPackets(5000);
+
+            foreach (var packet in packets)
+                Debug.Print("I/O sample of address " + ((IoSampleResponse)packet).Source + ": " + packet);  
+
+            if (packets.Length == 0)
+                Debug.Print("Didn't receive any I/O packet");
+
+            // if the listener is finished it will be discarded automatically
+            // if the listener is not finished (didn't receive 2 frames) we can remove it manualy
+            if (!listener.Finished)
+            {
+                xbee1.RemovePacketListener(listener);
+                xbee2.RemovePacketListener(listener);
+            }
+
             // performing unicast message sending
 
             var xbee1Serial = xbee1.Config.SerialNumber;

@@ -71,9 +71,12 @@
     <Compile Include="Api\At\RemoteAtResponse.cs" />
     <Compile Include="Api\Features\PacketListenning\PacketTypeFilter.cs" />
     <Compile Include="Api\Features\PacketListenning\AtResponseListener.cs" />
+    <Compile Include="Api\Wpan\IoSampleResponse.cs" />
     <Compile Include="Api\Wpan\IWpanPacket.cs" />
+    <Compile Include="Api\Wpan\Pin.cs" />
     <Compile Include="Api\Wpan\RxResponse.cs" />
     <Compile Include="Api\Wpan\IoSample.cs" />
+    <Compile Include="Api\Wpan\RxResponseBase.cs" />
     <Compile Include="Api\Wpan\TxRequest.cs" />
     <Compile Include="Api\Wpan\TxStatusResponse.cs" />
     <Compile Include="Api\Wpan\NodeDiscover.cs" />

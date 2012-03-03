@@ -1,4 +1,6 @@
-﻿using NUnit.Framework;
+﻿using System.IO;
+using Moq;
+using NUnit.Framework;
 
 namespace Gadgeteer.Modules.GHIElectronics.Util
 {
@@ -39,6 +41,21 @@ namespace Gadgeteer.Modules.GHIElectronics.Util
         public void from_ushort_to_chars_test()
         {
             Assert.AreEqual("AB", UshortUtils.ToAscii(0x4142));
+        }
+
+        [Test]
+        public void parse_10bit_analog_from_bytes_test()
+        {
+            const byte msb = 0xF1;
+            const byte lsb = 0x23;
+            Assert.AreEqual(0x0123, UshortUtils.Parse10BitAnalog(msb, lsb));
+        }
+
+        [Test]
+        public void parse_10bit_analog_from_stream_test()
+        {
+            var value = new byte[] { 0xF1, 0x23 };
+            Assert.AreEqual(0x0123, UshortUtils.Parse10BitAnalog(value));
         }
     }
 }

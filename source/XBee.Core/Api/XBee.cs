@@ -327,8 +327,11 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             _connection.Send(packet);
         }
 
-        public IAsyncResult BeginSend(XBeeRequest request, IPacketListener responseListener)
+        public IAsyncResult BeginSend(XBeeRequest request, IPacketListener responseListener = null)
         {
+            if (responseListener == null)
+                responseListener = new SinglePacketListener();
+
             AddPacketListener(responseListener);
             SendAsync(request);
             return new AsyncSendResult(request, responseListener);

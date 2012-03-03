@@ -11,7 +11,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         protected readonly ArrayList Packets;
         protected AutoResetEvent PacketProcessed;
 
-        public PacketListener(IPacketFilter filter)
+        public PacketListener(IPacketFilter filter = null)
         {
             Filter = filter;
             Packets = new ArrayList();
@@ -33,7 +33,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             PacketProcessed.Set();
         }
 
-        public XBeeResponse[] GetPackets(int timeout = -1)
+        public virtual XBeeResponse[] GetPackets(int timeout = -1)
         {
             if (Filter == null)
             {

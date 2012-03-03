@@ -4,14 +4,14 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 {
     public class SinglePacketListener : PacketListener
     {
-        public SinglePacketListener(IPacketFilter filter)
+        public SinglePacketListener(IPacketFilter filter = null)
             : base(filter)
         {
         }
 
-        public XBeeResponse GetResponse(int timeout = -1)
+        public override XBeeResponse[] GetPackets(int timeout = -1)
         {
-            while (!Finished)
+            while (Packets.Count == 0)
             {
                 var startTime = DateTime.Now;
 
@@ -31,7 +31,12 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
                     throw new XBeeTimeoutException();
             }
 
-            return (XBeeResponse)Packets[0];
+            return GetPacketsAsArray();
+        }
+
+        public XBeeResponse GetResponse(int timeout = -1)
+        {
+            return GetPackets(timeout)[0];
         }
     }
 }

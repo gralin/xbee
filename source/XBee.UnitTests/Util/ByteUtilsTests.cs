@@ -66,24 +66,6 @@ namespace Gadgeteer.Modules.GHIElectronics.Util
         }
 
         [Test]
-        public void parse_10bit_analog_from_bytes_test()
-        {
-            const byte msb = 0xF1;
-            const byte lsb = 0x23;
-            Assert.AreEqual(0x0123, ByteUtils.Parse10BitAnalog(msb, lsb));
-        }
-
-        [Test]
-        public void parse_10bit_analog_from_stream_test()
-        {
-            var value = new MemoryStream(new byte[] {0xF1, 0x23});
-            var streamMock = new Mock<IInputStream>();
-            streamMock.Setup(i => i.Read()).Returns(() => (byte)value.ReadByte());
-            streamMock.Setup(i => i.Read(It.IsAny<string>())).Returns(() => (byte)value.ReadByte());
-            Assert.AreEqual(0x0123, ByteUtils.Parse10BitAnalog(streamMock.Object, 0));
-        }
-
-        [Test]
         public void format_byte_test()
         {
             const byte value = 0x80;

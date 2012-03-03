@@ -229,14 +229,14 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
                 {ApiId.AtResponse,                      typeof (AtResponse).GetConstructor(noArgs)},
                 {ApiId.ModemStatusResponse,             typeof (ModemStatusResponse).GetConstructor(noArgs)},
                 {ApiId.RemoteAtResponse,                typeof (RemoteAtResponse).GetConstructor(noArgs)},
-                {ApiId.Rx16IOResponse,                  typeof (Wpan.IoSample).GetConstructor(noArgs)},
-                {ApiId.Rx64IOResponse,                  typeof (Wpan.IoSample).GetConstructor(noArgs)},
+                {ApiId.Rx16IoResponse,                  typeof (Wpan.IoSampleResponse).GetConstructor(noArgs)},
+                {ApiId.Rx64IoResponse,                  typeof (Wpan.IoSampleResponse).GetConstructor(noArgs)},
                 {ApiId.Rx16Response,                    typeof (Wpan.RxResponse).GetConstructor(noArgs)},
                 {ApiId.Rx64Response,                    typeof (Wpan.RxResponse).GetConstructor(noArgs)},
                 {ApiId.TxStatusResponse,                typeof (Wpan.TxStatusResponse).GetConstructor(noArgs)},
                 {ApiId.ZnetExplicitRxResponse,          typeof (Zigbee.ExplicitRxResponse).GetConstructor(noArgs)},
                 {ApiId.ZnetNodeIdentifierResponse,      typeof (Zigbee.NodeIdentificationResponse).GetConstructor(noArgs)},
-                {ApiId.ZnetIOSampleResponse,            typeof (Zigbee.IoSample).GetConstructor(noArgs)},
+                {ApiId.ZnetIoSampleResponse,            typeof (Zigbee.IoSample).GetConstructor(noArgs)},
                 {ApiId.ZnetRxResponse,                  typeof (Zigbee.RxResponse).GetConstructor(noArgs)},
                 {ApiId.ZnetTxStatusResponse,            typeof (Zigbee.TxStatusResponse).GetConstructor(noArgs)}
             };

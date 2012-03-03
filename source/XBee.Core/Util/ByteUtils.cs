@@ -69,19 +69,6 @@ namespace Gadgeteer.Modules.GHIElectronics.Util
             return ((value >> (--bit)) & 0x1) == 0x1;
         }
 
-        public static int Parse10BitAnalog(IInputStream input, int pos)
-        {
-            var adcMsb = input.Read("Analog " + pos + " MSB");
-            var adcLsb = input.Read("Analog " + pos + " LSB");
-            return Parse10BitAnalog(adcMsb, adcLsb);
-        }
-
-        public static int Parse10BitAnalog(byte msb, byte lsb)
-        {
-            // shift up bits 9 and 10 of the msb
-            return ((msb & 0x3) << 8) + lsb;
-        }
-
         public static string FormatByte(byte value)
         {
             return "0x" + ToBase16(value);

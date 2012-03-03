@@ -18,11 +18,12 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             if (!base.Accepted(packet))
                 return false;
 
-            if (_expectedCount-- > 0)
-                return true;
-        
-            _finished = true;
-            return false;
+            if (_expectedCount == 0)
+                return false;
+
+            _expectedCount--;
+            _finished = _expectedCount == 0;
+            return true;
         }
 
         public override bool Finished()

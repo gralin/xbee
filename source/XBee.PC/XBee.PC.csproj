@@ -163,14 +163,23 @@
     <Compile Include="..\XBee.Core\Api\Wpan\IoSample.cs">
       <Link>Api\Wpan\IoSample.cs</Link>
     </Compile>
+    <Compile Include="..\XBee.Core\Api\Wpan\IoSampleResponse.cs">
+      <Link>Api\Wpan\IoSampleResponse.cs</Link>
+    </Compile>
     <Compile Include="..\XBee.Core\Api\Wpan\IWpanPacket.cs">
       <Link>Api\Wpan\IWpanPacket.cs</Link>
     </Compile>
     <Compile Include="..\XBee.Core\Api\Wpan\NodeDiscover.cs">
       <Link>Api\Wpan\NodeDiscover.cs</Link>
     </Compile>
+    <Compile Include="..\XBee.Core\Api\Wpan\Pin.cs">
+      <Link>Api\Wpan\Pin.cs</Link>
+    </Compile>
     <Compile Include="..\XBee.Core\Api\Wpan\RxResponse.cs">
       <Link>Api\Wpan\RxResponse.cs</Link>
+    </Compile>
+    <Compile Include="..\XBee.Core\Api\Wpan\RxResponseBase.cs">
+      <Link>Api\Wpan\RxResponseBase.cs</Link>
     </Compile>
     <Compile Include="..\XBee.Core\Api\Wpan\TxRequest.cs">
       <Link>Api\Wpan\TxRequest.cs</Link>

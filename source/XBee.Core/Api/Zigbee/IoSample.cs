@@ -96,19 +96,17 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
             // parse 10-bit analog values
 
             Analog = new int[5];
-            var enabledCount = 0;
 
             for (var pin = Pin.A0; pin < Pin.A3; pin++)
             {
                 if (!IsAnalogEnabled(pin))
                     continue;
 
-                Analog[(byte)pin] = ByteUtils.Parse10BitAnalog(parser, enabledCount);
-                enabledCount++;
+                Analog[(byte)pin] = UshortUtils.Parse10BitAnalog(parser.Read(2));
             }
 
             if (IsAnalogEnabled(Pin.SupplyVoltage))
-                Analog[SupplyVoltageIndex] = ByteUtils.Parse10BitAnalog(parser, enabledCount);
+                Analog[SupplyVoltageIndex] = UshortUtils.Parse10BitAnalog(parser.Read(2));
         }
 
         public bool IsAnalogEnabled(Pin pin)
