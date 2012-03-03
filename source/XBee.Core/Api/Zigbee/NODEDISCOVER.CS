@@ -7,7 +7,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
     /// <summary>
     /// Series 2 XBee. Parses a Node Discover (ND) AT Command Response
     /// </summary>
-    public class ZBNodeDiscover : NodeInfo
+    public class NodeDiscover : NodeInfo
     {
         public XBeeAddress16 Parent { get; set; }
         public DeviceType DeviceType { get; set; }
@@ -33,19 +33,19 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
             }
         }
 
-        public static ZBNodeDiscover Parse(XBeeResponse response)
+        public static NodeDiscover Parse(XBeeResponse response)
         {
             return Parse(response as AtResponse);
         }
 
-        public static ZBNodeDiscover Parse(AtResponse response)
+        public static NodeDiscover Parse(AtResponse response)
         {
             if (response.Command != AtCmd.NodeDiscover)
                 throw new ArgumentException("This method is only applicable for the ND command");
 
             var input = new InputStream(response.Value);
 
-            var frame = new ZBNodeDiscover
+            var frame = new NodeDiscover
             {
                 NetworkAddress = new XBeeAddress16(input.Read(2)),
                 SerialNumber = new XBeeAddress64(input.Read(8))

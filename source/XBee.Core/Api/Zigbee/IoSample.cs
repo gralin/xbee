@@ -11,7 +11,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
     /// <remarks>
     /// Note: Series 2 XBee does not support multiple samples (IT) per packet
     /// </remarks>
-    public class IoSample : ZNetRxResponse
+    public class IoSample : RxResponse
     {
         public enum Pin
         {

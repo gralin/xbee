@@ -5,14 +5,14 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
 {
     /// <summary>
     /// This frame is received when a module transmits a node identification message to identify itself (when AO=0).
-    /// The data portion of this frame is similar to a network discovery response frame (see <see cref="ZBNodeDiscover"/>).
+    /// The data portion of this frame is similar to a network discovery response frame (see <see cref="NodeDiscover"/>).
     /// </summary>
     /// <example>
     /// If the commissioning push button is pressed on a remote router device with 64-bit address 0x0013A20040522BAA, 
     /// 16-bit address 0x7D84, and default NI string, the preceding node identification indicator would be received. 
     /// Please note that 00 03 00 00 appears before the checksum with the DD value only if ATNO & 0x01.
     /// </example>
-    public class ZNetNodeIdentificationResponse : XBeeResponse
+    public class NodeIdentificationResponse : XBeeResponse
     {
         public enum PacketOption
         {

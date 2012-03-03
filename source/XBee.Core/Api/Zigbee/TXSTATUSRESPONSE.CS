@@ -2,9 +2,9 @@
 {
     /// <summary>
     /// Series 2 XBee.  This is sent out the UART of the transmitting XBee immediately following
-    /// a Transmit packet.  Indicates if the Transmit packet (ZNetTxRequest) was successful.
+    /// a Transmit packet.  Indicates if the Transmit packet (TxRequest) was successful.
     /// </summary>
-    public class ZNetTxStatusResponse : XBeeFrameIdResponse
+    public class TxStatusResponse : XBeeFrameIdResponse
     {
         public enum DeliveryResult
         {

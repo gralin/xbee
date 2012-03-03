@@ -8,16 +8,16 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Wpan
     /// Series 1 XBee.
     /// Parses a Node Discover (ND) AT Command Response
     /// </summary>
-    public class WpanNodeDiscover : NodeInfo
+    public class NodeDiscover : NodeInfo
     {
         public int Rssi { get; set; }
 
-        public static WpanNodeDiscover Parse(XBeeResponse response)
+        public static NodeDiscover Parse(XBeeResponse response)
         {
             return Parse(response as AtResponse);
         }
 
-        public static WpanNodeDiscover Parse(AtResponse response)
+        public static NodeDiscover Parse(AtResponse response)
         {
             if (response.Command != AtCmd.NodeDiscover)
                 throw new ArgumentException("This method is only applicable for the ND command");
@@ -29,7 +29,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Wpan
 
             var input = new InputStream(response.Value);
 
-            var frame = new WpanNodeDiscover
+            var frame = new NodeDiscover
             {
                 NetworkAddress = new XBeeAddress16(input.Read(2)),
                 SerialNumber = new XBeeAddress64(input.Read(8)),

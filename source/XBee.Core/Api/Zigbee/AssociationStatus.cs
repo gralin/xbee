@@ -17,11 +17,11 @@
 	    /// <summary>
 	    /// Valid Coordinator or Routers found, but they are not allowing joining (NJ expired)
 	    /// </summary>
-        NjExpired = 0x23,
+        NodeJoiningExpired = 0x23,
 	    /// <summary>
 	    /// Node Joining attempt failed (typically due to incompatible security settings)
 	    /// </summary>
-        NjFailed = 0x27,
+        NodeJoiningFailed = 0x27,
         /// <summary>
         /// Coordinator Start attempt failed
         /// </summary>

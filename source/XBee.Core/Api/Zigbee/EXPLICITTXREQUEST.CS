@@ -4,10 +4,10 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
 {
     /// <summary>
     /// Series 2 XBee.  Sends a packet to a remote radio.  
-    /// The remote radio receives the packet as a ZNetExplicitRxResponse packet.
+    /// The remote radio receives the packet as a ExplicitRxResponse packet.
     /// API ID: 0x11
     /// </summary>
-    public class ZNetExplicitTxRequest : ZNetTxRequest
+    public class ExplicitTxRequest : TxRequest
     {
         public enum Endpoint
         {
@@ -35,7 +35,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
 
         // this is one big ctor ;)
 
-        public ZNetExplicitTxRequest(XBeeAddress64 destSerial, XBeeAddress16 destAddress, byte[] payload, byte srcEndpoint, byte destEndpoint, ushort clusterId, ushort profileId,
+        public ExplicitTxRequest(XBeeAddress64 destSerial, XBeeAddress16 destAddress, byte[] payload, byte srcEndpoint, byte destEndpoint, ushort clusterId, ushort profileId,
             Options option = Options.Unicast, byte broadcastRadius = DefaultBroadcastRadius) 
             : base(destSerial, payload, broadcastRadius, option)
         {

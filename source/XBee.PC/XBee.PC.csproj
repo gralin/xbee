@@ -166,6 +166,9 @@
     <Compile Include="..\XBee.Core\Api\Wpan\IWpanPacket.cs">
       <Link>Api\Wpan\IWpanPacket.cs</Link>
     </Compile>
+    <Compile Include="..\XBee.Core\Api\Wpan\NodeDiscover.cs">
+      <Link>Api\Wpan\NodeDiscover.cs</Link>
+    </Compile>
     <Compile Include="..\XBee.Core\Api\Wpan\RxResponse.cs">
       <Link>Api\Wpan\RxResponse.cs</Link>
     </Compile>
@@ -174,9 +177,6 @@
     </Compile>
     <Compile Include="..\XBee.Core\Api\Wpan\TxStatusResponse.cs">
       <Link>Api\Wpan\TxStatusResponse.cs</Link>
-    </Compile>
-    <Compile Include="..\XBee.Core\Api\Wpan\WpanNodeDiscover.cs">
-      <Link>Api\Wpan\WpanNodeDiscover.cs</Link>
     </Compile>
     <Compile Include="..\XBee.Core\Api\XBee.cs">
       <Link>Api\XBee.cs</Link>
@@ -220,35 +220,35 @@
     <Compile Include="..\XBee.Core\Api\Zigbee\DeviceType.cs">
       <Link>Api\Zigbee\DeviceType.cs</Link>
     </Compile>
+    <Compile Include="..\XBee.Core\Api\Zigbee\ExplicitRxResponse.cs">
+      <Link>Api\Zigbee\ExplicitRxResponse.cs</Link>
+    </Compile>
+    <Compile Include="..\XBee.Core\Api\Zigbee\ExplicitTxRequest.cs">
+      <Link>Api\Zigbee\ExplicitTxRequest.cs</Link>
+    </Compile>
+    <Compile Include="..\XBee.Core\Api\Zigbee\ForceSampleRequest.cs">
+      <Link>Api\Zigbee\ForceSampleRequest.cs</Link>
+    </Compile>
     <Compile Include="..\XBee.Core\Api\Zigbee\IoSample.cs">
       <Link>Api\Zigbee\IoSample.cs</Link>
     </Compile>
     <Compile Include="..\XBee.Core\Api\Zigbee\IZigbeePacket.cs">
       <Link>Api\Zigbee\IZigbeePacket.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\Zigbee\ZBForceSampleRequest.cs">
-      <Link>Api\Zigbee\ZBForceSampleRequest.cs</Link>
+    <Compile Include="..\XBee.Core\Api\Zigbee\NodeDiscover.cs">
+      <Link>Api\Zigbee\NodeDiscover.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\Zigbee\ZBNodeDiscover.cs">
-      <Link>Api\Zigbee\ZBNodeDiscover.cs</Link>
+    <Compile Include="..\XBee.Core\Api\Zigbee\NodeIdentificationResponse.cs">
+      <Link>Api\Zigbee\NodeIdentificationResponse.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\Zigbee\ZNetExplicitRxResponse.cs">
-      <Link>Api\Zigbee\ZNetExplicitRxResponse.cs</Link>
+    <Compile Include="..\XBee.Core\Api\Zigbee\RxResponse.cs">
+      <Link>Api\Zigbee\RxResponse.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\Zigbee\ZNetExplicitTxRequest.cs">
-      <Link>Api\Zigbee\ZNetExplicitTxRequest.cs</Link>
+    <Compile Include="..\XBee.Core\Api\Zigbee\TxRequest.cs">
+      <Link>Api\Zigbee\TxRequest.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\Zigbee\ZNetNodeIdentificationResponse.cs">
-      <Link>Api\Zigbee\ZNetNodeIdentificationResponse.cs</Link>
-    </Compile>
-    <Compile Include="..\XBee.Core\Api\Zigbee\ZNetRxResponse.cs">
-      <Link>Api\Zigbee\ZNetRxResponse.cs</Link>
-    </Compile>
-    <Compile Include="..\XBee.Core\Api\Zigbee\ZNetTxRequest.cs">
-      <Link>Api\Zigbee\ZNetTxRequest.cs</Link>
-    </Compile>
-    <Compile Include="..\XBee.Core\Api\Zigbee\ZNetTxStatusResponse.cs">
-      <Link>Api\Zigbee\ZNetTxStatusResponse.cs</Link>
+    <Compile Include="..\XBee.Core\Api\Zigbee\TxStatusResponse.cs">
+      <Link>Api\Zigbee\TxStatusResponse.cs</Link>
     </Compile>
     <Compile Include="..\XBee.Core\IXBeeConnection.cs">
       <Link>IXBeeConnection.cs</Link>

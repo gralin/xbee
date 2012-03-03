@@ -4,10 +4,7 @@ using System.IO;
 using System.Reflection;
 using System.Threading;
 using Gadgeteer.Modules.GHIElectronics.Api.At;
-using Gadgeteer.Modules.GHIElectronics.Api.Wpan;
-using Gadgeteer.Modules.GHIElectronics.Api.Zigbee;
 using Gadgeteer.Modules.GHIElectronics.Util;
-using IoSample = Gadgeteer.Modules.GHIElectronics.Api.Zigbee.IoSample;
 
 namespace Gadgeteer.Modules.GHIElectronics.Api
 {
@@ -234,14 +231,14 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
                 {ApiId.RemoteAtResponse,                typeof (RemoteAtResponse).GetConstructor(noArgs)},
                 {ApiId.Rx16IOResponse,                  typeof (Wpan.IoSample).GetConstructor(noArgs)},
                 {ApiId.Rx64IOResponse,                  typeof (Wpan.IoSample).GetConstructor(noArgs)},
-                {ApiId.Rx16Response,                    typeof (RxResponse).GetConstructor(noArgs)},
-                {ApiId.Rx64Response,                    typeof (RxResponse).GetConstructor(noArgs)},
-                {ApiId.TxStatusResponse,                typeof (TxStatusResponse).GetConstructor(noArgs)},
-                {ApiId.ZnetExplicitRxResponse,          typeof (ZNetExplicitRxResponse).GetConstructor(noArgs)},
-                {ApiId.ZnetNodeIdentifierResponse,      typeof (ZNetNodeIdentificationResponse).GetConstructor(noArgs)},
+                {ApiId.Rx16Response,                    typeof (Wpan.RxResponse).GetConstructor(noArgs)},
+                {ApiId.Rx64Response,                    typeof (Wpan.RxResponse).GetConstructor(noArgs)},
+                {ApiId.TxStatusResponse,                typeof (Wpan.TxStatusResponse).GetConstructor(noArgs)},
+                {ApiId.ZnetExplicitRxResponse,          typeof (Zigbee.ExplicitRxResponse).GetConstructor(noArgs)},
+                {ApiId.ZnetNodeIdentifierResponse,      typeof (Zigbee.NodeIdentificationResponse).GetConstructor(noArgs)},
                 {ApiId.ZnetIOSampleResponse,            typeof (Zigbee.IoSample).GetConstructor(noArgs)},
-                {ApiId.ZnetRxResponse,                  typeof (ZNetRxResponse).GetConstructor(noArgs)},
-                {ApiId.ZnetTxStatusResponse,            typeof (ZNetTxStatusResponse).GetConstructor(noArgs)}
+                {ApiId.ZnetRxResponse,                  typeof (Zigbee.RxResponse).GetConstructor(noArgs)},
+                {ApiId.ZnetTxStatusResponse,            typeof (Zigbee.TxStatusResponse).GetConstructor(noArgs)}
             };
         }
 

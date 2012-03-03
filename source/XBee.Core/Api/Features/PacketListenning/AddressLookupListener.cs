@@ -33,24 +33,24 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
                 var atResponse = packet as RemoteAtResponse;
                 _addressLookup[atResponse.RemoteSerial] = atResponse.RemoteAddress;
             }
-            else if (packet is ZNetRxResponse)
+            else if (packet is RxResponse)
             {
-                var zigbeeResponse = packet as ZNetRxResponse;
+                var zigbeeResponse = packet as RxResponse;
                 _addressLookup[zigbeeResponse.SourceSerial] = zigbeeResponse.SourceAddress;
             }
-            else if (packet is ZNetTxStatusResponse && CurrentRequest is ZNetTxRequest)
+            else if (packet is TxStatusResponse && CurrentRequest is TxRequest)
             {
-                var request = CurrentRequest as ZNetTxRequest;
-                var response = packet as ZNetTxStatusResponse;
+                var request = CurrentRequest as TxRequest;
+                var response = packet as TxStatusResponse;
 
                 _addressLookup[request.DestinationSerial] = 
-                    response.DeliveryStatus == ZNetTxStatusResponse.DeliveryResult.Success
+                    response.DeliveryStatus == TxStatusResponse.DeliveryResult.Success
                         ? response.DestinationAddress
                         : XBeeAddress16.ZnetBroadcast;
             }
-            else if (packet is ZNetNodeIdentificationResponse)
+            else if (packet is NodeIdentificationResponse)
             {
-                var identPacket = packet as ZNetNodeIdentificationResponse;
+                var identPacket = packet as NodeIdentificationResponse;
                 _addressLookup[identPacket.SenderSerial] = identPacket.SenderAddress;
                 _addressLookup[identPacket.RemoteSerial] = identPacket.RemoteAddress;
             }

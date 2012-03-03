@@ -49,8 +49,16 @@ namespace NETMF.Tester
             // example of reading configuration from remote XBee
 
             Debug.Print("Reading remote XBee 2 configuration...");
-            var remoteConfiguration = XBeeConfiguration.Read(xbee1, xbee2Address);
-            Debug.Print(remoteConfiguration.ToString());
+
+            try
+            {
+                var remoteConfiguration = XBeeConfiguration.Read(xbee1, xbee2Address);
+                Debug.Print(remoteConfiguration.ToString());
+            }
+            catch (XBeeTimeoutException)
+            {
+                Debug.Print("Failed to read remote XBee cofiguration - timeout");
+            }
 
             if (xbee1.Config.IsSeries1())
             {

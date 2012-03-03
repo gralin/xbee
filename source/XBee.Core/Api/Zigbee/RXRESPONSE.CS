@@ -1,7 +1,7 @@
 namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
 {
     /// <summary>
-    /// Series 2 XBee. This packet is received when a remote XBee sends a ZNetTxRequest
+    /// Series 2 XBee. This packet is received when a remote XBee sends a TxRequest
     /// API ID: 0x90
     /// </summary>
     /// <remarks>
@@ -10,7 +10,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
     /// If your network is not mesh (i.e. composed of a single coordinator and end devices -- no routers) 
     /// then the DB command should provide accurate RSSI.
     /// </remarks>
-    public class ZNetRxResponse : XBeeResponse, INoRequestResponse
+    public class RxResponse : XBeeResponse, INoRequestResponse
     {
         public enum Options
         {

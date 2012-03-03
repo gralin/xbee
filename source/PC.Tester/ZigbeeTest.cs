@@ -14,7 +14,7 @@ namespace PC.Tester
             // discovering modules available in ZigBee network
 
             Debug.Print("Discovering nodes...");
-            ZBNodeDiscover foundNode = null;
+            NodeDiscover foundNode = null;
 
             while (true)
             {
@@ -33,7 +33,7 @@ namespace PC.Tester
                     Debug.Print("#" + (i + 1) + " - " + foundNodes[i]);
 
                     if (foundNodes[i].SerialNumber != xbee.Config.SerialNumber)
-                        foundNode = (ZBNodeDiscover)foundNodes[i];
+                        foundNode = (NodeDiscover)foundNodes[i];
                 }
 
                 if (foundNode != null)
@@ -75,8 +75,8 @@ namespace PC.Tester
 
         private static bool SendText(XBee xbee, XBeeAddress destination, string message)
         {
-            var response = (ZNetTxStatusResponse)xbee.Send(destination, message);
-            return response.DeliveryStatus == ZNetTxStatusResponse.DeliveryResult.Success;
+            var response = (TxStatusResponse)xbee.Send(destination, message);
+            return response.DeliveryStatus == TxStatusResponse.DeliveryResult.Success;
         }
 
         class IncomingDataListener : IPacketListener
@@ -88,10 +88,10 @@ namespace PC.Tester
 
             public void ProcessPacket(XBeeResponse packet)
             {
-                if (!(packet is ZNetRxResponse))
+                if (!(packet is RxResponse))
                     return;
 
-                var dataPacket = packet as ZNetRxResponse;
+                var dataPacket = packet as RxResponse;
 
                 Debug.Print("Received '" + Arrays.ToString(dataPacket.Payload)
                     + "' from " + dataPacket.SourceAddress);

@@ -5,10 +5,10 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
 {
     /// <summary>
     /// Series 2 XBee.  Sends a packet to a remote radio.
-    /// The remote radio receives the data as a ZNetRxResponse packet.
+    /// The remote radio receives the data as a RxResponse packet.
     /// API ID: 0x10
     /// </summary>
-    public class ZNetTxRequest : XBeeRequest, IZigbeePacket
+    public class TxRequest : XBeeRequest, IZigbeePacket
     {
 	    public enum Options
         {
@@ -61,7 +61,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
         /// <param name="broadcastRadius"></param>
         /// <param name="option"></param>
         /// <param name="frameId"></param>
-        public ZNetTxRequest(XBeeAddress destination, byte[] payload, byte broadcastRadius = DefaultBroadcastRadius, Options option = Options.Unicast)
+        public TxRequest(XBeeAddress destination, byte[] payload, byte broadcastRadius = DefaultBroadcastRadius, Options option = Options.Unicast)
         {
             if (destination is XBeeAddress16)
             {

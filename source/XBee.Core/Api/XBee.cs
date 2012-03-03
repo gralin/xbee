@@ -123,8 +123,8 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             for (var i = 0; i < responses.Length; i++)
             {
                 var foundNode = Config.IsSeries1()
-                    ? (NodeInfo) WpanNodeDiscover.Parse(responses[i])
-                    : ZBNodeDiscover.Parse(responses[i]);
+                    ? (NodeInfo) Wpan.NodeDiscover.Parse(responses[i])
+                    : Zigbee.NodeDiscover.Parse(responses[i]);
 
                 if (_addressLookupEnabled)
                     AddressLookup[foundNode.SerialNumber] = foundNode.NetworkAddress;
@@ -170,8 +170,8 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         public XBeeRequest CreateRequest(XBeeAddress destination, byte[] payload)
         {
             return Config.IsSeries1()
-                ? (XBeeRequest)new TxRequest(destination, payload) { FrameId = _idGenerator.GetNext() }
-                : new ZNetTxRequest(destination, payload) { FrameId = _idGenerator.GetNext() };
+                ? (XBeeRequest)new Wpan.TxRequest(destination, payload) { FrameId = _idGenerator.GetNext() }
+                : new Zigbee.TxRequest(destination, payload) { FrameId = _idGenerator.GetNext() };
         }
 
         public AtCommand CreateRequest(AtCmd atCommand, byte[] value = null)
@@ -293,11 +293,11 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         {
             if (Config.IsSeries1())
             {
-                SendAsync(new TxRequest(destination, payload));
+                SendAsync(new Wpan.TxRequest(destination, payload));
             }
             else
             {
-                SendAsync(new ZNetTxRequest(destination, payload));
+                SendAsync(new Zigbee.TxRequest(destination, payload));
             }
         }
 

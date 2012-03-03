@@ -3,10 +3,10 @@
 namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
 {
     /// <summary>
-    /// Series 2 XBee. This packet is received when a remote XBee sends a ZNetExplicitTxRequest
+    /// Series 2 XBee. This packet is received when a remote XBee sends a ExplicitTxRequest
     /// Radio must be configured for explicit frames to use this class (AO=1)
     /// </summary>
-    public class ZNetExplicitRxResponse : ZNetRxResponse
+    public class ExplicitRxResponse : RxResponse
     {
         public byte SourceEndpoint { get; set; }
         public byte DestinationEndpoint { get; set; }
