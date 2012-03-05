@@ -1,6 +1,4 @@
-﻿using System.IO.Ports;
-using System.Threading;
-using Microsoft.SPOT;
+﻿using Microsoft.SPOT;
 
 namespace Gadgeteer.Tester
 {
@@ -9,37 +7,10 @@ namespace Gadgeteer.Tester
         // This method is run when the mainboard is powered up or reset.   
         void ProgramStarted()
         {
-            /*******************************************************************************************
-            Modules added in the Program.gadgeteer designer view are used by typing 
-            their name followed by a period, e.g.  button.  or  camera.
-            
-            Many modules generate useful events. Type +=<tab><tab> to add a handler to an event, e.g.:
-                button.ButtonPressed +=<tab><tab>
-            
-            If you want to do something periodically, use a GT.Timer and handle its Tick event, e.g.:
-                GT.Timer timer = new GT.Timer(1000); // every second (1000ms)
-                timer.Tick +=<tab><tab>
-                timer.Start();
-            *******************************************************************************************/
-            xbee.Configure(115200, Interfaces.Serial.SerialParity.None, Interfaces.Serial.SerialStopBits.One, 8);
-            if (xbee.SerialLine.IsOpen == false)
-                xbee.SerialLine.Open();
+            xbee.Configure(9600, Interfaces.Serial.SerialParity.None, Interfaces.Serial.SerialStopBits.One, 8);
 
-            xbee.SerialLine.DataReceived += OnSerialDataReceived;
-
-            Thread.Sleep(2000);
-
-            xbee.SerialLine.Flush();
-            xbee.SerialLine.Write("$$$");
-
-            // Use Debug.Print to show messages in Visual Studio's "Output" window during debugging.
+            Debug.Print("XBee config: " + xbee.Api.Config);
             Debug.Print("Program Started");
-        }
-
-        static void OnSerialDataReceived(Interfaces.Serial sender, SerialData data)
-        {
-            var buffer = new byte[sender.BytesToRead];
-            sender.Read(buffer, 0, sender.BytesToRead);
         }
     }
 }
