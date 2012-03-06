@@ -5,13 +5,13 @@ using Gadgeteer.Modules.GHIElectronics.Util;
 namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
 {
     /// <summary>
-    /// Series 2 XBee.  Represents an I/O Sample response sent from a remote radio.
+    /// Series 2 XBee. Represents an I/O Sample response sent from a remote radio.
     /// Provides access to the XBee's 4 Analog (0-4), 11 Digital (0-7,10-12), and 1 Supply Voltage pins
     /// </summary>
     /// <remarks>
-    /// Note: Series 2 XBee does not support multiple samples (IT) per packet
+    /// Series 2 XBee does not support multiple samples (IT) per packet
     /// </remarks>
-    public class IoSample : RxResponse
+    public class IoSampleResponse : RxResponseBase
     {
         public enum Pin
         {
@@ -49,14 +49,14 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
         public bool ContainsDigital { get { return DigitalChannelMask > 0; } }
         public bool ContainsAnalog { get { return AnalogChannelMask > 0; } }
 
-        public static IoSample ParseIsSample(AtResponse response)
+        public static IoSampleResponse ParseIsSample(AtResponse response)
         {
 		    if (response.Command != AtCmd.ForceSample)
 			    throw new ArgumentException("This is only applicable to the 'IS' AT command");
 		
 		    var input = new InputStream(response.Value);
-		    var sample = new IoSample();
-            sample.ParseIoSample(input);
+		    var sample = new IoSampleResponse();
+            //sample.ParseIoSample(input);
 		
 		    return sample;
 	    }
@@ -64,7 +64,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
         public override void Parse(IPacketParser parser)
         {
             base.Parse(parser);
-            ParseIoSample(new InputStream(Payload));
+            ParseIoSample(parser);
         }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
         /// from either a RX response or a Remote AT/Local AT response (IS).
         /// </summary>
         /// <param name="parser"></param>
-        public void ParseIoSample(IInputStream parser)
+        public void ParseIoSample(IPacketParser parser)
         {
             // eat sample size.. always 1
             var size = parser.Read("ZNet RX IO Sample Size");
@@ -102,11 +102,11 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
                 if (!IsAnalogEnabled(pin))
                     continue;
 
-                Analog[(byte)pin] = UshortUtils.Parse10BitAnalog(parser.Read(2));
+                Analog[(byte)pin] = UshortUtils.Parse10BitAnalog(parser.Read(), parser.Read());
             }
 
             if (IsAnalogEnabled(Pin.SupplyVoltage))
-                Analog[SupplyVoltageIndex] = UshortUtils.Parse10BitAnalog(parser.Read(2));
+                Analog[SupplyVoltageIndex] = UshortUtils.Parse10BitAnalog(parser.Read(), parser.Read());
         }
 
         public bool IsAnalogEnabled(Pin pin)

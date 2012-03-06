@@ -4,7 +4,7 @@
     /// Series 1 XBee.  
     /// Common elements of 16 and 64 bit Address Receive packets.
     /// </summary>
-    public abstract class RxResponse : RxResponseBase
+    public class RxResponse : RxResponseBase
     {
         public byte[] Payload { get; set; }
 

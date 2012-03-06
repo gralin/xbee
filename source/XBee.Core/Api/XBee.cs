@@ -239,7 +239,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         {
             if (xbeeRequest.FrameId == PacketIdGenerator.NoResponseId)
             {
-                SendNoReply(xbeeRequest);
+                SendRequest(xbeeRequest);
                 return null;
             }
 

@@ -241,8 +241,8 @@
     <Compile Include="..\XBee.Core\Api\Zigbee\ForceSampleRequest.cs">
       <Link>Api\Zigbee\ForceSampleRequest.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\Zigbee\IoSample.cs">
-      <Link>Api\Zigbee\IoSample.cs</Link>
+    <Compile Include="..\XBee.Core\Api\Zigbee\IoSampleResponse.cs">
+      <Link>Api\Zigbee\IoSampleResponse.cs</Link>
     </Compile>
     <Compile Include="..\XBee.Core\Api\Zigbee\IZigbeePacket.cs">
       <Link>Api\Zigbee\IZigbeePacket.cs</Link>
@@ -256,6 +256,9 @@
     <Compile Include="..\XBee.Core\Api\Zigbee\RxResponse.cs">
       <Link>Api\Zigbee\RxResponse.cs</Link>
     </Compile>
+    <Compile Include="..\XBee.Core\Api\Zigbee\RxResponseBase.cs">
+      <Link>Api\Zigbee\RxResponseBase.cs</Link>
+    </Compile>
     <Compile Include="..\XBee.Core\Api\Zigbee\TxRequest.cs">
       <Link>Api\Zigbee\TxRequest.cs</Link>
     </Compile>
@@ -267,6 +270,9 @@
     </Compile>
     <Compile Include="..\XBee.Core\SerialConnection.cs">
       <Link>SerialConnection.cs</Link>
+    </Compile>
+    <Compile Include="..\XBee.Core\Util\AdcHelper.cs">
+      <Link>Util\AdcHelper.cs</Link>
     </Compile>
     <Compile Include="..\XBee.Core\Util\Arrays.cs">
       <Link>Util\Arrays.cs</Link>

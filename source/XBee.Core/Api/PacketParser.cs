@@ -236,7 +236,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
                 {ApiId.TxStatusResponse,                typeof (Wpan.TxStatusResponse).GetConstructor(noArgs)},
                 {ApiId.ZnetExplicitRxResponse,          typeof (Zigbee.ExplicitRxResponse).GetConstructor(noArgs)},
                 {ApiId.ZnetNodeIdentifierResponse,      typeof (Zigbee.NodeIdentificationResponse).GetConstructor(noArgs)},
-                {ApiId.ZnetIoSampleResponse,            typeof (Zigbee.IoSample).GetConstructor(noArgs)},
+                {ApiId.ZnetIoSampleResponse,            typeof (Zigbee.IoSampleResponse).GetConstructor(noArgs)},
                 {ApiId.ZnetRxResponse,                  typeof (Zigbee.RxResponse).GetConstructor(noArgs)},
                 {ApiId.ZnetTxStatusResponse,            typeof (Zigbee.TxStatusResponse).GetConstructor(noArgs)}
             };

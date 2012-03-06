@@ -10,33 +10,19 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
     /// If your network is not mesh (i.e. composed of a single coordinator and end devices -- no routers) 
     /// then the DB command should provide accurate RSSI.
     /// </remarks>
-    public class RxResponse : XBeeResponse, INoRequestResponse
+    public class RxResponse : RxResponseBase, INoRequestResponse
     {
-        public enum Options
-        {
-            PacketAcknowledged = 0x01,
-            BroadcastPacket = 0x02
-        }
-
-        public XBeeAddress64 SourceSerial { get; set; }
-        public XBeeAddress16 SourceAddress { get; set; }
-        public Options Option { get; set; }
         public byte[] Payload { get; set; }
 
         public override void Parse(IPacketParser parser)
         {
-            SourceSerial = parser.ParseAddress64();
-            SourceAddress = parser.ParseAddress16();
-            Option = (Options)parser.Read("ZNet RX Option");
+            base.Parse(parser);
             Payload = parser.ReadRemainingBytes();	
         }
 
         public override string ToString()
         {
             return base.ToString()
-                   + ",sourceSerial=" + SourceSerial
-                   + ",sourceAddress=" + SourceAddress
-                   + ",option=" + Option
                    + ",payload=byte[" + Payload.Length + "]";
         }
     }

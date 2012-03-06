@@ -46,8 +46,8 @@ namespace NETMF.Tester
 
             var voltage1 = UshortUtils.ToUshort(coordinator.Send(AtCmd.SupplyVoltage).Value);
             var voltage2 = UshortUtils.ToUshort(router.Send(AtCmd.SupplyVoltage).Value);
-            var voltage1Volts = (voltage1 * 1200 / 1024.0) / 1000.0;
-            var voltage2Volts = (voltage2 * 1200 / 1024.0) / 1000.0;
+            var voltage1Volts = AdcHelper.ToMilliVolts(voltage1) / 1000.0;
+            var voltage2Volts = AdcHelper.ToMilliVolts(voltage1) / 1000.0;
 
             Debug.Print("Supply voltage of coordinator: " + voltage1Volts.ToString("F2") + "V");
             Debug.Print("Supply voltage of router: " + voltage2Volts.ToString("F2") + "V");
