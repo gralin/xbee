@@ -52,7 +52,8 @@ namespace PC.Tester
 
             // sending text messages
 
-            xbee.AddPacketListener(new IncomingDataListener());
+            xbee.DataReceived += (r,d,s) => 
+                Debug.Print("Received '" + Arrays.ToString(d) + "' from " + s);
 
             while (true)
             {
@@ -77,30 +78,6 @@ namespace PC.Tester
         {
             var response = (TxStatusResponse)xbee.Send(message, destination);
             return response.DeliveryStatus == TxStatusResponse.DeliveryResult.Success;
-        }
-
-        class IncomingDataListener : IPacketListener
-        {
-            public bool Finished
-            {
-                get { return false; }
-            }
-
-            public void ProcessPacket(XBeeResponse packet)
-            {
-                if (!(packet is RxResponse))
-                    return;
-
-                var dataPacket = packet as RxResponse;
-
-                Debug.Print("Received '" + Arrays.ToString(dataPacket.Payload)
-                    + "' from " + dataPacket.SourceAddress);
-            }
-
-            public XBeeResponse[] GetPackets(int timeout)
-            {
-                throw new NotSupportedException();
-            }
         }
     }
 }

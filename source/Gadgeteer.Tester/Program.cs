@@ -9,12 +9,16 @@ namespace Gadgeteer.Tester
         // This method is run when the mainboard is powered up or reset.   
         void ProgramStarted()
         {
-            xbee.Configure(9600, Interfaces.Serial.SerialParity.None, Interfaces.Serial.SerialStopBits.One, 8);
-
-            Debug.Print("XBee config: " + xbee.Api.Config);
-
-            xbee.Api.DataReceived += OnDataReceived;
-            xbee.Api.Send("Hello World!");
+            try
+            {
+                Debug.Print("XBee config: " + xbee.Api.Config);
+                xbee.Api.DataReceived += OnDataReceived;
+                xbee.Api.Send("Hello World!");
+            }
+            catch (XBeeTimeoutException)
+            {
+                Debug.Print("XBee is not responding");
+            }
         }
 
         private static void OnDataReceived(XBee receiver, byte[] data, XBeeAddress sender)

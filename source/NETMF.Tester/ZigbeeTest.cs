@@ -1,7 +1,5 @@
-﻿using System;
-using Gadgeteer.Modules.GHIElectronics.Api;
+﻿using Gadgeteer.Modules.GHIElectronics.Api;
 using Gadgeteer.Modules.GHIElectronics.Api.At;
-using Gadgeteer.Modules.GHIElectronics.Api.Zigbee;
 using Gadgeteer.Modules.GHIElectronics.Util;
 using Microsoft.SPOT;
 
@@ -41,11 +39,8 @@ namespace NETMF.Tester
             coordinator.DataReceived += OnDataReceived;
             router.DataReceived += OnDataReceived;
 
-            if (!SendText(router, coordinator.Config.SerialNumber, "Hello coordinator"))
-                Debug.Print("Failed to send message to coordinator");
-
-            if (!SendText(coordinator, router.Config.SerialNumber, "Hello router"))
-                Debug.Print("Failed to send message to router");
+            router.Send("Hello coordinator", coordinator.Config.SerialNumber);
+            coordinator.Send("Hello router", router.Config.SerialNumber);
 
             // reading supply voltage
 
@@ -62,12 +57,6 @@ namespace NETMF.Tester
         {
             var response = xbee.Send(AtCmd.ReceivedSignalStrength);
             return -1 * response.Value[0];
-        }
-
-        private static bool SendText(XBee xbee, XBeeAddress destination, string message)
-        {
-            var response = (TxStatusResponse)xbee.Send(message, destination);
-            return response.DeliveryStatus == TxStatusResponse.DeliveryResult.Success;
         }
 
         private static void OnDataReceived(XBee receiver, byte[] data, XBeeAddress sender)
