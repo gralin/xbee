@@ -313,6 +313,10 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 
         protected void IsRequestSupported(XBeeRequest request)
         {
+            // can be null when reading Config
+            if (Config == null)
+                return;
+
             if (Config.IsSeries1() && request is IZigbeePacket)
                 throw new ArgumentException("You are connected to a Series 1 radio but attempting to send Series 2 requests");
 

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using Gadgeteer.Modules.GHIElectronics.Api;
 using Gadgeteer.Modules.GHIElectronics.Api.At;
 using Gadgeteer.Modules.GHIElectronics.Api.Wpan;
@@ -91,8 +90,8 @@ namespace NETMF.Tester
             var xbee1Serial = xbee1.Config.SerialNumber;
             var xbee2Serial = xbee2.Config.SerialNumber;
 
-            xbee1.AddPacketListener(new IncomingDataListener(xbee1Address));
-            xbee2.AddPacketListener(new IncomingDataListener(xbee2Address));
+            xbee1.DataReceived += OnDataReceived;
+            xbee2.DataReceived += OnDataReceived;
 
             const string message1 = "serial unicast";
             Debug.Print(xbee1Address + " -> " + xbee2Serial + " (" + message1 + ")");
@@ -129,34 +128,9 @@ namespace NETMF.Tester
             return new XBeeAddress16(xbee.Send(AtCmd.NetworkAddress).Value);
         }
 
-        class IncomingDataListener : IPacketListener
+        private static void OnDataReceived(XBee receiver, byte[] data, XBeeAddress sender)
         {
-            private readonly XBeeAddress16 _address;
-
-            public IncomingDataListener(XBeeAddress16 receiverAddress)
-            {
-                _address = receiverAddress;
-            }
-
-            public bool Finished
-            {
-                get { return false; }
-            }
-
-            public void ProcessPacket(XBeeResponse packet)
-            {
-                if (!(packet is RxResponse)) 
-                    return;
-                
-                var rxResponse = (RxResponse) packet;
-                var message = Arrays.ToString(rxResponse.Payload);
-                Debug.Print(_address + " <- " + rxResponse + " (" + message + ")");
-            }
-
-            public XBeeResponse[] GetPackets(int timeout)
-            {
-                throw new NotSupportedException();
-            }
+            Debug.Print(receiver.Config.SerialNumber + " <- '" + Arrays.ToString(data) + "' from " + sender);
         }
     }
 }
