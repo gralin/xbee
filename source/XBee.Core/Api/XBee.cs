@@ -162,16 +162,21 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 
         // Creating requests
 
-        public XBeeRequest CreateRequest(XBeeAddress destination, string payload)
+        public XBeeRequest CreateRequest(string payload, XBeeAddress destination = null)
         {
-            return CreateRequest(destination, Arrays.ToByteArray(payload));
+            return CreateRequest(Arrays.ToByteArray(payload), destination);
         }
 
-        public XBeeRequest CreateRequest(XBeeAddress destination, byte[] payload)
+        public XBeeRequest CreateRequest(byte[] payload, XBeeAddress destination = null)
         {
-            return Config.IsSeries1()
-                ? (XBeeRequest)new Wpan.TxRequest(destination, payload) { FrameId = _idGenerator.GetNext() }
-                : new Zigbee.TxRequest(destination, payload) { FrameId = _idGenerator.GetNext() };
+            if (Config.IsSeries1())
+            {
+                return new Wpan.TxRequest(destination ?? XBeeAddress16.Broadcast, payload) {FrameId = _idGenerator.GetNext()};
+            }
+            else
+            {
+                return new Zigbee.TxRequest(destination ?? XBeeAddress16.ZnetBroadcast, payload) {FrameId = _idGenerator.GetNext()};
+            }
         }
 
         public AtCommand CreateRequest(AtCmd atCommand, byte[] value = null)
@@ -186,14 +191,14 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 
         // Sending requests
 
-        public XBeeResponse Send(XBeeAddress destination, byte[] payload)
+        public XBeeResponse Send(byte[] payload, XBeeAddress destination = null)
         {
-            return Send(CreateRequest(destination, payload));
+            return Send(CreateRequest(payload, destination));
         }
 
-        public XBeeResponse Send(XBeeAddress destination, string payload)
+        public XBeeResponse Send(string payload, XBeeAddress destination = null)
         {
-            return Send(CreateRequest(destination, payload));
+            return Send(CreateRequest(payload, destination));
         }
 
         public AtResponse Send(AtCmd atCommand, byte[] value = null, int timeout = PacketParser.DefaultParseTimeout)
@@ -254,11 +259,8 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 
             try
             {
-                if (_addressLookupListener != null)
-                    _addressLookupListener.CurrentRequest = xbeeRequest;
-
                 AddPacketListener(listener);
-                SendAsync(xbeeRequest);
+                SendRequest(xbeeRequest);
                 return listener.GetResponse(timeout);
             }
             finally
@@ -269,62 +271,24 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 
         public void SendAsync(AtCmd atCommand, byte[] value = null)
         {
-            SendAsync(new AtCommand(atCommand, value));
+            SendAsync(CreateRequest(atCommand, value));
+        }
+
+        public void SendAsync(byte[] payload, XBeeAddress destination = null)
+        {
+            SendAsync(CreateRequest(payload, destination));
+        }
+
+        public void SendAsync(string payload, XBeeAddress destination = null)
+        {
+            SendAsync(CreateRequest(payload, destination));
         }
 
         public void SendAsync(XBeeRequest request)
         {
-            if (Config != null)
-            {
-                if (Config.IsSeries1() && request is IZigbeePacket)
-                    throw new ArgumentException("You are connected to a Series 1 radio but attempting to send Series 2 requests");
-
-                if (Config.IsSeries2() && request is IWpanPacket)
-                    throw new ArgumentException("You are connected to a Series 2 radio but attempting to send Series 1 requests");
-            }
-
-            if (Logger.IsActive(LogLevel.Debug))
-                Logger.Debug("Sending " + request.GetType().Name + ": " + request);
-            
-            SendPacket(request.GetXBeePacket());
-        }
-
-        public void SendAsync(XBeeAddress destination, byte[] payload)
-        {
-            if (Config.IsSeries1())
-            {
-                SendAsync(new Wpan.TxRequest(destination, payload));
-            }
-            else
-            {
-                SendAsync(new Zigbee.TxRequest(destination, payload));
-            }
-        }
-
-        public void SendAsync(XBeeAddress destination, string payload)
-        {
-            SendAsync(destination, Arrays.ToByteArray(payload));
-        }
-
-        /// <summary>
-        /// It's possible for packets to get interspersed if multiple threads send simultaneously.  
-        /// This method is not thread-safe because doing so would introduce a synchronized performance penalty 
-        /// for the vast majority of users that will not never need thread safety.
-        /// That said, it is responsibility of the user to provide synchronization if multiple threads are sending.
-        /// </summary>
-        /// <remarks>
-        /// Not thread safe.
-        /// </remarks>
-        /// <param name="packet"></param>
-        public void SendPacket(XBeePacket packet)
-        {
-            SendPacket(packet.ToByteArray());
-        }
-
-        public void SendPacket(byte[] packet)
-        {
-            Logger.LowDebug("sending packet " + ByteUtils.ToBase16(packet));
-            _connection.Send(packet);
+            // we don't expect any response to this request
+            request.FrameId = PacketIdGenerator.NoResponseId;
+            SendRequest(request);
         }
 
         public IAsyncResult BeginSend(XBeeRequest request, IPacketListener responseListener = null)
@@ -333,8 +297,35 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
                 responseListener = new SinglePacketListener();
 
             AddPacketListener(responseListener);
-            SendAsync(request);
+            SendRequest(request);
             return new AsyncSendResult(request, responseListener);
+        }
+
+        protected void SendRequest(XBeeRequest request)
+        {
+            IsRequestSupported(request);
+
+            if (_addressLookupEnabled)
+                _addressLookupListener.CurrentRequest = request;
+
+            if (Logger.IsActive(LogLevel.Debug))
+                Logger.Debug("Sending " + request.GetType().Name + ": " + request);
+
+            var bytes = request.GetXBeePacket().ToByteArray();
+
+            if (Logger.IsActive(LogLevel.LowDebug))
+                Logger.LowDebug("Sending " + ByteUtils.ToBase16(bytes));
+            
+            _connection.Send(bytes);
+        }
+
+        protected void IsRequestSupported(XBeeRequest request)
+        {
+            if (Config.IsSeries1() && request is IZigbeePacket)
+                throw new ArgumentException("You are connected to a Series 1 radio but attempting to send Series 2 requests");
+
+            if (Config.IsSeries2() && request is IWpanPacket)
+                throw new ArgumentException("You are connected to a Series 2 radio but attempting to send Series 1 requests");
         }
 
         // Receiving responses
@@ -363,10 +354,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 
         public XBeeResponse Receive(Type expectedType = null, int timeout = PacketParser.DefaultParseTimeout)
         {
-            if (expectedType == null)
-                expectedType = typeof (XBeeResponse);
-
-            var listener = new SinglePacketListener(new PacketTypeFilter(expectedType));
+            var listener = new SinglePacketListener(new PacketTypeFilter(expectedType ?? typeof(XBeeResponse)));
 
             try
             {
@@ -381,10 +369,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 
         public XBeeResponse[] CollectResponses(int timeout = -1, Type expectedPacketType = null, byte maxPacketCount = byte.MaxValue)
         {
-            if (expectedPacketType == null)
-                expectedPacketType = typeof (XBeeResponse);
-
-            return CollectResponses(timeout, new PacketCountFilter(maxPacketCount, expectedPacketType));
+            return CollectResponses(timeout, new PacketCountFilter(maxPacketCount, expectedPacketType ?? typeof(XBeeResponse)));
         }
 
         public XBeeResponse[] CollectResponses(int timeout = -1, IPacketFilter filter = null)

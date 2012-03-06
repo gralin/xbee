@@ -96,13 +96,13 @@ namespace NETMF.Tester
 
             const string message1 = "serial unicast";
             Debug.Print(xbee1Address + " -> " + xbee2Serial + " (" + message1 + ")");
-            xbee1.Send(xbee2Serial, message1);
+            xbee1.Send(message1, xbee2Serial);
 
             Thread.Sleep(1000);
 
             const string message2 = "address unicast";
             Debug.Print(xbee2Address + " -> " + xbee1Address + " (" + message2 + ")");
-            xbee2.Send(xbee1Address, message2);
+            xbee2.Send(message2, xbee1Address);
 
             Thread.Sleep(1000);
 
@@ -110,13 +110,13 @@ namespace NETMF.Tester
 
             const string message3 = "serial broadcast";
             Debug.Print(xbee1Address + " -> " + XBeeAddress64.Broadcast + " (" + message3 + ")");
-            xbee1.SendAsync(XBeeAddress64.Broadcast, message3);
+            xbee1.SendAsync(message3, XBeeAddress64.Broadcast);
 
             Thread.Sleep(1000);
 
             const string message4 = "address broadcast";
             Debug.Print(xbee1Address + " -> "+ XBeeAddress16.Broadcast + " (" + message4 + ")");
-            xbee1.SendAsync(XBeeAddress16.Broadcast, message4);
+            xbee1.SendAsync(message4, XBeeAddress16.Broadcast);
         }
 
         private static void SetAddress(XBee xbee, XBeeAddress16 address)

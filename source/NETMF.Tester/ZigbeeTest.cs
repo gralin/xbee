@@ -66,7 +66,7 @@ namespace NETMF.Tester
 
         private static bool SendText(XBee xbee, XBeeAddress destination, string message)
         {
-            var response = (TxStatusResponse)xbee.Send(destination, message);
+            var response = (TxStatusResponse)xbee.Send(message, destination);
             return response.DeliveryStatus == TxStatusResponse.DeliveryResult.Success;
         }
 
