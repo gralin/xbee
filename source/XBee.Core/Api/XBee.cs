@@ -19,6 +19,9 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         private AddressLookupListener _addressLookupListener;
         private bool _addressLookupEnabled;
 
+        private DataReceivedListener _dataReceivedListener;
+        private bool _dataReceivedEventEnabled;
+
         public Hashtable AddressLookup { get; private set; }
         public XBeeConfiguration Config { get; private set; }
 
@@ -55,6 +58,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             _parser.Start();
             _connection.Open();
             ReadConfiguration();
+            EnableDataReceivedEvent();
         }
 
         public void Close()
@@ -103,38 +107,6 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             _parser.RemovePacketListener(listener);
         }
 
-        public NodeInfo[] DiscoverNodes()
-        {
-            var discoveryTimeout = Send(AtCmd.NodeDiscoverTimeout);
-
-            // it seems that Zigbee modules have longer timeout (2 bytes)
-            int timeout = discoveryTimeout.Value.Length == 1
-                              ? discoveryTimeout.Value[0]
-                              : UshortUtils.ToUshort(discoveryTimeout.Value);
-
-            // ms + 1 extra second
-            timeout = timeout * 100 + 1000;
-
-            var request = CreateRequest(AtCmd.NodeDiscover);
-            var asyncResult = BeginSend(request, new NodeDiscoveryListener());
-            var responses = EndReceive(asyncResult, timeout);
-            var result = new NodeInfo[responses.Length];
-
-            for (var i = 0; i < responses.Length; i++)
-            {
-                var foundNode = Config.IsSeries1()
-                    ? (NodeInfo) Wpan.NodeDiscover.Parse(responses[i])
-                    : Zigbee.NodeDiscover.Parse(responses[i]);
-
-                if (_addressLookupEnabled)
-                    AddressLookup[foundNode.SerialNumber] = foundNode.NetworkAddress;
-                
-                result[i] = foundNode;
-            }
-
-            return result;
-        }
-
         public void EnableAddressLookup()
         {
             if (_addressLookupEnabled)
@@ -158,6 +130,58 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             AddressLookup.Clear();
             RemovePacketListener(_addressLookupListener);
             _addressLookupEnabled = false;
+        }
+
+        public void EnableDataReceivedEvent()
+        {
+            if (_dataReceivedEventEnabled)
+                return;
+
+            if (_dataReceivedListener == null)
+                _dataReceivedListener = new DataReceivedListener(this);
+
+            AddPacketListener(_dataReceivedListener);
+            _dataReceivedEventEnabled = true;
+        }
+
+        public void DisableDataReceivedEvent()
+        {
+            if (!_dataReceivedEventEnabled)
+                return;
+
+            RemovePacketListener(_dataReceivedListener);
+            _dataReceivedEventEnabled = false;
+        }
+
+        public NodeInfo[] DiscoverNodes()
+        {
+            var discoveryTimeout = Send(AtCmd.NodeDiscoverTimeout);
+
+            // it seems that Zigbee modules have longer timeout (2 bytes)
+            int timeout = discoveryTimeout.Value.Length == 1
+                              ? discoveryTimeout.Value[0]
+                              : UshortUtils.ToUshort(discoveryTimeout.Value);
+
+            // ms + 1 extra second
+            timeout = timeout * 100 + 1000;
+
+            var request = CreateRequest(AtCmd.NodeDiscover);
+            var responses = BeginSend(request, new NodeDiscoveryListener()).EndReceive(timeout);
+            var result = new NodeInfo[responses.Length];
+
+            for (var i = 0; i < responses.Length; i++)
+            {
+                var foundNode = Config.IsSeries1()
+                    ? (NodeInfo)Wpan.NodeDiscover.Parse(responses[i])
+                    : Zigbee.NodeDiscover.Parse(responses[i]);
+
+                if (_addressLookupEnabled)
+                    AddressLookup[foundNode.SerialNumber] = foundNode.NetworkAddress;
+
+                result[i] = foundNode;
+            }
+
+            return result;
         }
 
         // Creating requests
@@ -211,43 +235,11 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             return (RemoteAtResponse) Send(CreateRequest(atCommand, remoteXbee, value), timeout);
         }
 
-        /// <summary>
-        /// Synchronous method for sending an XBeeRequest and obtaining the 
-        /// corresponding response (response that has same frame id).
-        /// <para>
-        /// This method returns the first response object with a matching frame id, within the timeout
-        /// period, so it is important to use a unique frame id (relative to previous subsequent requests).
-        /// </para>
-        /// <para>
-        /// This method must only be called with requests that receive a response of
-        /// type XBeeFrameIdResponse.  All other request types will timeout.
-        /// </para>
-        /// <para>
-        /// Keep in mind responses received here will also be available through the getResponse method
-        /// and the packet listener.  If you would prefer to not have these responses added to the response queue,
-        /// you can add a ResponseQueueFilter via XBeeConfiguration to ignore packets that are sent in response to
-        /// a request.  Another alternative is to call clearResponseQueue prior to calling this method.
-        /// </para>
-        /// <para>
-        /// It is recommended to use a timeout of at least 5 seconds, since some responses can take a few seconds or more
-        /// (e.g. if remote radio is not powered on).
-        /// </para>
-        /// </summary>
-        /// <remarks>
-        /// This method is thread-safe 
-        /// </remarks>
-        /// <param name="xbeeRequest"></param>
-        /// <param name="expectedResponse"></param>
-        /// <param name="timeout"></param>
-        /// <exception cref="XBeeTimeoutException">
-        /// XBeeTimeoutException thrown if no matching response is identified
-        /// </exception>
-        /// <returns></returns>
         public XBeeResponse Send(XBeeRequest xbeeRequest, int timeout = PacketParser.DefaultParseTimeout)
         {
             if (xbeeRequest.FrameId == PacketIdGenerator.NoResponseId)
             {
-                SendAsync(xbeeRequest);
+                SendNoReply(xbeeRequest);
                 return null;
             }
 
@@ -269,36 +261,36 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             }
         }
 
-        public void SendAsync(AtCmd atCommand, byte[] value = null)
+        public void SendNoReply(AtCmd atCommand, byte[] value = null)
         {
-            SendAsync(CreateRequest(atCommand, value));
+            SendNoReply(CreateRequest(atCommand, value));
         }
 
-        public void SendAsync(byte[] payload, XBeeAddress destination = null)
+        public void SendNoReply(byte[] payload, XBeeAddress destination = null)
         {
-            SendAsync(CreateRequest(payload, destination));
+            SendNoReply(CreateRequest(payload, destination));
         }
 
-        public void SendAsync(string payload, XBeeAddress destination = null)
+        public void SendNoReply(string payload, XBeeAddress destination = null)
         {
-            SendAsync(CreateRequest(payload, destination));
+            SendNoReply(CreateRequest(payload, destination));
         }
 
-        public void SendAsync(XBeeRequest request)
+        public void SendNoReply(XBeeRequest request)
         {
             // we don't expect any response to this request
             request.FrameId = PacketIdGenerator.NoResponseId;
             SendRequest(request);
         }
 
-        public IAsyncResult BeginSend(XBeeRequest request, IPacketListener responseListener = null)
+        public AsyncSendResult BeginSend(XBeeRequest request, IPacketListener responseListener = null)
         {
             if (responseListener == null)
                 responseListener = new SinglePacketListener();
 
             AddPacketListener(responseListener);
             SendRequest(request);
-            return new AsyncSendResult(request, responseListener);
+            return new AsyncSendResult(this, responseListener);
         }
 
         protected void SendRequest(XBeeRequest request)
@@ -330,26 +322,9 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 
         // Receiving responses
 
-        public XBeeResponse[] EndReceive(IAsyncResult asyncResult, int timeout = -1)
+        public XBeeResponse[] EndReceive(AsyncSendResult asyncResult, int timeout = -1)
         {
-            var asyncSendResult = asyncResult as AsyncSendResult;
-
-            if (asyncSendResult == null)
-                throw new ArgumentException("invalid asyncResult");
-
-            var responseListener = asyncSendResult.ResponseListener;
-
-            if (responseListener == null)
-                throw new ArgumentException("asyncResult is missing response listener");
-
-            try
-            {
-                return responseListener.GetPackets(timeout);
-            }
-            finally 
-            {
-                RemovePacketListener(responseListener);
-            }
+            return asyncResult.EndReceive(timeout);
         }
 
         public XBeeResponse Receive(Type expectedType = null, int timeout = PacketParser.DefaultParseTimeout)
@@ -386,5 +361,15 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
                 RemovePacketListener(listener);
             }
         }
+
+        internal void NotifyDataReceived(byte[] payload, XBeeAddress sender)
+        {
+            if (DataReceived != null)
+                DataReceived(this, payload, sender);
+        }
+
+        public event XBeeDataReceivedEventHandler DataReceived;
+
+        public delegate void XBeeDataReceivedEventHandler(XBee receiver, byte[] data, XBeeAddress sender);
     }
 }

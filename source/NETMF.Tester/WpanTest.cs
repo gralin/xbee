@@ -67,8 +67,8 @@ namespace NETMF.Tester
             xbee1.AddPacketListener(listener);
             xbee2.AddPacketListener(listener);
 
-            xbee1.SendAsync(AtCmd.ForceSample);
-            xbee2.SendAsync(AtCmd.ForceSample);
+            xbee1.SendNoReply(AtCmd.ForceSample);
+            xbee2.SendNoReply(AtCmd.ForceSample);
 
             var packets = listener.GetPackets(5000);
 
@@ -110,13 +110,13 @@ namespace NETMF.Tester
 
             const string message3 = "serial broadcast";
             Debug.Print(xbee1Address + " -> " + XBeeAddress64.Broadcast + " (" + message3 + ")");
-            xbee1.SendAsync(message3, XBeeAddress64.Broadcast);
+            xbee1.SendNoReply(message3, XBeeAddress64.Broadcast);
 
             Thread.Sleep(1000);
 
             const string message4 = "address broadcast";
             Debug.Print(xbee1Address + " -> "+ XBeeAddress16.Broadcast + " (" + message4 + ")");
-            xbee1.SendAsync(message4, XBeeAddress16.Broadcast);
+            xbee1.SendNoReply(message4, XBeeAddress16.Broadcast);
         }
 
         private static void SetAddress(XBee xbee, XBeeAddress16 address)

@@ -106,6 +106,9 @@
     <Compile Include="..\XBee.Core\Api\Features\PacketListenning\AtResponseListener.cs">
       <Link>Api\Features\PacketListenning\AtResponseListener.cs</Link>
     </Compile>
+    <Compile Include="..\XBee.Core\Api\Features\PacketListenning\DataReceivedListener.cs">
+      <Link>Api\Features\PacketListenning\DataReceivedListener.cs</Link>
+    </Compile>
     <Compile Include="..\XBee.Core\Api\Features\PacketListenning\IPacketFilter.cs">
       <Link>Api\Features\PacketListenning\IPacketFilter.cs</Link>
     </Compile>
