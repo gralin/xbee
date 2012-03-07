@@ -25,15 +25,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         /// <param name="request"></param>
         public static byte[] GetBytes(XBeeRequest request)
         {
-            // checksum is always computed on pre-escaped packet
-            var checksum = new Checksum();
-
             var frameData = request.GetFrameData();
-
-            foreach (var b in frameData)
-                checksum.AddByte(b);
-
-            checksum.Compute();
 
             // packet size is frame data + start byte + 2 length bytes + checksum byte
             var bytes = new byte[frameData.Length + 4];
@@ -52,7 +44,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             // set last byte as checksum
             // note: if checksum is not correct, XBee won't send out packet or return error.  ask me how I know.
 
-            bytes[bytes.Length - 1] = checksum.GetChecksum();
+            bytes[bytes.Length - 1] = Checksum.Compute(frameData, 0, frameData.Length);
 
             var preEscapeLength = bytes.Length;
 
@@ -184,41 +176,23 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         /// <returns> true if the packet is valid</returns>
         public static bool Verify(byte[] packet)
         {
-            var valid = true;
-
             try
             {
-                if (packet[0] != (byte)SpecialByte.StartByte)
+                if (packet[0] != (byte)SpecialByte.StartByte || packet.Length < 4)
                     return false;
  
                 // first need to unescape packet
                 var unEscaped = UnEscapePacket(packet);
 
-                var len = UshortUtils.ToUshort(unEscaped[1], unEscaped[2]);
+                var packetChecksum = unEscaped[unEscaped.Length - 1];
+                var validChecksum = Checksum.Compute(unEscaped, 3, unEscaped.Length - 4);
 
-                // stated packet length does not include start byte, length bytes, or checksum and is calculated before escaping
-
-                var frameData = new byte[len];
-
-                var checksum = new Checksum();
-
-                for (var i = 3; i < unEscaped.Length - 1; i++)
-                {
-                    frameData[i - 3] = unEscaped[i];
-                    checksum.AddByte(frameData[i - 3]);
-                }
-
-                // add checksum byte to verify -- the last byte
-                checksum.AddByte(unEscaped[unEscaped.Length - 1]);
-
-                valid &= checksum.Verify();
+                return packetChecksum == validChecksum;
             }
             catch (Exception e)
             {
                 throw new Exception("Packet verification failed with error: ", e);
             }
-
-            return valid;
         }
     }
 }
