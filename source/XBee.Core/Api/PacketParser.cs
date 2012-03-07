@@ -55,6 +55,8 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             _buffersAvailable = new ManualResetEvent(false);
 
             _packetListeners = new ArrayList();
+
+            SetupResponseHandlers();
         }
 
         public void Start()
@@ -222,6 +224,9 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 
         private static void SetupResponseHandlers()
         {
+            if (_responseHandler != null)
+                return;
+
             var noArgs = new Type[0];
 
             _responseHandler = new Hashtable(13)
@@ -244,10 +249,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 
         private static XBeeResponse GetResponse(ApiId apiId)
         {
-            if (_responseHandler == null)
-                SetupResponseHandlers();
-
-            if (_responseHandler == null || !_responseHandler.Contains(apiId))
+            if (!_responseHandler.Contains(apiId))
                 throw new XBeeException("No response contructor exists for apiId " + apiId);
 
             var responseCtor = (ConstructorInfo) _responseHandler[apiId];
