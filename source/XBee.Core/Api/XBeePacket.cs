@@ -6,7 +6,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
     /// <summary>
     /// Packages a frame data array into an XBee packet.
     /// </summary>
-    public class XBeePacket
+    public static class XBeePacket
     {
         public enum SpecialByte
         {
@@ -16,19 +16,19 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             Xoff = 0x13
         }
 
-        private readonly byte[] _packet;
-
         /// <summary>
         /// Performs the necessary activities to construct an XBee packet from the frame data.
         /// This includes: computing the checksum, escaping the necessary bytes, adding the start byte and length bytes.
         /// The format of a packet is as follows:
         /// start byte - msb length byte - lsb length byte - frame data - checksum byte
         /// </summary>
-        /// <param name="frameData"></param>
-        public XBeePacket(byte[] frameData)
+        /// <param name="request"></param>
+        public static byte[] GetBytes(XBeeRequest request)
         {
             // checksum is always computed on pre-escaped packet
             var checksum = new Checksum();
+
+            var frameData = request.GetFrameData();
 
             foreach (var b in frameData)
                 checksum.AddByte(b);
@@ -36,41 +36,35 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             checksum.Compute();
 
             // packet size is frame data + start byte + 2 length bytes + checksum byte
-            _packet = new byte[frameData.Length + 4];
-            _packet[0] = (byte)SpecialByte.StartByte;
+            var bytes = new byte[frameData.Length + 4];
+            bytes[0] = (byte)SpecialByte.StartByte;
 
             // Packet length does not include escape bytes or start, length and checksum bytes
             var length = (ushort)frameData.Length;
 
             // msb length (will be zero until maybe someday when > 255 bytes packets are supported)
-            _packet[1] = UshortUtils.Msb(length);
+            bytes[1] = UshortUtils.Msb(length);
             // lsb length
-            _packet[2] = UshortUtils.Lsb(length);
+            bytes[2] = UshortUtils.Lsb(length);
 
-            for (var i = 0; i < frameData.Length; i++)
-            {
-                if (frameData[i] > 255)
-                    throw new Exception("Packet values must not be greater than one byte (255): " + frameData[i]);
-
-                _packet[3 + i] = frameData[i];
-            }
+            Array.Copy(frameData, 0, bytes, 3, frameData.Length);
 
             // set last byte as checksum
             // note: if checksum is not correct, XBee won't send out packet or return error.  ask me how I know.
 
-            _packet[_packet.Length - 1] = checksum.GetChecksum();
+            bytes[bytes.Length - 1] = checksum.GetChecksum();
 
-            var preEscapeLength = _packet.Length;
+            var preEscapeLength = bytes.Length;
 
             // TODO save escaping for the serial out method. this is an unnecessary operation
-            _packet = EscapePacket(_packet);
+            bytes = EscapePacket(bytes);
 
-            var escapeLength = _packet.Length;
+            var escapeLength = bytes.Length;
 
             var packetStr = "Packet: ";
             for (var i = 0; i < escapeLength; i++)
             {
-                packetStr += ByteUtils.ToBase16(_packet[i]);
+                packetStr += ByteUtils.ToBase16(bytes[i]);
 
                 if (i < escapeLength - 1)
                     packetStr += " ";
@@ -78,6 +72,8 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 
             Logger.LowDebug(packetStr);
             Logger.LowDebug("pre-escape packet size is " + preEscapeLength + ", post-escape packet size is " + escapeLength);
+
+            return bytes;
         }
 
         /// <summary>
@@ -223,11 +219,6 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             }
 
             return valid;
-        }
-
-        public byte[] ToByteArray()
-        {
-            return _packet;
         }
     }
 }

@@ -303,7 +303,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             if (Logger.IsActive(LogLevel.Debug))
                 Logger.Debug("Sending " + request.GetType().Name + ": " + request);
 
-            var bytes = request.GetXBeePacket().ToByteArray();
+            var bytes = XBeePacket.GetBytes(request);
 
             if (Logger.IsActive(LogLevel.LowDebug))
                 Logger.LowDebug("Sending " + ByteUtils.ToBase16(bytes));
