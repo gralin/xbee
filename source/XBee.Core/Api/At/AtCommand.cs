@@ -42,7 +42,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.At
         public AtCmd Command { get; set; }
         public byte[] Value { get; set; }
 
-        public AtCommand(string command, byte[] value = null)
+        public AtCommand(string command, params byte[] value)
             :this((AtCmd)UshortUtils.FromAscii(command), value)
         {
         }
@@ -52,20 +52,10 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.At
         /// <param name="command"></param>
         /// <param name="value"></param>
         /// <param name="frameId">frameId must be > 0 for a response</param>
-        public AtCommand(AtCmd command, byte[] value = null)
+        public AtCommand(AtCmd command, params byte[] value)
         {
             Command = command;
             Value = value;
-        }
-
-        public AtCommand(string command, byte value)
-            : this(command, new[] { value })
-        {
-        }
-
-        public AtCommand(AtCmd command, byte value)
-            : this(command, new[] { value })
-        {
         }
 
         public override ApiId ApiId

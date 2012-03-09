@@ -203,12 +203,12 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             }
         }
 
-        public AtCommand CreateRequest(AtCmd atCommand, byte[] value = null)
+        public AtCommand CreateRequest(AtCmd atCommand, params byte[] value)
         {
             return new AtCommand(atCommand, value) { FrameId = _idGenerator.GetNext() };
         }
 
-        public RemoteAtCommand CreateRequest(AtCmd atCommand, XBeeAddress remoteXbee, byte[] value = null)
+        public RemoteAtCommand CreateRequest(AtCmd atCommand, XBeeAddress remoteXbee, params byte[] value)
         {
             return new RemoteAtCommand(atCommand, remoteXbee, value) { FrameId = _idGenerator.GetNext() };
         }
