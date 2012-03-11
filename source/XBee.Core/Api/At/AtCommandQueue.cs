@@ -6,7 +6,7 @@
     /// </summary>
     public class AtCommandQueue : AtCommand
     {
-        public AtCommandQueue(AtCmd command, byte[] value = null) 
+        public AtCommandQueue(ushort command, byte[] value = null) 
             : base(command, value)
         {
         }

@@ -163,6 +163,9 @@
     <Compile Include="..\XBee.Core\Api\PacketParser.cs">
       <Link>Api\PacketParser.cs</Link>
     </Compile>
+    <Compile Include="..\XBee.Core\Api\Wpan\AtCmd.cs">
+      <Link>Api\Wpan\AtCmd.cs</Link>
+    </Compile>
     <Compile Include="..\XBee.Core\Api\Wpan\IoSample.cs">
       <Link>Api\Wpan\IoSample.cs</Link>
     </Compile>
@@ -228,6 +231,9 @@
     </Compile>
     <Compile Include="..\XBee.Core\Api\Zigbee\AssociationStatus.cs">
       <Link>Api\Zigbee\AssociationStatus.cs</Link>
+    </Compile>
+    <Compile Include="..\XBee.Core\Api\Zigbee\AtCmd.cs">
+      <Link>Api\Zigbee\AtCmd.cs</Link>
     </Compile>
     <Compile Include="..\XBee.Core\Api\Zigbee\DeviceType.cs">
       <Link>Api\Zigbee\DeviceType.cs</Link>

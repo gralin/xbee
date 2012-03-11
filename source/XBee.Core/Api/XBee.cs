@@ -205,12 +205,32 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 
         public AtCommand CreateRequest(At.AtCmd atCommand, params byte[] value)
         {
-            return new AtCommand(atCommand, value) { FrameId = _idGenerator.GetNext() };
+            return new AtCommand((ushort)atCommand, value) { FrameId = _idGenerator.GetNext() };
+        }
+
+        public AtCommand CreateRequest(Wpan.AtCmd atCommand, params byte[] value)
+        {
+            return new AtCommand((ushort) atCommand, value) { FrameId = _idGenerator.GetNext() };
+        }
+
+        public AtCommand CreateRequest(Zigbee.AtCmd atCommand, params byte[] value)
+        {
+            return new AtCommand((ushort) atCommand, value) { FrameId = _idGenerator.GetNext() };
         }
 
         public RemoteAtCommand CreateRequest(At.AtCmd atCommand, XBeeAddress remoteXbee, params byte[] value)
         {
-            return new RemoteAtCommand(atCommand, remoteXbee, value) { FrameId = _idGenerator.GetNext() };
+            return new RemoteAtCommand((ushort)atCommand, remoteXbee, value) { FrameId = _idGenerator.GetNext() };
+        }
+
+        public RemoteAtCommand CreateRequest(Wpan.AtCmd atCommand, XBeeAddress remoteXbee, params byte[] value)
+        {
+            return new RemoteAtCommand((ushort) atCommand, remoteXbee, value) { FrameId = _idGenerator.GetNext() };
+        }
+
+        public RemoteAtCommand CreateRequest(Zigbee.AtCmd atCommand, XBeeAddress remoteXbee, params byte[] value)
+        {
+            return new RemoteAtCommand((ushort) atCommand, remoteXbee, value) { FrameId = _idGenerator.GetNext() };
         }
 
         // Sending requests
@@ -230,9 +250,29 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             return (AtResponse)Send(CreateRequest(atCommand, value), timeout);
         }
 
+        public AtResponse Send(Wpan.AtCmd atCommand, byte[] value = null, int timeout = PacketParser.DefaultParseTimeout)
+        {
+            return (AtResponse)Send(CreateRequest(atCommand, value), timeout);
+        }
+
+        public AtResponse Send(Zigbee.AtCmd atCommand, byte[] value = null, int timeout = PacketParser.DefaultParseTimeout)
+        {
+            return (AtResponse)Send(CreateRequest(atCommand, value), timeout);
+        }
+
         public RemoteAtResponse Send(At.AtCmd atCommand, XBeeAddress remoteXbee, byte[] value = null, int timeout = PacketParser.DefaultParseTimeout)
         {
+            return (RemoteAtResponse)Send(CreateRequest(atCommand, remoteXbee, value), timeout);
+        }
+
+        public RemoteAtResponse Send(Wpan.AtCmd atCommand, XBeeAddress remoteXbee, byte[] value = null, int timeout = PacketParser.DefaultParseTimeout)
+        {
             return (RemoteAtResponse) Send(CreateRequest(atCommand, remoteXbee, value), timeout);
+        }
+
+        public RemoteAtResponse Send(Zigbee.AtCmd atCommand, XBeeAddress remoteXbee, byte[] value = null, int timeout = PacketParser.DefaultParseTimeout)
+        {
+            return (RemoteAtResponse)Send(CreateRequest(atCommand, remoteXbee, value), timeout);
         }
 
         public XBeeResponse Send(XBeeRequest xbeeRequest, int timeout = PacketParser.DefaultParseTimeout)
@@ -262,6 +302,16 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         }
 
         public void SendNoReply(At.AtCmd atCommand, byte[] value = null)
+        {
+            SendNoReply(CreateRequest(atCommand, value));
+        }
+
+        public void SendNoReply(Wpan.AtCmd atCommand, byte[] value = null)
+        {
+            SendNoReply(CreateRequest(atCommand, value));
+        }
+
+        public void SendNoReply(Zigbee.AtCmd atCommand, byte[] value = null)
         {
             SendNoReply(CreateRequest(atCommand, value));
         }

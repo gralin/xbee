@@ -39,11 +39,11 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.At
     /// </remarks>
     public class AtCommand : XBeeRequest
     {
-        public AtCmd Command { get; set; }
+        public ushort Command { get; set; }
         public byte[] Value { get; set; }
 
         public AtCommand(string command, params byte[] value)
-            :this((AtCmd)UshortUtils.FromAscii(command), value)
+            :this(UshortUtils.FromAscii(command), value)
         {
         }
 
@@ -52,7 +52,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.At
         /// <param name="command"></param>
         /// <param name="value"></param>
         /// <param name="frameId">frameId must be > 0 for a response</param>
-        public AtCommand(AtCmd command, params byte[] value)
+        public AtCommand(ushort command, params byte[] value)
         {
             Command = command;
             Value = value;
@@ -80,7 +80,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.At
         public override string ToString()
         {
             return base.ToString()
-                   + ",command=" + UshortUtils.ToAscii((ushort)Command)
+                   + ",command=" + UshortUtils.ToAscii(Command)
                    + ",value=" + (Value == null ? "null" : ByteUtils.ToBase16(Value));
         }
     }

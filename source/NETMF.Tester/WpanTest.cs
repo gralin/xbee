@@ -1,9 +1,8 @@
 ﻿using System.Threading;
+using Microsoft.SPOT;
 using Gadgeteer.Modules.GHIElectronics.Api;
 using Gadgeteer.Modules.GHIElectronics.Api.Wpan;
 using Gadgeteer.Modules.GHIElectronics.Util;
-using Microsoft.SPOT;
-using AtCmd = Gadgeteer.Modules.GHIElectronics.Api.At.AtCmd;
 
 namespace NETMF.Tester
 {
@@ -19,7 +18,7 @@ namespace NETMF.Tester
             for (var i = 0; i < result.Length; i++)
                 Debug.Print("Channel " + (i + 0x0B) + ": " + result[i] + "-dBi");
 
-            Debug.Print("Active channel: " + xbee1.Send(AtCmd.OperatingChannel).Value[0]);
+            Debug.Print("Active channel: " + xbee1.Send(AtCmd.Channel).Value[0]);
 
             // disovering nodes
 
@@ -120,12 +119,12 @@ namespace NETMF.Tester
 
         private static void SetAddress(XBee xbee, XBeeAddress16 address)
         {
-            xbee.Send(AtCmd.NetworkAddress, (address as XBeeAddress).Address);
+            xbee.Send(AtCmd.SourceAddress, (address as XBeeAddress).Address);
         }
 
         private static XBeeAddress16 GetAddress(XBee xbee)
         {
-            return new XBeeAddress16(xbee.Send(AtCmd.NetworkAddress).Value);
+            return new XBeeAddress16(xbee.Send(AtCmd.SourceAddress).Value);
         }
 
         private static void OnDataReceived(XBee receiver, byte[] data, XBeeAddress sender)

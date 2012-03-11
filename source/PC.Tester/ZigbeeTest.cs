@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using Gadgeteer.Modules.GHIElectronics.Api;
-using Gadgeteer.Modules.GHIElectronics.Api.At;
 using Gadgeteer.Modules.GHIElectronics.Api.Zigbee;
 using Gadgeteer.Modules.GHIElectronics.Util;
 
