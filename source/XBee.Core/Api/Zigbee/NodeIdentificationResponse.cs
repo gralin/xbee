@@ -60,7 +60,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
         // these properties are all regarding the remote node
         public string NodeIdentifier { get; set; }
         public XBeeAddress16 ParentAddress { get; set; }
-        public DeviceType DeviceType { get; set; }
+        public NodeType NodeType { get; set; }
         public SourceActions SourceAction { get; set; }
 
         /// <summary>
@@ -95,7 +95,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
 
             NodeIdentifier = nodeIdentifier;
             ParentAddress = parser.ParseAddress16();
-            DeviceType = (DeviceType) parser.Read("Device Type");
+            NodeType = (NodeType) parser.Read("Device Type");
             SourceAction = (SourceActions) parser.Read("Source Action");
             ProfileId = UshortUtils.ToUshort(parser.Read("Profile MSB"), parser.Read("Profile LSB"));
             MfgId = UshortUtils.ToUshort(parser.Read("MFG MSB"), parser.Read("MFG LSB"));
@@ -108,7 +108,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
                    + ", senderSerial=" + SenderSerial
                    + ", remoteAddress=" + RemoteAddress
                    + ", remoteSerial=" + RemoteSerial
-                   + ", deviceType=" + DeviceType
+                   + ", nodeType=" + NodeType
                    + ", mfgId=" + MfgId
                    + ", nodeIdentifier=" + NodeIdentifier
                    + ", option=" + Option

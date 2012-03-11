@@ -51,7 +51,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
 
         public static IoSampleResponse ParseIsSample(AtResponse response)
         {
-		    if (response.Command != AtCmd.ForceSample)
+            if (response.Command != At.AtCmd.ForceSample)
 			    throw new ArgumentException("This is only applicable to the 'IS' AT command");
 		
 		    var input = new InputStream(response.Value);

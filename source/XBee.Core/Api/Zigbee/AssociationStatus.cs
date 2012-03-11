@@ -3,36 +3,81 @@
     public enum AssociationStatus
     {
         /// <summary>
-        /// Successful completion - Coordinator started or Router/End Device found and joined with a parent.
+        /// Successfully formed or joined a network. 
         /// </summary>
+        /// <remarks>
+        /// Coordinators form a network, routers and end devices join a network.
+        /// </remarks>
         Success = 0,
+
         /// <summary>
         /// Scan found no PANs
         /// </summary>
 	    NoPan = 0x21,
+
 	    /// <summary>
-	    /// Scan found no valid PANs based on current SC and ID settings
+	    /// Scan found no valid PANs based on current SC and ID settings.
 	    /// </summary>
         NoValidPan = 0x22,
+
 	    /// <summary>
-	    /// Valid Coordinator or Routers found, but they are not allowing joining (NJ expired)
+	    /// Valid Coordinator or Routers found, but they are not allowing joining (NJ expired).
 	    /// </summary>
         NodeJoiningExpired = 0x23,
-	    /// <summary>
-	    /// Node Joining attempt failed (typically due to incompatible security settings)
-	    /// </summary>
-        NodeJoiningFailed = 0x27,
+
         /// <summary>
-        /// Coordinator Start attempt failed
+        /// No joinable beacons were found.
         /// </summary>
-	    CoordinatorStartFailed = 0x2a,
-	    /// <summary>
-	    /// Scanning for a Parent
-	    /// </summary>
-        ScanningForParent = 0xff,
+        NoJoinableBeacons = 0x24,
+
         /// <summary>
-        /// Checking for an existing coordinator
+        /// Node should not be attempting to join at this time.
         /// </summary>
-	    ExistingCoordinatorCheck = 0x2b
+        UnexpectedState = 0x25,
+
+	    /// <summary>
+	    /// Node Joining attempt failed (typically due to incompatible security settings).
+	    /// </summary>
+        JoiningFailed = 0x27,
+
+        /// <summary>
+        /// Coordinator Start attempt failed.
+        /// </summary>
+	    CoordinatorStartFailed = 0x2A,
+
+        /// <summary>
+        /// Checking for an existing coordinator.
+        /// </summary>
+        CheckingForCoordinator = 0x2B,
+
+        /// <summary>
+        /// Attempt to leave the network failed.
+        /// </summary>
+        FailedToLeaveNetwork = 0x2C,
+
+        /// <summary>
+        /// Attempted to join a device that did not respond.
+        /// </summary>
+        FailedToJoinDevice = 0xAB,
+
+        /// <summary>
+        /// Network security key received unsecured.
+        /// </summary>
+        ReceivedUnsecuredKey = 0xAC,
+
+        /// <summary>
+        /// Network security key not received.
+        /// </summary>
+        KeyNotReceived = 0xAD,
+
+        /// <summary>
+        /// Joining device does not have the right preconfigured link key.
+        /// </summary>
+        MissingKey = 0xAF,
+
+	    /// <summary>
+        /// Scanning for a ZigBee network (routers and end devices).
+	    /// </summary>
+        ScanningInProgress = 0xFF,
     }
 }

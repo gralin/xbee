@@ -253,6 +253,9 @@
     <Compile Include="..\XBee.Core\Api\Zigbee\NodeIdentificationResponse.cs">
       <Link>Api\Zigbee\NodeIdentificationResponse.cs</Link>
     </Compile>
+    <Compile Include="..\XBee.Core\Api\Zigbee\NodeType.cs">
+      <Link>Api\Zigbee\NodeType.cs</Link>
+    </Compile>
     <Compile Include="..\XBee.Core\Api\Zigbee\RxResponse.cs">
       <Link>Api\Zigbee\RxResponse.cs</Link>
     </Compile>

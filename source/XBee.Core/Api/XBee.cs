@@ -155,7 +155,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 
         public NodeInfo[] DiscoverNodes()
         {
-            var discoveryTimeout = Send(AtCmd.NodeDiscoverTimeout);
+            var discoveryTimeout = Send(At.AtCmd.NodeDiscoverTimeout);
 
             // it seems that Zigbee modules have longer timeout (2 bytes)
             int timeout = discoveryTimeout.Value.Length == 1
@@ -165,7 +165,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             // ms + 1 extra second
             timeout = timeout * 100 + 1000;
 
-            var request = CreateRequest(AtCmd.NodeDiscover);
+            var request = CreateRequest(At.AtCmd.NodeDiscover);
             var responses = BeginSend(request, new NodeDiscoveryListener()).EndReceive(timeout);
             var result = new NodeInfo[responses.Length];
 
@@ -203,12 +203,12 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             }
         }
 
-        public AtCommand CreateRequest(AtCmd atCommand, params byte[] value)
+        public AtCommand CreateRequest(At.AtCmd atCommand, params byte[] value)
         {
             return new AtCommand(atCommand, value) { FrameId = _idGenerator.GetNext() };
         }
 
-        public RemoteAtCommand CreateRequest(AtCmd atCommand, XBeeAddress remoteXbee, params byte[] value)
+        public RemoteAtCommand CreateRequest(At.AtCmd atCommand, XBeeAddress remoteXbee, params byte[] value)
         {
             return new RemoteAtCommand(atCommand, remoteXbee, value) { FrameId = _idGenerator.GetNext() };
         }
@@ -225,12 +225,12 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             return Send(CreateRequest(payload, destination));
         }
 
-        public AtResponse Send(AtCmd atCommand, byte[] value = null, int timeout = PacketParser.DefaultParseTimeout)
+        public AtResponse Send(At.AtCmd atCommand, byte[] value = null, int timeout = PacketParser.DefaultParseTimeout)
         {
             return (AtResponse)Send(CreateRequest(atCommand, value), timeout);
         }
 
-        public RemoteAtResponse Send(AtCmd atCommand, XBeeAddress remoteXbee, byte[] value = null, int timeout = PacketParser.DefaultParseTimeout)
+        public RemoteAtResponse Send(At.AtCmd atCommand, XBeeAddress remoteXbee, byte[] value = null, int timeout = PacketParser.DefaultParseTimeout)
         {
             return (RemoteAtResponse) Send(CreateRequest(atCommand, remoteXbee, value), timeout);
         }
@@ -261,7 +261,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             }
         }
 
-        public void SendNoReply(AtCmd atCommand, byte[] value = null)
+        public void SendNoReply(At.AtCmd atCommand, byte[] value = null)
         {
             SendNoReply(CreateRequest(atCommand, value));
         }

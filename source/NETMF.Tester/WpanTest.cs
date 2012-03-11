@@ -1,9 +1,9 @@
 ﻿using System.Threading;
 using Gadgeteer.Modules.GHIElectronics.Api;
-using Gadgeteer.Modules.GHIElectronics.Api.At;
 using Gadgeteer.Modules.GHIElectronics.Api.Wpan;
 using Gadgeteer.Modules.GHIElectronics.Util;
 using Microsoft.SPOT;
+using AtCmd = Gadgeteer.Modules.GHIElectronics.Api.At.AtCmd;
 
 namespace NETMF.Tester
 {

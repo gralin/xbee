@@ -10,22 +10,22 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
     public class NodeDiscover : NodeInfo
     {
         public XBeeAddress16 Parent { get; set; }
-        public DeviceType DeviceType { get; set; }
+        public NodeType NodeType { get; set; }
         public byte Status { get; set; }
         public byte[] ProfileId { get; set; }
         public byte[] MfgId { get; set; }
 
-        public string DeviceTypeName
+        public string NodeTypeName
         {
             get
             {
-                switch (DeviceType)
+                switch (NodeType)
                 {
-                    case DeviceType.Coordinator:
+                    case NodeType.Coordinator:
                         return "Coordinator";
-                    case DeviceType.Router:
+                    case NodeType.Router:
                         return "Router";
-                    case DeviceType.EndDevice:
+                    case NodeType.EndDevice:
                         return "End device";
                     default:
                         return "Unknown";
@@ -40,7 +40,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
 
         public static NodeDiscover Parse(AtResponse response)
         {
-            if (response.Command != AtCmd.NodeDiscover)
+            if (response.Command != At.AtCmd.NodeDiscover)
                 throw new ArgumentException("This method is only applicable for the ND command");
 
             var input = new InputStream(response.Value);
@@ -64,7 +64,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
 
             frame.NodeIdentifier = nodeIdentifier;
             frame.Parent = new XBeeAddress16(input.Read(2));
-            frame.DeviceType = (DeviceType) input.Read();
+            frame.NodeType = (NodeType) input.Read();
             // TODO: this is being reported as 1 (router) for my end device
             frame.Status = input.Read();
             frame.ProfileId = input.Read(2);
@@ -75,7 +75,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
 
         public override string ToString()
         {
-            return DeviceTypeName 
+            return NodeTypeName 
                 + ", SerialNumber = " + SerialNumber 
                 + ", NetworkAddress = " + NetworkAddress;
         }
