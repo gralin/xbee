@@ -22,6 +22,10 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         private DataReceivedListener _dataReceivedListener;
         private bool _dataReceivedEventEnabled;
 
+        private readonly AtRequest _atRequest;
+        private readonly DataRequest _dataRequest;
+        private readonly RawRequest _rawRequest;
+
         public Hashtable AddressLookup { get; private set; }
         public XBeeConfiguration Config { get; private set; }
 
@@ -34,6 +38,9 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         {
             _parser = new PacketParser();
             _idGenerator = new PacketIdGenerator();
+            _atRequest = new AtRequest(this);
+            _dataRequest = new DataRequest(this);
+            _rawRequest = new RawRequest(this);
         }
 
         public XBee(IXBeeConnection connection) 
@@ -184,6 +191,44 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             return result;
         }
 
+        // New send methods idea
+
+        public DataRequest Send2(string payload)
+        {
+            _dataRequest.Init(payload);
+            return _dataRequest;
+        }
+
+        public DataRequest Send2(byte[] payload)
+        {
+            _dataRequest.Init(payload);
+            return _dataRequest;
+        }
+
+        public AtRequest Send2(At.AtCmd atCommand, params byte[] value)
+        {
+            _atRequest.Init((ushort) atCommand, value);
+            return _atRequest;
+        }
+
+        public AtRequest Send2(Wpan.AtCmd atCommand, params byte[] value)
+        {
+            _atRequest.Init((ushort)atCommand, value);
+            return _atRequest;
+        }
+
+        public AtRequest Send2(Zigbee.AtCmd atCommand, params byte[] value)
+        {
+            _atRequest.Init((ushort)atCommand, value);
+            return _atRequest;
+        }
+
+        public RawRequest Send2(XBeeRequest request)
+        {
+            _rawRequest.Init(request);
+            return _rawRequest;
+        }
+
         // Creating requests
 
         public XBeeRequest CreateRequest(string payload, XBeeAddress destination = null)
@@ -203,6 +248,11 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             }
         }
 
+        public AtCommand CreateRequest(ushort atCommand, params byte[] value)
+        {
+            return new AtCommand(atCommand, value) { FrameId = _idGenerator.GetNext() };
+        }
+
         public AtCommand CreateRequest(At.AtCmd atCommand, params byte[] value)
         {
             return new AtCommand((ushort)atCommand, value) { FrameId = _idGenerator.GetNext() };
@@ -216,6 +266,11 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         public AtCommand CreateRequest(Zigbee.AtCmd atCommand, params byte[] value)
         {
             return new AtCommand((ushort) atCommand, value) { FrameId = _idGenerator.GetNext() };
+        }
+
+        public RemoteAtCommand CreateRequest(ushort atCommand, XBeeAddress remoteXbee, params byte[] value)
+        {
+            return new RemoteAtCommand(atCommand, remoteXbee, value) { FrameId = _idGenerator.GetNext() };
         }
 
         public RemoteAtCommand CreateRequest(At.AtCmd atCommand, XBeeAddress remoteXbee, params byte[] value)

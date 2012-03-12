@@ -55,6 +55,11 @@
     <Compile Include="Api\Features\PacketListenning\NodeDiscoveryFilter.cs" />
     <Compile Include="Api\Features\PacketListenning\NodeDiscoveryListener.cs" />
     <Compile Include="Api\Features\PacketListenning\SinglePacketListener.cs" />
+    <Compile Include="Api\Features\Sending\AtRequest.cs" />
+    <Compile Include="Api\Features\Sending\IRequest.cs" />
+    <Compile Include="Api\Features\Sending\RawRequest.cs" />
+    <Compile Include="Api\Features\Sending\DataRequest.cs" />
+    <Compile Include="Api\Features\Sending\RequestBase.cs" />
     <Compile Include="Api\GenericResponse.cs" />
     <Compile Include="Api\At\HardwareVersion.cs" />
     <Compile Include="Api\Features\PacketListenning\IPacketFilter.cs" />

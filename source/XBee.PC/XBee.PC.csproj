@@ -136,6 +136,21 @@
     <Compile Include="..\XBee.Core\Api\Features\PacketListenning\SinglePacketListener.cs">
       <Link>Api\Features\PacketListenning\SinglePacketListener.cs</Link>
     </Compile>
+    <Compile Include="..\XBee.Core\Api\Features\Sending\AtRequest.cs">
+      <Link>Api\Features\Sending\AtRequest.cs</Link>
+    </Compile>
+    <Compile Include="..\XBee.Core\Api\Features\Sending\DataRequest.cs">
+      <Link>Api\Features\Sending\DataRequest.cs</Link>
+    </Compile>
+    <Compile Include="..\XBee.Core\Api\Features\Sending\IRequest.cs">
+      <Link>Api\Features\Sending\IRequest.cs</Link>
+    </Compile>
+    <Compile Include="..\XBee.Core\Api\Features\Sending\RawRequest.cs">
+      <Link>Api\Features\Sending\RawRequest.cs</Link>
+    </Compile>
+    <Compile Include="..\XBee.Core\Api\Features\Sending\RequestBase.cs">
+      <Link>Api\Features\Sending\RequestBase.cs</Link>
+    </Compile>
     <Compile Include="..\XBee.Core\Api\GenericResponse.cs">
       <Link>Api\GenericResponse.cs</Link>
     </Compile>

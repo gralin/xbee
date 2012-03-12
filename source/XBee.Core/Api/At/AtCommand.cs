@@ -69,7 +69,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.At
 
             frameData.Write((byte) ApiId);
             frameData.Write(FrameId);
-            frameData.Write((ushort)Command);
+            frameData.Write(Command);
 
             if (Value != null)
                 frameData.Write(Value);
