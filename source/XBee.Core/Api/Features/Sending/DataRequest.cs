@@ -11,16 +11,15 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         {
         }
 
+        internal void Init(string payload)
+        {
+            Init(Arrays.ToByteArray(payload));
+        }
+        
         internal void Init(byte[] payload)
         {
             Init();
             Payload = payload;
-        }
-
-        internal void Init(string payload)
-        {
-            Init();
-            Payload = Arrays.ToByteArray(payload);
         }
 
         protected override XBeeRequest CreateRequest()

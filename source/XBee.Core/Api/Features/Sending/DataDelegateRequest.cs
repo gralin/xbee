@@ -6,17 +6,13 @@
 
         public override byte[] Payload
         {
-            get 
-            {
-                return _bytesDelegate.Invoke();
-            }
+            get { return _bytesDelegate.Invoke(); }
         }
 
         public DataDelegateRequest(XBee xbee) 
             : base(xbee)
         {
         }
-
 
         internal void Init(XBee.PayloadDelegate payloadDelegate)
         {

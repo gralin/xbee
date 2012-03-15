@@ -17,8 +17,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XBee.UnitTests", "XBee.Unit
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PC.Tester", "PC.Tester\PC.Tester.csproj", "{46B94514-1A5E-417B-8E84-D542163B9233}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zigbee.Tester", "Zigbee.Tester\Zigbee.Tester.csproj", "{89AB090E-ED35-482D-A7B9-3AD69048251B}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

@@ -20,6 +20,7 @@
       <!-- This lists the assembly which provides the API to this module, i.e. the output assembly of this template. -->
       <Assemblies>
         <Assembly MFVersion="4.1" Name="GTM.GHIElectronics.XBee"/>
+        <Assembly MFVersion="4.1" Name="GTM.GHIElectronics.XBee.Core"/>
       </Assemblies>
 
       <!--
