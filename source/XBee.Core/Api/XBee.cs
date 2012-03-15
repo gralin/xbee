@@ -25,7 +25,8 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         private readonly AtRequest _atRequest;
         private readonly DataRequest _dataRequest;
         private readonly RawRequest _rawRequest;
-
+        private readonly DataDelegateRequest _dataDelegateRequest;
+        
         public Hashtable AddressLookup { get; private set; }
         public XBeeConfiguration Config { get; private set; }
 
@@ -41,6 +42,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             _atRequest = new AtRequest(this);
             _dataRequest = new DataRequest(this);
             _rawRequest = new RawRequest(this);
+            _dataDelegateRequest = new DataDelegateRequest(this);
         }
 
         public XBee(IXBeeConnection connection) 
@@ -66,6 +68,9 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             _connection.Open();
             ReadConfiguration();
             EnableDataReceivedEvent();
+
+            if (Config.IsSeries2())
+                EnableAddressLookup();
         }
 
         public void Close()
@@ -199,7 +204,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             return _dataRequest;
         }
 
-        public DataRequest Send2(byte[] payload)
+        public DataRequest Send2(params byte[] payload)
         {
             _dataRequest.Init(payload);
             return _dataRequest;
@@ -229,28 +234,53 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             return _rawRequest;
         }
 
+        public DataDelegateRequest Send2(PayloadDelegate payloadDelegate)
+        {
+            _dataDelegateRequest.Init(payloadDelegate);
+            return _dataDelegateRequest;
+        }
+
+        public delegate byte[] PayloadDelegate();
+
         // Creating requests
 
-        public XBeeRequest CreateRequest(string payload, XBeeAddress destination = null)
+        public XBeeRequest CreateRequest(string payload, XBeeAddress destination)
         {
             return CreateRequest(Arrays.ToByteArray(payload), destination);
         }
 
-        public XBeeRequest CreateRequest(byte[] payload, XBeeAddress destination = null)
+        public XBeeRequest CreateRequest(byte[] payload, XBeeAddress destination)
         {
             if (Config.IsSeries1())
-            {
-                return new Wpan.TxRequest(destination ?? XBeeAddress16.Broadcast, payload) {FrameId = _idGenerator.GetNext()};
-            }
-            else
-            {
-                return new Zigbee.TxRequest(destination ?? XBeeAddress16.ZnetBroadcast, payload) {FrameId = _idGenerator.GetNext()};
-            }
+                return new Wpan.TxRequest(destination, payload) 
+                    {FrameId = _idGenerator.GetNext()};
+
+            if (!(destination is XBeeAddress64) || destination == null)
+                throw new ArgumentException("64 bit address expected", "destination");
+
+            var serialNumber = (XBeeAddress64) destination;
+
+            var networkAddress = AddressLookup.Contains(destination)
+                ? (XBeeAddress16)AddressLookup[destination]
+                : XBeeAddress16.Unknown;
+
+            return new Zigbee.TxRequest(serialNumber, networkAddress, payload) 
+                { FrameId = _idGenerator.GetNext() };
         }
 
-        public AtCommand CreateRequest(ushort atCommand, params byte[] value)
+        public XBeeRequest CreateRequest(string payload, NodeInfo destination)
         {
-            return new AtCommand(atCommand, value) { FrameId = _idGenerator.GetNext() };
+            return CreateRequest(Arrays.ToByteArray(payload), destination);
+        }
+
+        public XBeeRequest CreateRequest(byte[] payload, NodeInfo destination)
+        {
+            if (Config.IsSeries1())
+                return new Wpan.TxRequest(destination.SerialNumber, payload) 
+                    { FrameId = _idGenerator.GetNext() };
+
+            return new Zigbee.TxRequest(destination.SerialNumber, destination.NetworkAddress, payload)
+                { FrameId = _idGenerator.GetNext() };
         }
 
         public AtCommand CreateRequest(At.AtCmd atCommand, params byte[] value)
@@ -268,24 +298,45 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             return new AtCommand((ushort) atCommand, value) { FrameId = _idGenerator.GetNext() };
         }
 
-        public RemoteAtCommand CreateRequest(ushort atCommand, XBeeAddress remoteXbee, params byte[] value)
+        public AtCommand CreateRequest(ushort atCommand, params byte[] value)
         {
-            return new RemoteAtCommand(atCommand, remoteXbee, value) { FrameId = _idGenerator.GetNext() };
+            return new AtCommand(atCommand, value) { FrameId = _idGenerator.GetNext() };
         }
 
-        public RemoteAtCommand CreateRequest(At.AtCmd atCommand, XBeeAddress remoteXbee, params byte[] value)
+        public RemoteAtCommand CreateRequest(At.AtCmd atCommand, XBeeAddress destination, params byte[] value)
         {
-            return new RemoteAtCommand((ushort)atCommand, remoteXbee, value) { FrameId = _idGenerator.GetNext() };
+            return CreateRequest((ushort)atCommand, destination, value);
         }
 
-        public RemoteAtCommand CreateRequest(Wpan.AtCmd atCommand, XBeeAddress remoteXbee, params byte[] value)
+        public RemoteAtCommand CreateRequest(Wpan.AtCmd atCommand, XBeeAddress destination, params byte[] value)
         {
-            return new RemoteAtCommand((ushort) atCommand, remoteXbee, value) { FrameId = _idGenerator.GetNext() };
+            return CreateRequest((ushort)atCommand, destination, value);
         }
 
-        public RemoteAtCommand CreateRequest(Zigbee.AtCmd atCommand, XBeeAddress remoteXbee, params byte[] value)
+        public RemoteAtCommand CreateRequest(Zigbee.AtCmd atCommand, XBeeAddress destination, params byte[] value)
         {
-            return new RemoteAtCommand((ushort) atCommand, remoteXbee, value) { FrameId = _idGenerator.GetNext() };
+            return CreateRequest((ushort)atCommand, destination, value);
+        }
+
+        public RemoteAtCommand CreateRequest(ushort atCommand, XBeeAddress destination, params byte[] value)
+        {
+            if (destination is XBeeAddress16)
+                throw new ArgumentException("64 bit address expected", "destination");
+
+            return new RemoteAtCommand(atCommand, (XBeeAddress64) destination, value) 
+                { FrameId = _idGenerator.GetNext() };
+        }
+
+        public RemoteAtCommand CreateRequest(ushort atCommand, XBeeAddress64 destSerial, XBeeAddress16 destAddress, params byte[] value)
+        {
+            return new RemoteAtCommand(atCommand, destSerial, destAddress, value) 
+                { FrameId = _idGenerator.GetNext() };
+        }
+
+        public RemoteAtCommand CreateRequest(ushort atCommand, NodeInfo destination, params byte[] value)
+        {
+            return new RemoteAtCommand(atCommand, destination.SerialNumber, destination.NetworkAddress, value) 
+                { FrameId = _idGenerator.GetNext() };
         }
 
         // Sending requests

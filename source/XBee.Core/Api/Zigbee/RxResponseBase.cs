@@ -1,11 +1,16 @@
-﻿namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
+﻿using System;
+
+namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
 {
     public abstract class RxResponseBase : XBeeResponse
     {
+        [Flags]
         public enum Options
         {
-            PacketAcknowledged = 0x01,
-            BroadcastPacket = 0x02
+            Acknowledged = 0x01,
+            Broadcast = 0x02,
+            Encrypted,
+            FromEndDevice = 0x40
         }
 
         public XBeeAddress64 SourceSerial { get; set; }
@@ -24,7 +29,7 @@
             return base.ToString()
                    + ",sourceSerial=" + SourceSerial
                    + ",sourceAddress=" + SourceAddress
-                   + ",option=" + Option;
+                   + ",options=" + Option;
         }
     }
 }

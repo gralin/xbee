@@ -4,7 +4,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 {
     public class DataRequest : RequestBase
     {
-        protected byte[] Payload;
+        public virtual byte[] Payload { get; set; }
 
         public DataRequest(XBee xbee)
             : base(xbee)
@@ -25,10 +25,13 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 
         protected override XBeeRequest CreateRequest()
         {
-            if (Destination == null)
-                throw new System.ArgumentException("Destination needs to be specified");
+            if (DestinationNode != null) 
+               return LocalXBee.CreateRequest(Payload, DestinationNode);
 
-            return LocalXBee.CreateRequest(Payload, Destination);
+            if (DestinationAddress == null)
+                DestinationAddress = XBeeAddress64.Broadcast;
+
+            return LocalXBee.CreateRequest(Payload, DestinationAddress);
         }
     }
 }

@@ -17,14 +17,8 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 
         protected override XBeeRequest CreateRequest()
         {
-            if (Destination != null)
-                throw new System.InvalidOperationException("Destination needs to be set directly in request");
-
             if (Request.FrameId == PacketIdGenerator.NoResponseId)
-            {
                 ExpectedResponse = Response.None;
-                return Request;
-            }
 
             return Request;
         }

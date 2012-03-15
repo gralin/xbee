@@ -39,44 +39,33 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
         public byte[] Payload { get; set; }
         public byte MaxPayloadSize { get; set; }
 
-        /// <summary>
-        /// From manual p. 33:
-        /// The ZigBee Transmit Request API frame specifies the 64-bit Address and the network address (if
-        /// known) that the packet should be sent to. By supplying both addresses, the module will forego
-        /// network address Discovery and immediately attempt to route the data packet to the remote. If the
-        /// network address of a particular remote changes, network address and route discovery will take
-        /// place to establish a new route to the correct node. Upon successful
-        /// </summary>
-        /// <remarks>
-        /// Key points:
-        /// <list type="bullet">
-        ///    <item>always specify the 64-bit address and also specify the 16-bit address, if known. 
-        ///          Set the 16-bit network address to 0xfffe if not known.</item>
-        ///    <item>check the 16-bit address of the tx status response frame as it may change.</item>
-        ///    <item>keep a hash table mapping of 64-bit address to 16-bit network address.</item>
-        /// </list>
-        /// </remarks>
-        /// <param name="destination"></param>
-        /// <param name="payload"></param>
-        /// <param name="broadcastRadius"></param>
-        /// <param name="option"></param>
-        /// <param name="frameId"></param>
-        public TxRequest(XBeeAddress destination, byte[] payload, byte broadcastRadius = DefaultBroadcastRadius, Options option = Options.Unicast)
+        public TxRequest(XBeeAddress destination, byte[] payload)
+            : this(payload)
         {
             if (destination is XBeeAddress16)
             {
-                DestinationAddress = (XBeeAddress16)destination;
                 DestinationSerial = XBeeAddress64.Broadcast;
+                DestinationAddress = (XBeeAddress16) destination;
             }
             else
             {
-                DestinationAddress = XBeeAddress16.ZnetBroadcast;
-                DestinationSerial = (XBeeAddress64)destination;
+                DestinationSerial = (XBeeAddress64) destination;
+                DestinationAddress = XBeeAddress16.Unknown;
             }
+        }
 
-            BroadcastRadius = broadcastRadius;
-            Option = option;
+        public TxRequest(XBeeAddress64 destSerial, XBeeAddress16 destAddress, byte[] payload)
+            : this(payload)
+        {
+            DestinationSerial = destSerial;
+            DestinationAddress = destAddress;
+        }
+
+        protected TxRequest(byte[] payload)
+        {
             Payload = payload;
+            BroadcastRadius = DefaultBroadcastRadius;
+            Option = Options.Unicast;
         }
 
         protected OutputStream GetFrameDataAsIntArrayOutputStream()

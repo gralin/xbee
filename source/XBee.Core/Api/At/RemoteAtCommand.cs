@@ -18,37 +18,26 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.At
         public XBeeAddress16 RemoteAddress16 { get; set; }
         public bool ApplyChanges { get; set; }
 
-        public RemoteAtCommand(string command, XBeeAddress remoteAddress, byte[] value = null, bool applyChanges = true)
-            : this(UshortUtils.FromAscii(command), remoteAddress, value, applyChanges)
+        public RemoteAtCommand(string command, XBeeAddress64 remoteSerial, byte[] value = null, bool applyChanges = true)
+            : this(UshortUtils.FromAscii(command), remoteSerial, XBeeAddress16.Unknown, value, applyChanges)
         {
         }
 
-        /// <summary>
-        /// Abbreviated Constructor for setting an AT command on a remote XBee.
-        /// This defaults to the DefaultId, and true for apply changes
-        /// </summary>
-        /// <remarks>
-        /// Note: the ZNET broadcast also works for series 1.  We could also use ffff but then that wouldn't work for series 2
-        /// </remarks>
-        /// <param name="command"></param>
-        /// <param name="remoteAddress"></param>
-        /// <param name="value"></param>
-        /// <param name="frameId"> </param>
-        /// <param name="applyChanges"> </param>
-        public RemoteAtCommand(ushort command, XBeeAddress remoteAddress, byte[] value = null, bool applyChanges = true)
+        public RemoteAtCommand(string command, XBeeAddress64 remoteSerial, XBeeAddress16 remoteAddress, byte[] value = null, bool applyChanges = true)
+            : this(UshortUtils.FromAscii(command), remoteSerial, remoteAddress, value, applyChanges)
+        {
+        }
+
+        public RemoteAtCommand(ushort command, XBeeAddress64 remoteSerial, byte[] value = null, bool applyChanges = true)
+            : this(command, remoteSerial, XBeeAddress16.Unknown, value, applyChanges)
+        {
+        }
+
+        public RemoteAtCommand(ushort command, XBeeAddress64 remoteSerial, XBeeAddress16 remoteAddress, byte[] value = null, bool applyChanges = true)
             : base(command, value)
         {
-            if (remoteAddress is XBeeAddress16)
-            {
-                RemoteAddress16 = (XBeeAddress16)remoteAddress;
-                RemoteAddress64 = XBeeAddress64.Broadcast;
-            }
-            else
-            {
-                RemoteAddress16 = XBeeAddress16.ZnetBroadcast;
-                RemoteAddress64 = (XBeeAddress64)remoteAddress;
-            }
-
+            RemoteAddress64 = remoteSerial;
+            RemoteAddress16 = remoteAddress;
             ApplyChanges = applyChanges;
         }
 

@@ -15,7 +15,8 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         protected IPacketFilter Filter;
         protected Response ExpectedResponse;
         protected int TimeoutValue;
-        protected XBeeAddress Destination;
+        protected NodeInfo DestinationNode;
+        protected XBeeAddress DestinationAddress;
 
         protected RequestBase(XBee localXBee)
         {
@@ -26,23 +27,12 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         {
             ExpectedResponse = Response.Single;
             TimeoutValue = PacketParser.DefaultParseTimeout;
-            Destination = null;
+            DestinationAddress = null;
+            DestinationNode = null;
             Filter = null;
         }
 
         #region IRequest Members
-
-        public IRequest NoResponse()
-        {
-            ExpectedResponse = Response.None;
-            return this;
-        }
-
-        public IRequest MultiResponse()
-        {
-            ExpectedResponse = Response.Multiple;
-            return this;
-        }
 
         public IRequest Use(IPacketFilter filter)
         {
@@ -62,17 +52,33 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             return this;
         }
 
+        public IRequest To(ushort networkAddress)
+        {
+            DestinationAddress = new XBeeAddress16(networkAddress);
+            return this;
+        }
+
+        public IRequest To(ulong serialNumber)
+        {
+            DestinationAddress = new XBeeAddress64(serialNumber);
+            return this;
+        }
+
         public IRequest To(XBeeAddress destination)
         {
-            Destination = destination;
+            DestinationAddress = destination;
+            return this;
+        }
+
+        public IRequest To(NodeInfo destination)
+        {
+            DestinationNode = destination;
             return this;
         }
 
         public IRequest ToAll()
         {
-            Destination = LocalXBee.Config.IsSeries1()
-                                ? XBeeAddress16.Broadcast
-                                : XBeeAddress16.ZnetBroadcast;
+            DestinationAddress = XBeeAddress64.Broadcast;
             return this;
         }
 
@@ -80,20 +86,19 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         {
             var request = CreateRequest();
 
-            if (ExpectedResponse == Response.None)
-                request.FrameId = PacketIdGenerator.NoResponseId;
-
             switch (ExpectedResponse)
             {
                 case Response.None:
-                    SendExpectNoResponse(request);
+                    LocalXBee.SendNoReply(request);
                     return null;
 
                 case Response.Single:
-                    return SendExpectSingleResponse(request);
+                    InitFilter(request);
+                    return LocalXBee.BeginSend(request, new SinglePacketListener(Filter));
 
                 case Response.Multiple:
-                    return SendExpectMultipleResponse(request);
+                    InitFilter(request);
+                    return LocalXBee.BeginSend(request, new PacketListener(Filter));
 
                 default:
                     throw new NotImplementedException();
@@ -102,38 +107,23 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 
         public XBeeResponse[] GetResponses(int timeout = -1)
         {
-            if (ExpectedResponse != Response.Multiple)
-                throw new InvalidOperationException("ExpectedResponse value is invalid");
-
+            ExpectedResponse = Response.Multiple;
             return Invoke().EndReceive(timeout);
         }
 
         public XBeeResponse GetResponse(int timeout = -1)
         {
-            if (ExpectedResponse != Response.Single)
-                throw new InvalidOperationException("ExpectedResponse value is invalid");
-
+            ExpectedResponse = Response.Single;
             return Invoke().EndReceive(timeout)[0];
         }
 
+        public void NoResponse()
+        {
+            ExpectedResponse = Response.None;
+            Invoke();
+        }
+
         #endregion
-
-        protected virtual void SendExpectNoResponse(XBeeRequest request)
-        {
-            LocalXBee.SendNoReply(request);
-        }
-
-        protected virtual AsyncSendResult SendExpectSingleResponse(XBeeRequest request)
-        {
-            InitFilter(request);
-            return LocalXBee.BeginSend(request, new SinglePacketListener(Filter));
-        }
-
-        protected virtual AsyncSendResult SendExpectMultipleResponse(XBeeRequest request)
-        {
-            InitFilter(request);
-            return LocalXBee.BeginSend(request, new PacketListener(Filter));
-        }
 
         protected abstract XBeeRequest CreateRequest();
 

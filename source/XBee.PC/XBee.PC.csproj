@@ -139,6 +139,9 @@
     <Compile Include="..\XBee.Core\Api\Features\Sending\AtRequest.cs">
       <Link>Api\Features\Sending\AtRequest.cs</Link>
     </Compile>
+    <Compile Include="..\XBee.Core\Api\Features\Sending\DataDelegateRequest.cs">
+      <Link>Api\Features\Sending\DataDelegateRequest.cs</Link>
+    </Compile>
     <Compile Include="..\XBee.Core\Api\Features\Sending\DataRequest.cs">
       <Link>Api\Features\Sending\DataRequest.cs</Link>
     </Compile>
@@ -258,9 +261,6 @@
     </Compile>
     <Compile Include="..\XBee.Core\Api\Zigbee\ExplicitTxRequest.cs">
       <Link>Api\Zigbee\ExplicitTxRequest.cs</Link>
-    </Compile>
-    <Compile Include="..\XBee.Core\Api\Zigbee\ForceSampleRequest.cs">
-      <Link>Api\Zigbee\ForceSampleRequest.cs</Link>
     </Compile>
     <Compile Include="..\XBee.Core\Api\Zigbee\IoSampleResponse.cs">
       <Link>Api\Zigbee\IoSampleResponse.cs</Link>

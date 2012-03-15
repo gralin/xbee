@@ -56,6 +56,7 @@
     <Compile Include="Api\Features\PacketListenning\NodeDiscoveryListener.cs" />
     <Compile Include="Api\Features\PacketListenning\SinglePacketListener.cs" />
     <Compile Include="Api\Features\Sending\AtRequest.cs" />
+    <Compile Include="Api\Features\Sending\DataDelegateRequest.cs" />
     <Compile Include="Api\Features\Sending\IRequest.cs" />
     <Compile Include="Api\Features\Sending\RawRequest.cs" />
     <Compile Include="Api\Features\Sending\DataRequest.cs" />
@@ -107,7 +108,6 @@
     <Compile Include="Api\Zigbee\DeviceType.cs" />
     <Compile Include="Api\Zigbee\NodeType.cs" />
     <Compile Include="Api\Zigbee\IZigbeePacket.cs" />
-    <Compile Include="Api\Zigbee\ForceSampleRequest.cs" />
     <Compile Include="Api\Zigbee\NodeDiscover.cs" />
     <Compile Include="Api\Zigbee\ExplicitRxResponse.cs" />
     <Compile Include="Api\Zigbee\ExplicitTxRequest.cs" />

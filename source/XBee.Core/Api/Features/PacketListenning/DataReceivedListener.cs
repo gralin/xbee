@@ -26,15 +26,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             else if (packet is Zigbee.RxResponse)
             {
                 var response = packet as Zigbee.RxResponse;
-
-                if (response.SourceAddress != XBeeAddress16.ZnetBroadcast)
-                {
-                    _xbee.NotifyDataReceived(response.Payload, response.SourceAddress);
-                }
-                else
-                {
-                    _xbee.NotifyDataReceived(response.Payload, response.SourceSerial);
-                }
+                _xbee.NotifyDataReceived(response.Payload, response.SourceSerial);
             }
         }
 

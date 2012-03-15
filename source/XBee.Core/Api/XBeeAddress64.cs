@@ -26,6 +26,11 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         {
         }
 
+        public XBeeAddress64(ulong address)
+            : base(Arrays.ToByteArray(address))
+        {
+        }
+
         /// <summary>
         /// Parses an 64-bit XBee address from a string representation
         /// </summary>
