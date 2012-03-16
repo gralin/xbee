@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using Gadgeteer.Interfaces;
 
 namespace Gadgeteer.Modules.GHIElectronics
@@ -8,10 +9,28 @@ namespace Gadgeteer.Modules.GHIElectronics
     /// </summary>
     public class XBee : Module
     {
+        // It seems that the module is ready to work after aprox. 100 ms after the reset
+        private const int StartupTime = 100;
+
         private Api.XBee _api;
         private Serial _serialLine;
         private readonly Socket _socket;
         private readonly DigitalOutput _resetPin;
+        private readonly DigitalOutput _sleepPin;
+        private readonly Timer _resetTimer;
+        private readonly ManualResetEvent _ready;
+
+        private static class ResetState
+        {
+            public const bool NotRunning = false;
+            public const bool Running = true;
+        }
+
+        private static class SleepState
+        {
+            public const bool Awaken = false;
+            public const bool Sleeping = true;
+        }
 
         /// <summary>
         /// Gets the <see cref="GHIElectronics.Api.XBee"/> of the connected XBee module.
@@ -65,7 +84,13 @@ namespace Gadgeteer.Modules.GHIElectronics
             
             _socket.EnsureTypeIsSupported(new[] { 'K', 'U' }, this);
 
-            _resetPin = new DigitalOutput(_socket, Socket.Pin.Three, false, this);
+            _resetPin = new DigitalOutput(_socket, Socket.Pin.Three, ResetState.NotRunning, this);
+            _sleepPin = new DigitalOutput(_socket, Socket.Pin.Eight, SleepState.Awaken, this);
+
+            _resetTimer = new Timer(StartupTime, Timer.BehaviorType.RunOnce);
+            _resetTimer.Tick += t => _ready.Set();
+
+            _ready = new ManualResetEvent(false);
         }
 
         /// <summary>
@@ -87,6 +112,12 @@ namespace Gadgeteer.Modules.GHIElectronics
             _serialLine = new Serial(_socket, baudRate, parity, stopBits, dataBits, Serial.HardwareFlowControl.NotRequired, this);
 
             _api = new Api.XBee(new XBeeConnection(_serialLine));
+
+            Reset();
+
+            if (!_ready.WaitOne(2 * StartupTime, false))
+                throw new Exception("Module ready flag was not set in expected time!");
+            
             _api.Open();
         }
 
@@ -95,8 +126,49 @@ namespace Gadgeteer.Modules.GHIElectronics
         /// </summary>
         public void Reset()
         {
-            _resetPin.Write(true);
-            _resetPin.Write(false);
+            // reset pulse must be at least 200 ns
+            Disable();
+            Enable();
+        }
+
+        /// <summary>
+        /// Disables the module (power off).
+        /// </summary>
+        public void Disable()
+        {
+            if (_resetPin.Read() == ResetState.NotRunning) 
+                return;
+
+            _ready.Reset();
+            _resetPin.Write(ResetState.NotRunning);
+        }
+
+        /// <summary>
+        /// Enabled the module (power on).
+        /// </summary>
+        public void Enable()
+        {
+            if (_resetPin.Read() == ResetState.Running)
+                return;
+
+            _resetPin.Write(ResetState.Running);
+            _resetTimer.Start();
+        }
+
+        /// <summary>
+        /// Sets the sleep control pin to active state (sleep request).
+        /// </summary>
+        public void Sleep()
+        {
+            _sleepPin.Write(SleepState.Sleeping);
+        }
+
+        /// <summary>
+        /// Sets the sleep control pin to inactive state (no sleep request)
+        /// </summary>
+        public void Awake()
+        {
+            _sleepPin.Write(SleepState.Awaken);
         }
     }
 }
