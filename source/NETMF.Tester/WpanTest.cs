@@ -1,10 +1,8 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
+using Microsoft.SPOT;
 using Gadgeteer.Modules.GHIElectronics.Api;
-using Gadgeteer.Modules.GHIElectronics.Api.At;
 using Gadgeteer.Modules.GHIElectronics.Api.Wpan;
 using Gadgeteer.Modules.GHIElectronics.Util;
-using Microsoft.SPOT;
 
 namespace NETMF.Tester
 {
@@ -20,7 +18,7 @@ namespace NETMF.Tester
             for (var i = 0; i < result.Length; i++)
                 Debug.Print("Channel " + (i + 0x0B) + ": " + result[i] + "-dBi");
 
-            Debug.Print("Active channel: " + xbee1.Send(AtCmd.OperatingChannel).Value[0]);
+            Debug.Print("Active channel: " + xbee1.Send(AtCmd.Channel).Value[0]);
 
             // disovering nodes
 
@@ -67,8 +65,8 @@ namespace NETMF.Tester
             xbee1.AddPacketListener(listener);
             xbee2.AddPacketListener(listener);
 
-            xbee1.SendAsync(AtCmd.ForceSample);
-            xbee2.SendAsync(AtCmd.ForceSample);
+            xbee1.SendNoReply(AtCmd.ForceSample);
+            xbee2.SendNoReply(AtCmd.ForceSample);
 
             var packets = listener.GetPackets(5000);
 
@@ -91,18 +89,18 @@ namespace NETMF.Tester
             var xbee1Serial = xbee1.Config.SerialNumber;
             var xbee2Serial = xbee2.Config.SerialNumber;
 
-            xbee1.AddPacketListener(new IncomingDataListener(xbee1Address));
-            xbee2.AddPacketListener(new IncomingDataListener(xbee2Address));
+            xbee1.DataReceived += OnDataReceived;
+            xbee2.DataReceived += OnDataReceived;
 
             const string message1 = "serial unicast";
             Debug.Print(xbee1Address + " -> " + xbee2Serial + " (" + message1 + ")");
-            xbee1.Send(xbee2Serial, message1);
+            xbee1.Send(message1, xbee2Serial);
 
             Thread.Sleep(1000);
 
             const string message2 = "address unicast";
             Debug.Print(xbee2Address + " -> " + xbee1Address + " (" + message2 + ")");
-            xbee2.Send(xbee1Address, message2);
+            xbee2.Send(message2, xbee1Address);
 
             Thread.Sleep(1000);
 
@@ -110,53 +108,28 @@ namespace NETMF.Tester
 
             const string message3 = "serial broadcast";
             Debug.Print(xbee1Address + " -> " + XBeeAddress64.Broadcast + " (" + message3 + ")");
-            xbee1.SendAsync(XBeeAddress64.Broadcast, message3);
+            xbee1.SendNoReply(message3, XBeeAddress64.Broadcast);
 
             Thread.Sleep(1000);
 
             const string message4 = "address broadcast";
             Debug.Print(xbee1Address + " -> "+ XBeeAddress16.Broadcast + " (" + message4 + ")");
-            xbee1.SendAsync(XBeeAddress16.Broadcast, message4);
+            xbee1.SendNoReply(message4, XBeeAddress16.Broadcast);
         }
 
         private static void SetAddress(XBee xbee, XBeeAddress16 address)
         {
-            xbee.Send(AtCmd.NetworkAddress, (address as XBeeAddress).Address);
+            xbee.Send(AtCmd.SourceAddress, (address as XBeeAddress).Address);
         }
 
         private static XBeeAddress16 GetAddress(XBee xbee)
         {
-            return new XBeeAddress16(xbee.Send(AtCmd.NetworkAddress).Value);
+            return new XBeeAddress16(xbee.Send(AtCmd.SourceAddress).Value);
         }
 
-        class IncomingDataListener : IPacketListener
+        private static void OnDataReceived(XBee receiver, byte[] data, XBeeAddress sender)
         {
-            private readonly XBeeAddress16 _address;
-
-            public IncomingDataListener(XBeeAddress16 receiverAddress)
-            {
-                _address = receiverAddress;
-            }
-
-            public bool Finished
-            {
-                get { return false; }
-            }
-
-            public void ProcessPacket(XBeeResponse packet)
-            {
-                if (!(packet is RxResponse)) 
-                    return;
-                
-                var rxResponse = (RxResponse) packet;
-                var message = Arrays.ToString(rxResponse.Payload);
-                Debug.Print(_address + " <- " + rxResponse + " (" + message + ")");
-            }
-
-            public XBeeResponse[] GetPackets(int timeout)
-            {
-                throw new NotSupportedException();
-            }
+            Debug.Print(receiver.Config.SerialNumber + " <- '" + Arrays.ToString(data) + "' from " + sender);
         }
     }
 }

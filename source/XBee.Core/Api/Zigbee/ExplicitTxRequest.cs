@@ -35,9 +35,8 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
 
         // this is one big ctor ;)
 
-        public ExplicitTxRequest(XBeeAddress64 destSerial, XBeeAddress16 destAddress, byte[] payload, byte srcEndpoint, byte destEndpoint, ushort clusterId, ushort profileId,
-            Options option = Options.Unicast, byte broadcastRadius = DefaultBroadcastRadius) 
-            : base(destSerial, payload, broadcastRadius, option)
+        public ExplicitTxRequest(XBeeAddress64 destSerial, XBeeAddress16 destAddress, byte[] payload, byte srcEndpoint, byte destEndpoint, ushort clusterId, ushort profileId) 
+            : base(destSerial, payload)
         {
             DestinationAddress = destAddress;
             SourceEndpoint = srcEndpoint;

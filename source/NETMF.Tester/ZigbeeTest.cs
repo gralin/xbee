@@ -1,6 +1,4 @@
-﻿using System;
-using Gadgeteer.Modules.GHIElectronics.Api;
-using Gadgeteer.Modules.GHIElectronics.Api.At;
+﻿using Gadgeteer.Modules.GHIElectronics.Api;
 using Gadgeteer.Modules.GHIElectronics.Api.Zigbee;
 using Gadgeteer.Modules.GHIElectronics.Util;
 using Microsoft.SPOT;
@@ -38,21 +36,18 @@ namespace NETMF.Tester
 
             // sending text messages
 
-            coordinator.AddPacketListener(new IncomingDataListener(coordinator.Config.SerialNumber));
-            router.AddPacketListener(new IncomingDataListener(router.Config.SerialNumber));
+            coordinator.DataReceived += OnDataReceived;
+            router.DataReceived += OnDataReceived;
 
-            if (!SendText(router, coordinator.Config.SerialNumber, "Hello coordinator"))
-                Debug.Print("Failed to send message to coordinator");
-
-            if (!SendText(coordinator, router.Config.SerialNumber, "Hello router"))
-                Debug.Print("Failed to send message to router");
+            router.Send("Hello coordinator", coordinator.Config.SerialNumber);
+            coordinator.Send("Hello router", router.Config.SerialNumber);
 
             // reading supply voltage
 
             var voltage1 = UshortUtils.ToUshort(coordinator.Send(AtCmd.SupplyVoltage).Value);
             var voltage2 = UshortUtils.ToUshort(router.Send(AtCmd.SupplyVoltage).Value);
-            var voltage1Volts = (voltage1 * 1200 / 1024.0) / 1000.0;
-            var voltage2Volts = (voltage2 * 1200 / 1024.0) / 1000.0;
+            var voltage1Volts = AdcHelper.ToMilliVolts(voltage1) / 1000.0;
+            var voltage2Volts = AdcHelper.ToMilliVolts(voltage1) / 1000.0;
 
             Debug.Print("Supply voltage of coordinator: " + voltage1Volts.ToString("F2") + "V");
             Debug.Print("Supply voltage of router: " + voltage2Volts.ToString("F2") + "V");
@@ -64,41 +59,9 @@ namespace NETMF.Tester
             return -1 * response.Value[0];
         }
 
-        private static bool SendText(XBee xbee, XBeeAddress destination, string message)
+        private static void OnDataReceived(XBee receiver, byte[] data, XBeeAddress sender)
         {
-            var response = (TxStatusResponse)xbee.Send(destination, message);
-            return response.DeliveryStatus == TxStatusResponse.DeliveryResult.Success;
-        }
-
-        class IncomingDataListener : IPacketListener
-        {
-            private readonly XBeeAddress _receiver;
-
-            public bool Finished
-            {
-                get { return false; }
-            }
-
-            public IncomingDataListener(XBeeAddress receiver)
-            {
-                _receiver = receiver;
-            }
-
-            public void ProcessPacket(XBeeResponse packet)
-            {
-                if (!(packet is RxResponse))
-                    return;
-
-                var dataPacket = packet as RxResponse;
-
-                Debug.Print(_receiver + " <- '" + Arrays.ToString(dataPacket.Payload)
-                    + "' from " + dataPacket.SourceAddress);
-            }
-
-            public XBeeResponse[] GetPackets(int timeout)
-            {
-                throw new NotSupportedException();
-            }
+            Debug.Print(receiver.Config.SerialNumber + " <- '" + Arrays.ToString(data) + "' from " + sender);
         }
     }
 }

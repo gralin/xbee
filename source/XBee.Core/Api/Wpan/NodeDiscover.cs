@@ -19,7 +19,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Wpan
 
         public static NodeDiscover Parse(AtResponse response)
         {
-            if (response.Command != AtCmd.NodeDiscover)
+            if (response.Command != At.AtCmd.NodeDiscover)
                 throw new ArgumentException("This method is only applicable for the ND command");
 
             // empty response is received after the last disovered node

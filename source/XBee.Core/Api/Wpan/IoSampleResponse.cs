@@ -53,7 +53,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Wpan
         private IoSample ParseIoSample(IPacketParser parser)
         {
             ushort digital = 0;
-            var analog = new ushort[Pin.AnalogCount];
+            var analog = new double[Pin.AnalogCount];
 
             if (ContainsDigital)
             {
@@ -70,7 +70,8 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Wpan
                     if (!IsEnabled((Pin.Analog) i))
                         continue;
 
-                    analog[i] = UshortUtils.Parse10BitAnalog(parser.Read(), parser.Read());
+                    var reading = UshortUtils.Parse10BitAnalog(parser.Read(), parser.Read());
+                    analog[i] = AdcHelper.ToMilliVolts(reading);
                     analogCount++;
                 }
 
@@ -109,7 +110,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Wpan
                 for (var pin = Pin.Analog.A0; pin <= Pin.Analog.A5; pin++)
                 {
                     if (!IsEnabled(pin)) continue;
-                    result += ", A" + pin + "=" + Samples[0].GetValue(pin);
+                    result += ", A" + pin + "=" + Samples[0].GetValue(pin).ToString("F2");
                 }
 
             return "SampleCount=" + SampleCount

@@ -106,6 +106,9 @@
     <Compile Include="..\XBee.Core\Api\Features\PacketListenning\AtResponseListener.cs">
       <Link>Api\Features\PacketListenning\AtResponseListener.cs</Link>
     </Compile>
+    <Compile Include="..\XBee.Core\Api\Features\PacketListenning\DataReceivedListener.cs">
+      <Link>Api\Features\PacketListenning\DataReceivedListener.cs</Link>
+    </Compile>
     <Compile Include="..\XBee.Core\Api\Features\PacketListenning\IPacketFilter.cs">
       <Link>Api\Features\PacketListenning\IPacketFilter.cs</Link>
     </Compile>
@@ -133,6 +136,24 @@
     <Compile Include="..\XBee.Core\Api\Features\PacketListenning\SinglePacketListener.cs">
       <Link>Api\Features\PacketListenning\SinglePacketListener.cs</Link>
     </Compile>
+    <Compile Include="..\XBee.Core\Api\Features\Sending\AtRequest.cs">
+      <Link>Api\Features\Sending\AtRequest.cs</Link>
+    </Compile>
+    <Compile Include="..\XBee.Core\Api\Features\Sending\DataDelegateRequest.cs">
+      <Link>Api\Features\Sending\DataDelegateRequest.cs</Link>
+    </Compile>
+    <Compile Include="..\XBee.Core\Api\Features\Sending\DataRequest.cs">
+      <Link>Api\Features\Sending\DataRequest.cs</Link>
+    </Compile>
+    <Compile Include="..\XBee.Core\Api\Features\Sending\IRequest.cs">
+      <Link>Api\Features\Sending\IRequest.cs</Link>
+    </Compile>
+    <Compile Include="..\XBee.Core\Api\Features\Sending\RawRequest.cs">
+      <Link>Api\Features\Sending\RawRequest.cs</Link>
+    </Compile>
+    <Compile Include="..\XBee.Core\Api\Features\Sending\RequestBase.cs">
+      <Link>Api\Features\Sending\RequestBase.cs</Link>
+    </Compile>
     <Compile Include="..\XBee.Core\Api\GenericResponse.cs">
       <Link>Api\GenericResponse.cs</Link>
     </Compile>
@@ -159,6 +180,9 @@
     </Compile>
     <Compile Include="..\XBee.Core\Api\PacketParser.cs">
       <Link>Api\PacketParser.cs</Link>
+    </Compile>
+    <Compile Include="..\XBee.Core\Api\Wpan\AtCmd.cs">
+      <Link>Api\Wpan\AtCmd.cs</Link>
     </Compile>
     <Compile Include="..\XBee.Core\Api\Wpan\IoSample.cs">
       <Link>Api\Wpan\IoSample.cs</Link>
@@ -226,6 +250,9 @@
     <Compile Include="..\XBee.Core\Api\Zigbee\AssociationStatus.cs">
       <Link>Api\Zigbee\AssociationStatus.cs</Link>
     </Compile>
+    <Compile Include="..\XBee.Core\Api\Zigbee\AtCmd.cs">
+      <Link>Api\Zigbee\AtCmd.cs</Link>
+    </Compile>
     <Compile Include="..\XBee.Core\Api\Zigbee\DeviceType.cs">
       <Link>Api\Zigbee\DeviceType.cs</Link>
     </Compile>
@@ -235,11 +262,8 @@
     <Compile Include="..\XBee.Core\Api\Zigbee\ExplicitTxRequest.cs">
       <Link>Api\Zigbee\ExplicitTxRequest.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\Zigbee\ForceSampleRequest.cs">
-      <Link>Api\Zigbee\ForceSampleRequest.cs</Link>
-    </Compile>
-    <Compile Include="..\XBee.Core\Api\Zigbee\IoSample.cs">
-      <Link>Api\Zigbee\IoSample.cs</Link>
+    <Compile Include="..\XBee.Core\Api\Zigbee\IoSampleResponse.cs">
+      <Link>Api\Zigbee\IoSampleResponse.cs</Link>
     </Compile>
     <Compile Include="..\XBee.Core\Api\Zigbee\IZigbeePacket.cs">
       <Link>Api\Zigbee\IZigbeePacket.cs</Link>
@@ -250,8 +274,14 @@
     <Compile Include="..\XBee.Core\Api\Zigbee\NodeIdentificationResponse.cs">
       <Link>Api\Zigbee\NodeIdentificationResponse.cs</Link>
     </Compile>
+    <Compile Include="..\XBee.Core\Api\Zigbee\NodeType.cs">
+      <Link>Api\Zigbee\NodeType.cs</Link>
+    </Compile>
     <Compile Include="..\XBee.Core\Api\Zigbee\RxResponse.cs">
       <Link>Api\Zigbee\RxResponse.cs</Link>
+    </Compile>
+    <Compile Include="..\XBee.Core\Api\Zigbee\RxResponseBase.cs">
+      <Link>Api\Zigbee\RxResponseBase.cs</Link>
     </Compile>
     <Compile Include="..\XBee.Core\Api\Zigbee\TxRequest.cs">
       <Link>Api\Zigbee\TxRequest.cs</Link>
@@ -264,6 +294,9 @@
     </Compile>
     <Compile Include="..\XBee.Core\SerialConnection.cs">
       <Link>SerialConnection.cs</Link>
+    </Compile>
+    <Compile Include="..\XBee.Core\Util\AdcHelper.cs">
+      <Link>Util\AdcHelper.cs</Link>
     </Compile>
     <Compile Include="..\XBee.Core\Util\Arrays.cs">
       <Link>Util\Arrays.cs</Link>

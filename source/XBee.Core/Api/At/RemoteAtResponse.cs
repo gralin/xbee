@@ -14,7 +14,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.At
 
         public bool IsNetworkAddressKnown
         {
-            get { return RemoteAddress != XBeeAddress16.ZnetBroadcast; }
+            get { return RemoteAddress != XBeeAddress16.Unknown; }
         }
 
         public override void Parse(IPacketParser parser)

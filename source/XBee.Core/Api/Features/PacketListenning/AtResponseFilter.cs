@@ -4,10 +4,10 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 {
     public class AtResponseFilter : PacketIdFilter
     {
-        private readonly AtCmd _atCmd;
+        private readonly ushort _atCmd;
         private bool _finished;
 
-        public AtResponseFilter(AtCmd atCommand, int packetId)
+        public AtResponseFilter(ushort atCommand, int packetId)
             : base(packetId)
         {
             _atCmd = atCommand;
@@ -26,7 +26,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             if (!(packet is AtResponse))
                 return false;
 
-            var accepted = (packet as AtResponse).Command == _atCmd;
+            var accepted = (ushort)(packet as AtResponse).Command == _atCmd;
 
             _finished = accepted;
             return accepted;

@@ -1,37 +1,41 @@
 ﻿using System;
-using System.Threading;
 
 namespace Gadgeteer.Modules.GHIElectronics.Api
 {
-    internal class AsyncSendResult : IAsyncResult
+    public class AsyncSendResult : IDisposable
     {
-        public XBeeRequest Request { get; protected set; }
-        public IPacketListener ResponseListener { get; protected set; }
+        private XBee _xbee;
+        private IPacketListener _responseListener;
+        private bool _finished;
 
-        public AsyncSendResult(XBeeRequest request, IPacketListener responseListener)
+        internal AsyncSendResult(XBee xbee, IPacketListener responseListener)
         {
-            Request = request;
-            ResponseListener = responseListener;
+            _xbee = xbee;
+            _responseListener = responseListener;
         }
 
-        public bool IsCompleted
+        public XBeeResponse[] EndReceive(int timeout = -1)
         {
-            get { return ResponseListener.Finished; }
+            if (_finished)
+                throw new InvalidOperationException("EndReceive can be called only once!");
+
+            try
+            {
+                return _responseListener.GetPackets(timeout);
+            }
+            finally
+            {
+                _xbee.RemovePacketListener(_responseListener);
+                _responseListener = null;
+                _xbee = null;
+                _finished = true;
+            }
         }
 
-        public WaitHandle AsyncWaitHandle
+        public void Dispose()
         {
-            get { throw new NotSupportedException(); }
-        }
-
-        public object AsyncState
-        {
-            get { throw new NotSupportedException(); }
-        }
-
-        public bool CompletedSynchronously
-        {
-            get { throw new NotSupportedException(); }
+            if (!_finished)
+                _xbee.RemovePacketListener(_responseListener);
         }
     }
 }

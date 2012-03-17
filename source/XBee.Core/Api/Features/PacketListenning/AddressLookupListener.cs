@@ -46,7 +46,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
                 _addressLookup[request.DestinationSerial] = 
                     response.DeliveryStatus == TxStatusResponse.DeliveryResult.Success
                         ? response.DestinationAddress
-                        : XBeeAddress16.ZnetBroadcast;
+                        : XBeeAddress16.Unknown;
             }
             else if (packet is NodeIdentificationResponse)
             {

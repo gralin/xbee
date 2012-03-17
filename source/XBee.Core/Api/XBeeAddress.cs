@@ -24,12 +24,15 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
 
         public static bool operator ==(XBeeAddress a1, XBeeAddress a2)
         {
+            if (ReferenceEquals(null, a1) && ReferenceEquals(null, a2))
+                return true;
+
             return !ReferenceEquals(null, a1) && a1.Equals(a2);
         }
 
         public static bool operator !=(XBeeAddress a1, XBeeAddress a2)
         {
-            return !ReferenceEquals(null, a1) && !a1.Equals(a2);
+            return !(a1 == a2);
         }
 
         public bool Equals(XBeeAddress other)

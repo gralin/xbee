@@ -1,13 +1,11 @@
-﻿using Gadgeteer.Modules.GHIElectronics.Api.At;
-
-namespace Gadgeteer.Modules.GHIElectronics.Api
+﻿namespace Gadgeteer.Modules.GHIElectronics.Api
 {
     public class NodeDiscoveryFilter : AtResponseFilter
     {
         private bool _finished;
 
         public NodeDiscoveryFilter(int packetId)
-            : base(AtCmd.NodeDiscover, packetId)
+            : base((ushort) At.AtCmd.NodeDiscover, packetId)
         {
         }
 
@@ -16,7 +14,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
             if (!base.Accepted(packet))
                 return false;
 
-            var atResponse = (AtResponse) packet;
+            var atResponse = (At.AtResponse)packet;
 
             // empty response is received in series 1 modules
             // in series 2 the timeout determines the end of discovery

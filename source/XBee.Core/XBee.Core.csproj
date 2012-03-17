@@ -49,11 +49,18 @@
     <Compile Include="Api\ErrorResponse.cs" />
     <Compile Include="Api\Features\PacketListenning\AtResponseFilter.cs" />
     <Compile Include="Api\Features\PacketListenning\AddressLookupListener.cs" />
+    <Compile Include="Api\Features\PacketListenning\DataReceivedListener.cs" />
     <Compile Include="Api\Features\PacketListenning\PacketCountFilter.cs" />
     <Compile Include="Api\Features\PacketListenning\PacketIdFilter.cs" />
     <Compile Include="Api\Features\PacketListenning\NodeDiscoveryFilter.cs" />
     <Compile Include="Api\Features\PacketListenning\NodeDiscoveryListener.cs" />
     <Compile Include="Api\Features\PacketListenning\SinglePacketListener.cs" />
+    <Compile Include="Api\Features\Sending\AtRequest.cs" />
+    <Compile Include="Api\Features\Sending\DataDelegateRequest.cs" />
+    <Compile Include="Api\Features\Sending\IRequest.cs" />
+    <Compile Include="Api\Features\Sending\RawRequest.cs" />
+    <Compile Include="Api\Features\Sending\DataRequest.cs" />
+    <Compile Include="Api\Features\Sending\RequestBase.cs" />
     <Compile Include="Api\GenericResponse.cs" />
     <Compile Include="Api\At\HardwareVersion.cs" />
     <Compile Include="Api\Features\PacketListenning\IPacketFilter.cs" />
@@ -71,12 +78,16 @@
     <Compile Include="Api\At\RemoteAtResponse.cs" />
     <Compile Include="Api\Features\PacketListenning\PacketTypeFilter.cs" />
     <Compile Include="Api\Features\PacketListenning\AtResponseListener.cs" />
+    <Compile Include="Api\Wpan\AssociationStatus.cs" />
+    <Compile Include="Api\Wpan\AtCmd.cs" />
     <Compile Include="Api\Wpan\IoSampleResponse.cs" />
     <Compile Include="Api\Wpan\IWpanPacket.cs" />
     <Compile Include="Api\Wpan\Pin.cs" />
+    <Compile Include="Api\Wpan\PowerLevel.cs" />
     <Compile Include="Api\Wpan\RxResponse.cs" />
     <Compile Include="Api\Wpan\IoSample.cs" />
     <Compile Include="Api\Wpan\RxResponseBase.cs" />
+    <Compile Include="Api\Wpan\SleepMode.cs" />
     <Compile Include="Api\Wpan\TxRequest.cs" />
     <Compile Include="Api\Wpan\TxStatusResponse.cs" />
     <Compile Include="Api\Wpan\NodeDiscover.cs" />
@@ -93,20 +104,23 @@
     <Compile Include="Api\XBeeResponse.cs" />
     <Compile Include="Api\XBeeTimeoutException.cs" />
     <Compile Include="Api\Zigbee\AssociationStatus.cs" />
+    <Compile Include="Api\Zigbee\AtCmd.cs" />
     <Compile Include="Api\Zigbee\DeviceType.cs" />
+    <Compile Include="Api\Zigbee\NodeType.cs" />
     <Compile Include="Api\Zigbee\IZigbeePacket.cs" />
-    <Compile Include="Api\Zigbee\ForceSampleRequest.cs" />
     <Compile Include="Api\Zigbee\NodeDiscover.cs" />
     <Compile Include="Api\Zigbee\ExplicitRxResponse.cs" />
     <Compile Include="Api\Zigbee\ExplicitTxRequest.cs" />
     <Compile Include="Api\Zigbee\NodeIdentificationResponse.cs" />
-    <Compile Include="Api\Zigbee\IoSample.cs" />
+    <Compile Include="Api\Zigbee\IoSampleResponse.cs" />
     <Compile Include="Api\Zigbee\RxResponse.cs" />
+    <Compile Include="Api\Zigbee\RxResponseBase.cs" />
     <Compile Include="Api\Zigbee\TxRequest.cs" />
     <Compile Include="Api\Zigbee\TxStatusResponse.cs" />
     <Compile Include="IXBeeConnection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SerialConnection.cs" />
+    <Compile Include="Util\AdcHelper.cs" />
     <Compile Include="Util\Arrays.cs" />
     <Compile Include="Util\ByteUtils.cs" />
     <Compile Include="Util\IOutputStream.cs" />
@@ -124,4 +138,5 @@
     </Reference>
     <Reference Include="System.IO" />
   </ItemGroup>
+  <ItemGroup />
 </Project>

@@ -2,13 +2,13 @@
 {
     public class PacketIdFilter : PacketTypeFilter
     {
-        private readonly int _expectedPacketId;
+        public int ExpectedPacketId;
         private bool _finished;
 
         public PacketIdFilter(int packetId)
             : base(typeof(XBeeFrameIdResponse))
         {
-            _expectedPacketId = packetId;
+            ExpectedPacketId = packetId;
         }
 
         public PacketIdFilter(XBeeRequest request)
@@ -23,8 +23,8 @@
 
             var frameIdResponse = (XBeeFrameIdResponse)packet;
 
-            var accepted = _expectedPacketId == PacketIdGenerator.DefaultId 
-                || frameIdResponse.FrameId == _expectedPacketId;
+            var accepted = ExpectedPacketId == PacketIdGenerator.DefaultId 
+                || frameIdResponse.FrameId == ExpectedPacketId;
 
             _finished = accepted;
             return accepted;

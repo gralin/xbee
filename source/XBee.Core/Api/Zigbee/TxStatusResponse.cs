@@ -8,26 +8,73 @@
     {
         public enum DeliveryResult
         {
-            Success = 0,
+            Success = 0x00,
+
+            /// <summary>
+            /// MAC ACK Failure.
+            /// </summary>
+            MacAckFailure = 0x01,
+
+            /// <summary>
+            /// CCA Failure.
+            /// </summary>
             CcaFailure = 0x02,
+
             InvalidDestinationEndpoint = 0x15,
             NetworkAckFailure = 0x21,
             NotJoinedToNetwork = 0x22,
             SelfAddressed = 0x23,
             AddressNotFound = 0x24,
             RouteNotFound = 0x25,
+
             /// <summary>
-            /// ZB Pro firmware only
+            /// Broadcast source failed to hear a neighbor relay the message.
             /// </summary>
-            PayloadTooLarge = 0x74
+            BroadcastFailed = 0x26,
+
+            /// <summary>
+            /// Invalid binding table index.
+            /// </summary>
+            InvalidBinding = 0x2B,
+
+            /// <summary>
+            /// Lack of free buffers, timers, etc.
+            /// </summary>
+            ResourceError = 0x2C,
+
+            /// <summary>
+            /// Attempted broadcast with APS transmission.
+            /// </summary>
+            AttemptedBroadcast = 0x2D,
+
+            /// <summary>
+            /// Attempted unicast with APS transmission, but EE=0.
+            /// </summary>
+            AttemptedUnicast = 0x2E,
+
+            /// <summary>
+            /// Lack of free buffers, timers, etc.
+            /// </summary>
+            ResourceError2 = 0x32,
+
+            /// <summary>
+            /// Data payload too large.
+            /// </summary>
+            PayloadTooLarge = 0x74,
+
+            /// <summary>
+            /// Indirect message unrequested.
+            /// </summary>
+            MessageUnrequested = 0x75
         }
 
         public enum DiscoveryResult
         {
-            NoDiscovery = 0,
-            AddressDiscovery = 1,
-            RouteDiscovery = 2,
-            AddressAndRouteDiscovery = 3
+            NoOverhead = 0x00,
+            Address = 0x01,
+            Route = 0x02,
+            AddressAndRoute = 0x03,
+            ExtendedTimeout = 0x40
         }
 
         public XBeeAddress16 DestinationAddress { get; set; }

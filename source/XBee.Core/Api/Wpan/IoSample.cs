@@ -7,20 +7,30 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Wpan
     /// </summary>
     public class IoSample
     {
-        private readonly ushort[] _analog;
+        private readonly double[] _analog;
         private readonly ushort _digital;
 
-        public IoSample(ushort[] analog, ushort digital)
+        public IoSample(double[] analog, ushort digital)
         {
             _analog = analog;
             _digital = digital;
         }
 
-        public ushort GetValue(Pin.Analog pin)
+        /// <summary>
+        /// Get A/D reading.
+        /// </summary>
+        /// <param name="pin">Analog pin</param>
+        /// <returns>Reading in mV</returns>
+        public double GetValue(Pin.Analog pin)
         {
             return _analog[(byte)pin];
         }
 
+        /// <summary>
+        /// Get digital pin state.
+        /// </summary>
+        /// <param name="pin">Digital pin</param>
+        /// <returns>Returns <c>true</c> if low, <c>false</c> if high.</returns>
         public bool GetValue(Pin.Digital pin)
         {
             return UshortUtils.GetBit(_digital, (byte)pin);

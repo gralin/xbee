@@ -73,7 +73,7 @@
         {
             var checksum = 0;
 
-            for (var i = offset; i < count; i++)
+            for (var i = offset; i < offset + count; i++)
                 checksum += bytes[i];
 
             return (byte)(0xFF - checksum);

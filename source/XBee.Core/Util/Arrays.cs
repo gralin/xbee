@@ -48,6 +48,20 @@ namespace Gadgeteer.Modules.GHIElectronics.Util
             return new[] { UshortUtils.Msb(value), UshortUtils.Lsb(value) };
         }
 
+        public static byte[] ToByteArray(ulong value)
+        {
+            var result = new byte[8];
+            var index = result.Length;
+
+            while (index > 0)
+            {
+                result[--index] = (byte)value;
+                value >>= 8;
+            }
+
+            return result;
+        }
+
         public static string ToString(byte[] array)
         {
             return new string(Encoding.UTF8.GetChars(array));
