@@ -1,4 +1,4 @@
-﻿namespace Gadgeteer.Modules.GHIElectronics
+﻿namespace NETMF.OpenSource.XBee
 {
     /// <summary>
     /// Represents a configurable XBee pin and associated name, pin number, AT command, 

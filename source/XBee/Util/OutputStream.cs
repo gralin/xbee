@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace Gadgeteer.Modules.GHIElectronics.Util
+namespace NETMF.OpenSource.XBee.Util
 {
     public class OutputStream : IOutputStream
     {

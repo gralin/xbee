@@ -1,7 +1,7 @@
 using System;
 using System.Text;
 
-namespace Gadgeteer.Modules.GHIElectronics.Util
+namespace NETMF.OpenSource.XBee.Util
 {
     public static class Arrays
     {

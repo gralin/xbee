@@ -1,7 +1,7 @@
-﻿using Gadgeteer.Modules.GHIElectronics.Api;
-using Gadgeteer.Modules.GHIElectronics.Api.Zigbee;
-using Gadgeteer.Modules.GHIElectronics.Util;
-using Microsoft.SPOT;
+﻿using Microsoft.SPOT;
+using NETMF.OpenSource.XBee.Api;
+using NETMF.OpenSource.XBee.Api.Zigbee;
+using NETMF.OpenSource.XBee.Util;
 
 namespace NETMF.Tester
 {

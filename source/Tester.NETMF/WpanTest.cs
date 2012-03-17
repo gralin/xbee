@@ -1,8 +1,8 @@
 ﻿using System.Threading;
 using Microsoft.SPOT;
-using Gadgeteer.Modules.GHIElectronics.Api;
-using Gadgeteer.Modules.GHIElectronics.Api.Wpan;
-using Gadgeteer.Modules.GHIElectronics.Util;
+using NETMF.OpenSource.XBee.Api;
+using NETMF.OpenSource.XBee.Api.Wpan;
+using NETMF.OpenSource.XBee.Util;
 
 namespace NETMF.Tester
 {

@@ -1,6 +1,6 @@
-using Gadgeteer.Modules.GHIElectronics.Util;
+using NETMF.OpenSource.XBee.Util;
 
-namespace Gadgeteer.Modules.GHIElectronics.Api
+namespace NETMF.OpenSource.XBee.Api
 {
     public class DataRequest : RequestBase
     {

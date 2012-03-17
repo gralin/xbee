@@ -8,7 +8,7 @@
     <ProjectGuid>{9623552C-F672-4E93-A9B4-B59B6E7754AB}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Gadgeteer.Modules.GHIElectronics</RootNamespace>
+    <RootNamespace>NETMF.OpenSource.XBee</RootNamespace>
     <AssemblyName>XBee.UnitTests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

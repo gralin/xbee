@@ -1,4 +1,5 @@
-﻿
+﻿using NETMF.OpenSource.XBee;
+
 namespace Gadgeteer.Modules.GHIElectronics
 {
     internal class XBeeConnection : IXBeeConnection

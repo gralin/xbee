@@ -1,4 +1,4 @@
-namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
+namespace NETMF.OpenSource.XBee.Api.Zigbee
 {
     /// <summary>
     /// AT commands for ZigBee RF Modules by Digi International.

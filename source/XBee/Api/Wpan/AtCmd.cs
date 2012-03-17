@@ -1,4 +1,4 @@
-namespace Gadgeteer.Modules.GHIElectronics.Api.Wpan
+namespace NETMF.OpenSource.XBee.Api.Wpan
 {
     /// <summary>
     /// AT commands for IEEE® 802.15.4 RF Modules by Digi International.

@@ -1,6 +1,6 @@
-﻿using Gadgeteer.Modules.GHIElectronics.Api.At;
+﻿using NETMF.OpenSource.XBee.Api.At;
 
-namespace Gadgeteer.Modules.GHIElectronics.Api
+namespace NETMF.OpenSource.XBee.Api
 {
     /// <summary>
     /// Holds basic information about XBee module and allows to set it's properties using AT commands.

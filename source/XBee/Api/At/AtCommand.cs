@@ -1,6 +1,6 @@
-﻿using Gadgeteer.Modules.GHIElectronics.Util;
+﻿using NETMF.OpenSource.XBee.Util;
 
-namespace Gadgeteer.Modules.GHIElectronics.Api.At
+namespace NETMF.OpenSource.XBee.Api.At
 {
     /// <summary>
     /// API technique to set/query commands

@@ -1,7 +1,6 @@
-﻿using Gadgeteer.Modules.GHIElectronics.Api.At;
-using Gadgeteer.Modules.GHIElectronics.Util;
+﻿using NETMF.OpenSource.XBee.Util;
 
-namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
+namespace NETMF.OpenSource.XBee.Api.Zigbee
 {
     /// <summary>
     /// This frame is received when a module transmits a node identification message to identify itself (when AO=0).

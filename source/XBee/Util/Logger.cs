@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 
-namespace Gadgeteer.Modules.GHIElectronics.Util
+namespace NETMF.OpenSource.XBee.Util
 {
     public enum LogLevel
     {

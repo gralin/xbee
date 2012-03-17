@@ -1,4 +1,4 @@
-﻿namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
+﻿namespace NETMF.OpenSource.XBee.Api.Zigbee
 {
     /// <summary>
     /// Series 2 XBee.  This is sent out the UART of the transmitting XBee immediately following

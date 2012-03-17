@@ -1,4 +1,4 @@
-﻿namespace Gadgeteer.Modules.GHIElectronics.Api.At
+﻿namespace NETMF.OpenSource.XBee.Api.At
 {
     public static class SaveSettings
     {

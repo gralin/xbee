@@ -1,6 +1,6 @@
 using System;
 
-namespace Gadgeteer.Modules.GHIElectronics.Util
+namespace NETMF.OpenSource.XBee.Util
 {
     public interface IInputStream : IDisposable
     {

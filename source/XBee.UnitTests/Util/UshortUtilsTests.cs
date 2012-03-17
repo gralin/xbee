@@ -1,8 +1,6 @@
-﻿using System.IO;
-using Moq;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
-namespace Gadgeteer.Modules.GHIElectronics.Util
+namespace NETMF.OpenSource.XBee.Util
 {
     [TestFixture]
     class UshortUtilsTests

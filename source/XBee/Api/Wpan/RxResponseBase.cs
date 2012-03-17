@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Gadgeteer.Modules.GHIElectronics.Api.Wpan
+namespace NETMF.OpenSource.XBee.Api.Wpan
 {
     public abstract class RxResponseBase : XBeeResponse
     {

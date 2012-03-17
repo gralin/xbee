@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections;
-using Gadgeteer.Modules.GHIElectronics.Api.At;
-using Gadgeteer.Modules.GHIElectronics.Api.Zigbee;
+using NETMF.OpenSource.XBee.Api.At;
+using NETMF.OpenSource.XBee.Api.Zigbee;
 
-namespace Gadgeteer.Modules.GHIElectronics.Api
+namespace NETMF.OpenSource.XBee.Api
 {
     public class AddressLookupListener : IPacketListener
     {

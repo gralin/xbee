@@ -1,4 +1,4 @@
-﻿namespace Gadgeteer.Modules.GHIElectronics.Api
+﻿namespace NETMF.OpenSource.XBee.Api
 {
     /// <summary>
     /// Container for unknown response

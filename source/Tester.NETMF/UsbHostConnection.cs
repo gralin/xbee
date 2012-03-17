@@ -1,7 +1,7 @@
 ﻿using System.IO.Ports;
 using System.Threading;
 using GHIElectronics.NETMF.USBHost;
-using Gadgeteer.Modules.GHIElectronics;
+using NETMF.OpenSource.XBee;
 
 namespace NETMF.Tester
 {

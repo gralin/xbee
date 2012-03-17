@@ -1,4 +1,4 @@
-﻿namespace Gadgeteer.Modules.GHIElectronics.Api.Wpan
+﻿namespace NETMF.OpenSource.XBee.Api.Wpan
 {
     /// <summary>
     /// Value returned by <see cref="WpanAtCmd.AssociationIndication"/> command.

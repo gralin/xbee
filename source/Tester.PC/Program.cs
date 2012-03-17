@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
-using Gadgeteer.Modules.GHIElectronics.Api;
-using Gadgeteer.Modules.GHIElectronics.Api.At;
-using Gadgeteer.Modules.GHIElectronics.Util;
-using LogLevel = Gadgeteer.Modules.GHIElectronics.Util.LogLevel;
+using NETMF.OpenSource.XBee.Api;
+using NETMF.OpenSource.XBee.Api.At;
+using NETMF.OpenSource.XBee.Util;
+using LogLevel = NETMF.OpenSource.XBee.Util.LogLevel;
 
 namespace PC.Tester
 {
@@ -15,7 +15,7 @@ namespace PC.Tester
 
             Debug.Print("Connecting to XBee...");
 
-            var xbee = new XBee("COM12", 9600);
+            var xbee = new XBee("COM11", 9600);
             xbee.Open();
 
             // reading network addresses of the connected module

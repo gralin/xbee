@@ -1,6 +1,6 @@
-﻿using Gadgeteer.Modules.GHIElectronics.Util;
+﻿using NETMF.OpenSource.XBee.Util;
 
-namespace Gadgeteer.Modules.GHIElectronics.Api.Wpan
+namespace NETMF.OpenSource.XBee.Api.Wpan
 {
     /// <summary>
     /// Provides access to XBee's 8 Digital (0-7) and 6 Analog (0-5) IO pins.

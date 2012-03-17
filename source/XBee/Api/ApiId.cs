@@ -1,6 +1,6 @@
-using Gadgeteer.Modules.GHIElectronics.Api.At;
+using NETMF.OpenSource.XBee.Api.At;
 
-namespace Gadgeteer.Modules.GHIElectronics.Api
+namespace NETMF.OpenSource.XBee.Api
 {
     /// <summary>
     /// In API frame <see cref="ApiId"/> indicates which API message will be contained in the packet payload.
@@ -120,7 +120,7 @@ namespace Gadgeteer.Modules.GHIElectronics.Api
         /// <remarks>
         /// In response to a <see cref="AtCommand"/>, the module will send a <see cref="AtResponse"/>.
         /// Some commands will send back multiple frames (<see cref="AtCmd.NodeDiscover"/> or <see cref="AtCmd.ActiveScan"/>). 
-        /// These commands will end by sending a frame with <see cref="At.AtResponse.IsOk"/> set to <c>true</c> and empty payload.
+        /// These commands will end by sending a frame with <see cref="Gadgeteer.Modules.GHIElectronics.Api.At.AtResponse.IsOk"/> set to <c>true</c> and empty payload.
         /// </remarks>
         AtResponse = 0x88,
 

@@ -1,6 +1,6 @@
 ﻿using System.Text;
-using Gadgeteer.Modules.GHIElectronics.Api;
 using Microsoft.SPOT;
+using NETMF.OpenSource.XBee.Api;
 
 namespace Gadgeteer.Tester
 {

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections;
-using Gadgeteer.Modules.GHIElectronics.Api.At;
-using Gadgeteer.Modules.GHIElectronics.Api.Wpan;
-using Gadgeteer.Modules.GHIElectronics.Api.Zigbee;
-using Gadgeteer.Modules.GHIElectronics.Util;
+using NETMF.OpenSource.XBee.Api.At;
+using NETMF.OpenSource.XBee.Api.Wpan;
+using NETMF.OpenSource.XBee.Api.Zigbee;
+using NETMF.OpenSource.XBee.Util;
 
-namespace Gadgeteer.Modules.GHIElectronics.Api
+namespace NETMF.OpenSource.XBee.Api
 {
     /// <summary>
     /// This is an API for communicating with Digi XBee 802.15.4 and ZigBee radios

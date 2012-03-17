@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
-using Gadgeteer.Modules.GHIElectronics.Api;
-using Gadgeteer.Modules.GHIElectronics.Api.Zigbee;
-using Gadgeteer.Modules.GHIElectronics.Util;
+using NETMF.OpenSource.XBee.Api;
+using NETMF.OpenSource.XBee.Api.Zigbee;
+using NETMF.OpenSource.XBee.Util;
 
 namespace PC.Tester
 {

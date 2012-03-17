@@ -1,4 +1,4 @@
-﻿namespace Gadgeteer.Modules.GHIElectronics.Api.Wpan
+﻿namespace NETMF.OpenSource.XBee.Api.Wpan
 {
     /// <summary>
     /// When a TX Request is completed, the module sends a TX Status message. 

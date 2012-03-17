@@ -1,8 +1,8 @@
 ﻿using System;
-using Gadgeteer.Modules.GHIElectronics.Api.At;
-using Gadgeteer.Modules.GHIElectronics.Util;
+using NETMF.OpenSource.XBee.Api.At;
+using NETMF.OpenSource.XBee.Util;
 
-namespace Gadgeteer.Modules.GHIElectronics.Api.Wpan
+namespace NETMF.OpenSource.XBee.Api.Wpan
 {
     /// <summary>
     /// Series 1 XBee.

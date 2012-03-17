@@ -1,6 +1,6 @@
 ﻿using System.IO.Ports;
 
-namespace Gadgeteer.Modules.GHIElectronics
+namespace NETMF.OpenSource.XBee
 {
     internal class SerialConnection : IXBeeConnection
     {

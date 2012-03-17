@@ -1,4 +1,4 @@
-﻿namespace Gadgeteer.Modules.GHIElectronics.Api.Wpan
+﻿namespace NETMF.OpenSource.XBee.Api.Wpan
 {
     public enum PowerLevel
     {

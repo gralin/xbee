@@ -1,7 +1,7 @@
 using System;
-using Gadgeteer.Modules.GHIElectronics.Util;
+using NETMF.OpenSource.XBee.Util;
 
-namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
+namespace NETMF.OpenSource.XBee.Api.Zigbee
 {
     /// <summary>
     /// Series 2 XBee.  Sends a packet to a remote radio.

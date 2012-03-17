@@ -1,6 +1,6 @@
-﻿using Gadgeteer.Modules.GHIElectronics.Util;
+﻿using NETMF.OpenSource.XBee.Util;
 
-namespace Gadgeteer.Modules.GHIElectronics.Api.At
+namespace NETMF.OpenSource.XBee.Api.At
 {
     /// <summary>
     /// Supported by both series 1 (10C8 firmware and later) and series 2.

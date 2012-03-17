@@ -1,8 +1,8 @@
 ﻿using System;
-using Gadgeteer.Modules.GHIElectronics.Api.At;
-using Gadgeteer.Modules.GHIElectronics.Util;
+using NETMF.OpenSource.XBee.Api.At;
+using NETMF.OpenSource.XBee.Util;
 
-namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
+namespace NETMF.OpenSource.XBee.Api.Zigbee
 {
     /// <summary>
     /// Series 2 XBee. Parses a Node Discover (ND) AT Command Response

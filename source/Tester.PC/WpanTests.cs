@@ -1,5 +1,5 @@
 ﻿using System;
-using Gadgeteer.Modules.GHIElectronics.Api;
+using NETMF.OpenSource.XBee.Api;
 
 namespace PC.Tester
 {

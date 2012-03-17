@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Gadgeteer.Modules.GHIElectronics.Api
+namespace NETMF.OpenSource.XBee.Api
 {
     /// <summary>
     /// Generates packet id numbers to be used with XBeeRequest.

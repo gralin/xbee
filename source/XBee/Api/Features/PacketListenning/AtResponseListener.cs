@@ -1,7 +1,7 @@
 ﻿using System;
-using Gadgeteer.Modules.GHIElectronics.Api.At;
+using NETMF.OpenSource.XBee.Api.At;
 
-namespace Gadgeteer.Modules.GHIElectronics.Api
+namespace NETMF.OpenSource.XBee.Api
 {
     public class AtResponseListener : PacketListener
     {

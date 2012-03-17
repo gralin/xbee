@@ -1,7 +1,7 @@
-﻿using Gadgeteer.Modules.GHIElectronics.Api;
+﻿using NETMF.OpenSource.XBee.Api;
 using NUnit.Framework;
 
-namespace Gadgeteer.Modules.GHIElectronics.Util
+namespace NETMF.OpenSource.XBee.Util
 {
     [TestFixture]
     class ArraysTests

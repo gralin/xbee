@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using Gadgeteer.Interfaces;
+using XBeeApi = NETMF.OpenSource.XBee.Api.XBee;
 
 namespace Gadgeteer.Modules.GHIElectronics
 {
@@ -12,7 +13,7 @@ namespace Gadgeteer.Modules.GHIElectronics
         // It seems that the module is ready to work after aprox. 100 ms after the reset
         private const int StartupTime = 100;
 
-        private Api.XBee _api;
+        private XBeeApi _api;
         private Serial _serialLine;
         private readonly Socket _socket;
         private readonly DigitalOutput _resetPin;
@@ -33,9 +34,9 @@ namespace Gadgeteer.Modules.GHIElectronics
         }
 
         /// <summary>
-        /// Gets the <see cref="GHIElectronics.Api.XBee"/> of the connected XBee module.
+        /// Gets the <see cref="NETMF.OpenSource.XBee.Api.XBee"/> of the connected XBee module.
         /// </summary>
-        public Api.XBee Api
+        public XBeeApi Api
         {
             get
             {
@@ -111,7 +112,7 @@ namespace Gadgeteer.Modules.GHIElectronics
             // TODO: check if HW flow control should be used
             _serialLine = new Serial(_socket, baudRate, parity, stopBits, dataBits, Serial.HardwareFlowControl.NotRequired, this);
 
-            _api = new Api.XBee(new XBeeConnection(_serialLine));
+            _api = new XBeeApi(new XBeeConnection(_serialLine));
 
             Reset();
 

@@ -1,4 +1,4 @@
-﻿namespace Gadgeteer.Modules.GHIElectronics
+﻿namespace NETMF.OpenSource.XBee
 {
     public interface IXBeeConnection
     {

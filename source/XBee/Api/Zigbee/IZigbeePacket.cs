@@ -1,4 +1,4 @@
-﻿namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
+﻿namespace NETMF.OpenSource.XBee.Api.Zigbee
 {
     public interface IZigbeePacket
     {

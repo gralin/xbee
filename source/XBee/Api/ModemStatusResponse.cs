@@ -1,4 +1,4 @@
-﻿namespace Gadgeteer.Modules.GHIElectronics.Api
+﻿namespace NETMF.OpenSource.XBee.Api
 {
     /// <summary>
     /// RF module status messages are sent from the module in response to specific conditions.

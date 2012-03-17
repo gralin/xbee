@@ -1,7 +1,7 @@
 using System;
-using Gadgeteer.Modules.GHIElectronics.Util;
+using NETMF.OpenSource.XBee.Util;
 
-namespace Gadgeteer.Modules.GHIElectronics.Api
+namespace NETMF.OpenSource.XBee.Api
 {
     /// <summary>
     /// Packages a frame data array into an XBee packet.

@@ -3,10 +3,10 @@ using System.Collections;
 using System.IO;
 using System.Reflection;
 using System.Threading;
-using Gadgeteer.Modules.GHIElectronics.Api.At;
-using Gadgeteer.Modules.GHIElectronics.Util;
+using NETMF.OpenSource.XBee.Api.At;
+using NETMF.OpenSource.XBee.Util;
 
-namespace Gadgeteer.Modules.GHIElectronics.Api
+namespace NETMF.OpenSource.XBee.Api
 {
     /// <summary>
     /// Reads a packet from the input stream, verifies checksum and creates an XBeeResponse object
