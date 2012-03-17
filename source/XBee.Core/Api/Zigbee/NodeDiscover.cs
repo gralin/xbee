@@ -76,8 +76,9 @@ namespace Gadgeteer.Modules.GHIElectronics.Api.Zigbee
         public override string ToString()
         {
             return NodeTypeName 
-                + ", SerialNumber = " + SerialNumber 
-                + ", NetworkAddress = " + NetworkAddress;
+                + ", S/N=" + SerialNumber 
+                + ", Address=" + NetworkAddress
+                + ", Parent=" + Parent;
         }
     }
 }
