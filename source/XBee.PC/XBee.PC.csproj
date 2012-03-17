@@ -40,289 +40,298 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\XBee.Core\Api\ApiId.cs">
+    <Compile Include="..\XBee\Api\ApiId.cs">
       <Link>Api\ApiId.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\AsyncSendResult.cs">
+    <Compile Include="..\XBee\Api\AsyncSendResult.cs">
       <Link>Api\AsyncSendResult.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\At\ApiMode.cs">
+    <Compile Include="..\XBee\Api\At\ApiMode.cs">
       <Link>Api\At\ApiMode.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\At\ApiModes.cs">
+    <Compile Include="..\XBee\Api\At\ApiModes.cs">
       <Link>Api\At\ApiModes.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\At\AtCmd.cs">
+    <Compile Include="..\XBee\Api\At\AtCmd.cs">
       <Link>Api\At\AtCmd.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\At\AtCommand.cs">
+    <Compile Include="..\XBee\Api\At\AtCommand.cs">
       <Link>Api\At\AtCommand.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\At\AtCommandQueue.cs">
+    <Compile Include="..\XBee\Api\At\AtCommandQueue.cs">
       <Link>Api\At\AtCommandQueue.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\At\AtResponse.cs">
+    <Compile Include="..\XBee\Api\At\AtResponse.cs">
       <Link>Api\At\AtResponse.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\At\AtResponseStatus.cs">
+    <Compile Include="..\XBee\Api\At\AtResponseStatus.cs">
       <Link>Api\At\AtResponseStatus.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\At\Firmware.cs">
+    <Compile Include="..\XBee\Api\At\Firmware.cs">
       <Link>Api\At\Firmware.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\At\HardwareVersion.cs">
+    <Compile Include="..\XBee\Api\At\HardwareVersion.cs">
       <Link>Api\At\HardwareVersion.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\At\HardwareVersions.cs">
+    <Compile Include="..\XBee\Api\At\HardwareVersions.cs">
       <Link>Api\At\HardwareVersions.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\At\NodeIdentifier.cs">
+    <Compile Include="..\XBee\Api\At\NodeIdentifier.cs">
       <Link>Api\At\NodeIdentifier.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\At\RemoteAtCommand.cs">
+    <Compile Include="..\XBee\Api\At\RemoteAtCommand.cs">
       <Link>Api\At\RemoteAtCommand.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\At\RemoteAtResponse.cs">
+    <Compile Include="..\XBee\Api\At\RemoteAtResponse.cs">
       <Link>Api\At\RemoteAtResponse.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\At\SaveSettings.cs">
+    <Compile Include="..\XBee\Api\At\SaveSettings.cs">
       <Link>Api\At\SaveSettings.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\At\SerialNumber.cs">
+    <Compile Include="..\XBee\Api\At\SerialNumber.cs">
       <Link>Api\At\SerialNumber.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\Checksum.cs">
+    <Compile Include="..\XBee\Api\Checksum.cs">
       <Link>Api\Checksum.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\ErrorResponse.cs">
+    <Compile Include="..\XBee\Api\ErrorResponse.cs">
       <Link>Api\ErrorResponse.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\Features\PacketListenning\AddressLookupListener.cs">
+    <Compile Include="..\XBee\Api\Features\PacketListenning\AddressLookupListener.cs">
       <Link>Api\Features\PacketListenning\AddressLookupListener.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\Features\PacketListenning\AtResponseFilter.cs">
+    <Compile Include="..\XBee\Api\Features\PacketListenning\AtResponseFilter.cs">
       <Link>Api\Features\PacketListenning\AtResponseFilter.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\Features\PacketListenning\AtResponseListener.cs">
+    <Compile Include="..\XBee\Api\Features\PacketListenning\AtResponseListener.cs">
       <Link>Api\Features\PacketListenning\AtResponseListener.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\Features\PacketListenning\DataReceivedListener.cs">
+    <Compile Include="..\XBee\Api\Features\PacketListenning\DataReceivedListener.cs">
       <Link>Api\Features\PacketListenning\DataReceivedListener.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\Features\PacketListenning\IPacketFilter.cs">
+    <Compile Include="..\XBee\Api\Features\PacketListenning\IPacketFilter.cs">
       <Link>Api\Features\PacketListenning\IPacketFilter.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\Features\PacketListenning\IPacketListener.cs">
+    <Compile Include="..\XBee\Api\Features\PacketListenning\IPacketListener.cs">
       <Link>Api\Features\PacketListenning\IPacketListener.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\Features\PacketListenning\NodeDiscoveryFilter.cs">
+    <Compile Include="..\XBee\Api\Features\PacketListenning\NodeDiscoveryFilter.cs">
       <Link>Api\Features\PacketListenning\NodeDiscoveryFilter.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\Features\PacketListenning\NodeDiscoveryListener.cs">
+    <Compile Include="..\XBee\Api\Features\PacketListenning\NodeDiscoveryListener.cs">
       <Link>Api\Features\PacketListenning\NodeDiscoveryListener.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\Features\PacketListenning\PacketCountFilter.cs">
+    <Compile Include="..\XBee\Api\Features\PacketListenning\PacketCountFilter.cs">
       <Link>Api\Features\PacketListenning\PacketCountFilter.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\Features\PacketListenning\PacketIdFilter.cs">
+    <Compile Include="..\XBee\Api\Features\PacketListenning\PacketIdFilter.cs">
       <Link>Api\Features\PacketListenning\PacketIdFilter.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\Features\PacketListenning\PacketListener.cs">
+    <Compile Include="..\XBee\Api\Features\PacketListenning\PacketListener.cs">
       <Link>Api\Features\PacketListenning\PacketListener.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\Features\PacketListenning\PacketTypeFilter.cs">
+    <Compile Include="..\XBee\Api\Features\PacketListenning\PacketTypeFilter.cs">
       <Link>Api\Features\PacketListenning\PacketTypeFilter.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\Features\PacketListenning\SinglePacketListener.cs">
+    <Compile Include="..\XBee\Api\Features\PacketListenning\SinglePacketListener.cs">
       <Link>Api\Features\PacketListenning\SinglePacketListener.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\Features\Sending\AtRequest.cs">
+    <Compile Include="..\XBee\Api\Features\Sending\AtRequest.cs">
       <Link>Api\Features\Sending\AtRequest.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\Features\Sending\DataDelegateRequest.cs">
+    <Compile Include="..\XBee\Api\Features\Sending\DataDelegateRequest.cs">
       <Link>Api\Features\Sending\DataDelegateRequest.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\Features\Sending\DataRequest.cs">
+    <Compile Include="..\XBee\Api\Features\Sending\DataRequest.cs">
       <Link>Api\Features\Sending\DataRequest.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\Features\Sending\IRequest.cs">
+    <Compile Include="..\XBee\Api\Features\Sending\IRequest.cs">
       <Link>Api\Features\Sending\IRequest.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\Features\Sending\RawRequest.cs">
+    <Compile Include="..\XBee\Api\Features\Sending\RawRequest.cs">
       <Link>Api\Features\Sending\RawRequest.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\Features\Sending\RequestBase.cs">
+    <Compile Include="..\XBee\Api\Features\Sending\RequestBase.cs">
       <Link>Api\Features\Sending\RequestBase.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\GenericResponse.cs">
+    <Compile Include="..\XBee\Api\GenericResponse.cs">
       <Link>Api\GenericResponse.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\INoRequestResponse.cs">
+    <Compile Include="..\XBee\Api\INoRequestResponse.cs">
       <Link>Api\INoRequestResponse.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\IPacketParser.cs">
+    <Compile Include="..\XBee\Api\IPacketParser.cs">
       <Link>Api\IPacketParser.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\IResponseFilter.cs">
+    <Compile Include="..\XBee\Api\IResponseFilter.cs">
       <Link>Api\IResponseFilter.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\IXBeePacketHandler.cs">
+    <Compile Include="..\XBee\Api\IXBeePacketHandler.cs">
       <Link>Api\IXBeePacketHandler.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\ModemStatusResponse.cs">
+    <Compile Include="..\XBee\Api\ModemStatusResponse.cs">
       <Link>Api\ModemStatusResponse.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\NodeInfo.cs">
+    <Compile Include="..\XBee\Api\NodeInfo.cs">
       <Link>Api\NodeInfo.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\PacketIdGenerator.cs">
+    <Compile Include="..\XBee\Api\PacketIdGenerator.cs">
       <Link>Api\PacketIdGenerator.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\PacketParser.cs">
+    <Compile Include="..\XBee\Api\PacketParser.cs">
       <Link>Api\PacketParser.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\Wpan\AtCmd.cs">
+    <Compile Include="..\XBee\Api\Wpan\AssociationStatus.cs">
+      <Link>Api\Wpan\AssociationStatus.cs</Link>
+    </Compile>
+    <Compile Include="..\XBee\Api\Wpan\AtCmd.cs">
       <Link>Api\Wpan\AtCmd.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\Wpan\IoSample.cs">
+    <Compile Include="..\XBee\Api\Wpan\IoSample.cs">
       <Link>Api\Wpan\IoSample.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\Wpan\IoSampleResponse.cs">
+    <Compile Include="..\XBee\Api\Wpan\IoSampleResponse.cs">
       <Link>Api\Wpan\IoSampleResponse.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\Wpan\IWpanPacket.cs">
+    <Compile Include="..\XBee\Api\Wpan\IWpanPacket.cs">
       <Link>Api\Wpan\IWpanPacket.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\Wpan\NodeDiscover.cs">
+    <Compile Include="..\XBee\Api\Wpan\NodeDiscover.cs">
       <Link>Api\Wpan\NodeDiscover.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\Wpan\Pin.cs">
+    <Compile Include="..\XBee\Api\Wpan\Pin.cs">
       <Link>Api\Wpan\Pin.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\Wpan\RxResponse.cs">
+    <Compile Include="..\XBee\Api\Wpan\PowerLevel.cs">
+      <Link>Api\Wpan\PowerLevel.cs</Link>
+    </Compile>
+    <Compile Include="..\XBee\Api\Wpan\RxResponse.cs">
       <Link>Api\Wpan\RxResponse.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\Wpan\RxResponseBase.cs">
+    <Compile Include="..\XBee\Api\Wpan\RxResponseBase.cs">
       <Link>Api\Wpan\RxResponseBase.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\Wpan\TxRequest.cs">
+    <Compile Include="..\XBee\Api\Wpan\SleepMode.cs">
+      <Link>Api\Wpan\SleepMode.cs</Link>
+    </Compile>
+    <Compile Include="..\XBee\Api\Wpan\TxRequest.cs">
       <Link>Api\Wpan\TxRequest.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\Wpan\TxStatusResponse.cs">
+    <Compile Include="..\XBee\Api\Wpan\TxStatusResponse.cs">
       <Link>Api\Wpan\TxStatusResponse.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\XBee.cs">
+    <Compile Include="..\XBee\Api\XBee.cs">
       <Link>Api\XBee.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\XBeeAddress.cs">
+    <Compile Include="..\XBee\Api\XBeeAddress.cs">
       <Link>Api\XBeeAddress.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\XBeeAddress16.cs">
+    <Compile Include="..\XBee\Api\XBeeAddress16.cs">
       <Link>Api\XBeeAddress16.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\XBeeAddress64.cs">
+    <Compile Include="..\XBee\Api\XBeeAddress64.cs">
       <Link>Api\XBeeAddress64.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\XBeeConfiguration.cs">
+    <Compile Include="..\XBee\Api\XBeeConfiguration.cs">
       <Link>Api\XBeeConfiguration.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\XBeeException.cs">
+    <Compile Include="..\XBee\Api\XBeeException.cs">
       <Link>Api\XBeeException.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\XBeeFrameIdResponse.cs">
+    <Compile Include="..\XBee\Api\XBeeFrameIdResponse.cs">
       <Link>Api\XBeeFrameIdResponse.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\XBeePacket.cs">
+    <Compile Include="..\XBee\Api\XBeePacket.cs">
       <Link>Api\XBeePacket.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\XBeeParseException.cs">
+    <Compile Include="..\XBee\Api\XBeeParseException.cs">
       <Link>Api\XBeeParseException.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\XBeeRequest.cs">
+    <Compile Include="..\XBee\Api\XBeeRequest.cs">
       <Link>Api\XBeeRequest.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\XBeeResponse.cs">
+    <Compile Include="..\XBee\Api\XBeeResponse.cs">
       <Link>Api\XBeeResponse.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\XBeeTimeoutException.cs">
+    <Compile Include="..\XBee\Api\XBeeTimeoutException.cs">
       <Link>Api\XBeeTimeoutException.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\Zigbee\AssociationStatus.cs">
+    <Compile Include="..\XBee\Api\Zigbee\AssociationStatus.cs">
       <Link>Api\Zigbee\AssociationStatus.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\Zigbee\AtCmd.cs">
+    <Compile Include="..\XBee\Api\Zigbee\AtCmd.cs">
       <Link>Api\Zigbee\AtCmd.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\Zigbee\DeviceType.cs">
+    <Compile Include="..\XBee\Api\Zigbee\DeviceType.cs">
       <Link>Api\Zigbee\DeviceType.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\Zigbee\ExplicitRxResponse.cs">
+    <Compile Include="..\XBee\Api\Zigbee\ExplicitRxResponse.cs">
       <Link>Api\Zigbee\ExplicitRxResponse.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\Zigbee\ExplicitTxRequest.cs">
+    <Compile Include="..\XBee\Api\Zigbee\ExplicitTxRequest.cs">
       <Link>Api\Zigbee\ExplicitTxRequest.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\Zigbee\IoSampleResponse.cs">
+    <Compile Include="..\XBee\Api\Zigbee\IoSampleResponse.cs">
       <Link>Api\Zigbee\IoSampleResponse.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\Zigbee\IZigbeePacket.cs">
+    <Compile Include="..\XBee\Api\Zigbee\IZigbeePacket.cs">
       <Link>Api\Zigbee\IZigbeePacket.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\Zigbee\NodeDiscover.cs">
+    <Compile Include="..\XBee\Api\Zigbee\NodeDiscover.cs">
       <Link>Api\Zigbee\NodeDiscover.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\Zigbee\NodeIdentificationResponse.cs">
+    <Compile Include="..\XBee\Api\Zigbee\NodeIdentificationResponse.cs">
       <Link>Api\Zigbee\NodeIdentificationResponse.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\Zigbee\NodeType.cs">
+    <Compile Include="..\XBee\Api\Zigbee\NodeType.cs">
       <Link>Api\Zigbee\NodeType.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\Zigbee\RxResponse.cs">
+    <Compile Include="..\XBee\Api\Zigbee\RxResponse.cs">
       <Link>Api\Zigbee\RxResponse.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\Zigbee\RxResponseBase.cs">
+    <Compile Include="..\XBee\Api\Zigbee\RxResponseBase.cs">
       <Link>Api\Zigbee\RxResponseBase.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\Zigbee\TxRequest.cs">
+    <Compile Include="..\XBee\Api\Zigbee\TxRequest.cs">
       <Link>Api\Zigbee\TxRequest.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Api\Zigbee\TxStatusResponse.cs">
+    <Compile Include="..\XBee\Api\Zigbee\TxStatusResponse.cs">
       <Link>Api\Zigbee\TxStatusResponse.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\IXBeeConnection.cs">
+    <Compile Include="..\XBee\IXBeeConnection.cs">
       <Link>IXBeeConnection.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\SerialConnection.cs">
+    <Compile Include="..\XBee\SerialConnection.cs">
       <Link>SerialConnection.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Util\AdcHelper.cs">
-      <Link>Util\AdcHelper.cs</Link>
+    <Compile Include="..\XBee\Util\AdcHelper.cs">
+      <Link>Utils\AdcHelper.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Util\Arrays.cs">
-      <Link>Util\Arrays.cs</Link>
+    <Compile Include="..\XBee\Util\Arrays.cs">
+      <Link>Utils\Arrays.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Util\ByteUtils.cs">
-      <Link>Util\ByteUtils.cs</Link>
+    <Compile Include="..\XBee\Util\ByteUtils.cs">
+      <Link>Utils\ByteUtils.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Util\IInputStream.cs">
-      <Link>Util\IInputStream.cs</Link>
+    <Compile Include="..\XBee\Util\IInputStream.cs">
+      <Link>Utils\IInputStream.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Util\InputStream.cs">
-      <Link>Util\InputStream.cs</Link>
+    <Compile Include="..\XBee\Util\InputStream.cs">
+      <Link>Utils\InputStream.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Util\IOutputStream.cs">
-      <Link>Util\IOutputStream.cs</Link>
+    <Compile Include="..\XBee\Util\IOutputStream.cs">
+      <Link>Utils\IOutputStream.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Util\Logger.cs">
-      <Link>Util\Logger.cs</Link>
+    <Compile Include="..\XBee\Util\Logger.cs">
+      <Link>Utils\Logger.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Util\OutputStream.cs">
-      <Link>Util\OutputStream.cs</Link>
+    <Compile Include="..\XBee\Util\OutputStream.cs">
+      <Link>Utils\OutputStream.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\Util\UshortUtils.cs">
-      <Link>Util\UshortUtils.cs</Link>
+    <Compile Include="..\XBee\Util\UshortUtils.cs">
+      <Link>Utils\UshortUtils.cs</Link>
     </Compile>
-    <Compile Include="..\XBee.Core\XBeePin.cs">
+    <Compile Include="..\XBee\XBeePin.cs">
       <Link>XBeePin.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />

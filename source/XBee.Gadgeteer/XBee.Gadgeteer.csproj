@@ -79,7 +79,7 @@
     <None Include="Setup\G.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\XBee.Core\XBee.Core.csproj">
+    <ProjectReference Include="..\XBee\XBee.csproj">
       <Project>{7F280F44-4AE1-4917-83BC-36825E729EC2}</Project>
       <Name>XBee.Core</Name>
     </ProjectReference>
