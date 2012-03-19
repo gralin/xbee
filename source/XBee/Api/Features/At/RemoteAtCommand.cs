@@ -1,6 +1,6 @@
 ﻿using NETMF.OpenSource.XBee.Util;
 
-namespace NETMF.OpenSource.XBee.Api.At
+namespace NETMF.OpenSource.XBee.Api
 {
     /// <summary>
     /// Supported by both series 1 (10C8 firmware and later) and series 2.

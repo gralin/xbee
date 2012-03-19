@@ -131,8 +131,8 @@ namespace NETMF.OpenSource.XBee.Api
         {
             if (Filter == null)
             {
-                Filter = request is At.AtCommand
-                           ? new AtResponseFilter((At.AtCommand)request)
+                Filter = request is AtCommand
+                           ? new AtResponseFilter((AtCommand)request)
                            : new PacketIdFilter(request);   
             }
             else if (Filter is PacketIdFilter)

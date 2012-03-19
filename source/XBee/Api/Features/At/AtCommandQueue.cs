@@ -1,4 +1,4 @@
-﻿namespace NETMF.OpenSource.XBee.Api.At
+﻿namespace NETMF.OpenSource.XBee.Api
 {
     /// <summary>
     /// AT Command Queue

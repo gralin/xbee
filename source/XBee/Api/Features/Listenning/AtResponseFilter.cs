@@ -1,6 +1,4 @@
-﻿using NETMF.OpenSource.XBee.Api.At;
-
-namespace NETMF.OpenSource.XBee.Api
+﻿namespace NETMF.OpenSource.XBee.Api
 {
     public class AtResponseFilter : PacketIdFilter
     {

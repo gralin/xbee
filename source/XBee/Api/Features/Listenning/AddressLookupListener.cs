@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using NETMF.OpenSource.XBee.Api.At;
 using NETMF.OpenSource.XBee.Api.Zigbee;
 
 namespace NETMF.OpenSource.XBee.Api

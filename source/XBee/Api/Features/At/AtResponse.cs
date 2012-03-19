@@ -1,6 +1,6 @@
 ﻿using NETMF.OpenSource.XBee.Util;
 
-namespace NETMF.OpenSource.XBee.Api.At
+namespace NETMF.OpenSource.XBee.Api
 {
     public class AtResponse : XBeeFrameIdResponse
     {

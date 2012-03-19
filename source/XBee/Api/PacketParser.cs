@@ -3,7 +3,6 @@ using System.Collections;
 using System.IO;
 using System.Reflection;
 using System.Threading;
-using NETMF.OpenSource.XBee.Api.At;
 using NETMF.OpenSource.XBee.Util;
 
 namespace NETMF.OpenSource.XBee.Api

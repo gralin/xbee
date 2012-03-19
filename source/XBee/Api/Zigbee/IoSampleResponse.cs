@@ -1,5 +1,4 @@
 ﻿using System;
-using NETMF.OpenSource.XBee.Api.At;
 using NETMF.OpenSource.XBee.Util;
 
 namespace NETMF.OpenSource.XBee.Api.Zigbee

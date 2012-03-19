@@ -14,7 +14,7 @@
             if (!base.Accepted(packet))
                 return false;
 
-            var atResponse = (At.AtResponse)packet;
+            var atResponse = (AtResponse)packet;
 
             // empty response is received in series 1 modules
             // in series 2 the timeout determines the end of discovery

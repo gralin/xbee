@@ -1,4 +1,4 @@
-namespace NETMF.OpenSource.XBee.Api.At
+namespace NETMF.OpenSource.XBee.Api
 {
     public enum AtResponseStatus
     {

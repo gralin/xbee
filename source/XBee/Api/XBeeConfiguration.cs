@@ -1,5 +1,4 @@
-﻿using NETMF.OpenSource.XBee.Api.At;
-using NETMF.OpenSource.XBee.Api.Common;
+﻿using NETMF.OpenSource.XBee.Api.Common;
 
 namespace NETMF.OpenSource.XBee.Api
 {
