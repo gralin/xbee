@@ -46,24 +46,6 @@
     <Compile Include="..\XBee\Api\AsyncSendResult.cs">
       <Link>Api\AsyncSendResult.cs</Link>
     </Compile>
-    <Compile Include="..\XBee\Api\At\AtCommand.cs">
-      <Link>Api\At\AtCommand.cs</Link>
-    </Compile>
-    <Compile Include="..\XBee\Api\At\AtCommandQueue.cs">
-      <Link>Api\At\AtCommandQueue.cs</Link>
-    </Compile>
-    <Compile Include="..\XBee\Api\At\AtResponse.cs">
-      <Link>Api\At\AtResponse.cs</Link>
-    </Compile>
-    <Compile Include="..\XBee\Api\At\AtResponseStatus.cs">
-      <Link>Api\At\AtResponseStatus.cs</Link>
-    </Compile>
-    <Compile Include="..\XBee\Api\At\RemoteAtCommand.cs">
-      <Link>Api\At\RemoteAtCommand.cs</Link>
-    </Compile>
-    <Compile Include="..\XBee\Api\At\RemoteAtResponse.cs">
-      <Link>Api\At\RemoteAtResponse.cs</Link>
-    </Compile>
     <Compile Include="..\XBee\Api\Checksum.cs">
       <Link>Api\Checksum.cs</Link>
     </Compile>
@@ -108,6 +90,24 @@
     </Compile>
     <Compile Include="..\XBee\Api\Features\Address\XBeeAddress64.cs">
       <Link>Api\Features\Address\XBeeAddress64.cs</Link>
+    </Compile>
+    <Compile Include="..\XBee\Api\Features\At\AtCommand.cs">
+      <Link>Api\Features\At\AtCommand.cs</Link>
+    </Compile>
+    <Compile Include="..\XBee\Api\Features\At\AtCommandQueue.cs">
+      <Link>Api\Features\At\AtCommandQueue.cs</Link>
+    </Compile>
+    <Compile Include="..\XBee\Api\Features\At\AtResponse.cs">
+      <Link>Api\Features\At\AtResponse.cs</Link>
+    </Compile>
+    <Compile Include="..\XBee\Api\Features\At\AtResponseStatus.cs">
+      <Link>Api\Features\At\AtResponseStatus.cs</Link>
+    </Compile>
+    <Compile Include="..\XBee\Api\Features\At\RemoteAtCommand.cs">
+      <Link>Api\Features\At\RemoteAtCommand.cs</Link>
+    </Compile>
+    <Compile Include="..\XBee\Api\Features\At\RemoteAtResponse.cs">
+      <Link>Api\Features\At\RemoteAtResponse.cs</Link>
     </Compile>
     <Compile Include="..\XBee\Api\Features\Listenning\AddressLookupListener.cs">
       <Link>Api\Features\Listenning\AddressLookupListener.cs</Link>
