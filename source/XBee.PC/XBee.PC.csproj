@@ -97,6 +97,15 @@
     <Compile Include="..\XBee\Api\ErrorResponse.cs">
       <Link>Api\ErrorResponse.cs</Link>
     </Compile>
+    <Compile Include="..\XBee\Api\Features\Address\XBeeAddress.cs">
+      <Link>Api\Features\Address\XBeeAddress.cs</Link>
+    </Compile>
+    <Compile Include="..\XBee\Api\Features\Address\XBeeAddress16.cs">
+      <Link>Api\Features\Address\XBeeAddress16.cs</Link>
+    </Compile>
+    <Compile Include="..\XBee\Api\Features\Address\XBeeAddress64.cs">
+      <Link>Api\Features\Address\XBeeAddress64.cs</Link>
+    </Compile>
     <Compile Include="..\XBee\Api\Features\Listenning\AddressLookupListener.cs">
       <Link>Api\Features\Listenning\AddressLookupListener.cs</Link>
     </Compile>
@@ -225,15 +234,6 @@
     </Compile>
     <Compile Include="..\XBee\Api\XBee.cs">
       <Link>Api\XBee.cs</Link>
-    </Compile>
-    <Compile Include="..\XBee\Api\XBeeAddress.cs">
-      <Link>Api\XBeeAddress.cs</Link>
-    </Compile>
-    <Compile Include="..\XBee\Api\XBeeAddress16.cs">
-      <Link>Api\XBeeAddress16.cs</Link>
-    </Compile>
-    <Compile Include="..\XBee\Api\XBeeAddress64.cs">
-      <Link>Api\XBeeAddress64.cs</Link>
     </Compile>
     <Compile Include="..\XBee\Api\XBeeConfiguration.cs">
       <Link>Api\XBeeConfiguration.cs</Link>
