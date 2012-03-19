@@ -88,6 +88,9 @@
     <Compile Include="..\XBee\Api\Common\NodeIdentifier.cs">
       <Link>Api\Common\NodeIdentifier.cs</Link>
     </Compile>
+    <Compile Include="..\XBee\Api\Common\NodeInfo.cs">
+      <Link>Api\Common\NodeInfo.cs</Link>
+    </Compile>
     <Compile Include="..\XBee\Api\Common\SaveSettings.cs">
       <Link>Api\Common\SaveSettings.cs</Link>
     </Compile>
@@ -174,9 +177,6 @@
     </Compile>
     <Compile Include="..\XBee\Api\ModemStatusResponse.cs">
       <Link>Api\ModemStatusResponse.cs</Link>
-    </Compile>
-    <Compile Include="..\XBee\Api\NodeInfo.cs">
-      <Link>Api\NodeInfo.cs</Link>
     </Compile>
     <Compile Include="..\XBee\Api\PacketIdGenerator.cs">
       <Link>Api\PacketIdGenerator.cs</Link>
