@@ -210,7 +210,7 @@ namespace NETMF.OpenSource.XBee.Api
             return _dataRequest;
         }
 
-        internal AtRequest Send2(Common.AtCmd atCommand, params byte[] value)
+        public AtRequest Send2(Common.AtCmd atCommand, params byte[] value)
         {
             _atRequest.Init((ushort)atCommand, value);
             return _atRequest;
@@ -283,7 +283,7 @@ namespace NETMF.OpenSource.XBee.Api
                 { FrameId = _idGenerator.GetNext() };
         }
 
-        internal AtCommand CreateRequest(Common.AtCmd atCommand, params byte[] value)
+        public AtCommand CreateRequest(Common.AtCmd atCommand, params byte[] value)
         {
             return new AtCommand((ushort)atCommand, value) { FrameId = _idGenerator.GetNext() };
         }
@@ -303,7 +303,7 @@ namespace NETMF.OpenSource.XBee.Api
             return new AtCommand(atCommand, value) { FrameId = _idGenerator.GetNext() };
         }
 
-        internal RemoteAtCommand CreateRequest(Common.AtCmd atCommand, XBeeAddress destination, params byte[] value)
+        public RemoteAtCommand CreateRequest(Common.AtCmd atCommand, XBeeAddress destination, params byte[] value)
         {
             return CreateRequest((ushort)atCommand, destination, value);
         }

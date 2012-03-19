@@ -94,11 +94,8 @@ namespace NETMF.OpenSource.XBee.Api.Common
 
         /// <summary>
         /// MY.
-        /// <para>Read the 16-bit network address of the module.</para>
+        /// <para>Read the network address of the module.</para>
         /// </summary>
-        /// <remarks>
-        /// <para>Range: 0 - 0xFFFF.</para>
-        /// </remarks>
         NetworkAddress = 0x4D59
     }
 }

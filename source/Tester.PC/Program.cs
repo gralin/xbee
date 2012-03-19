@@ -20,7 +20,12 @@ namespace PC.Tester
 
             // reading network addresses of the connected module
 
-            var xbeeAddress = new XBeeAddress16(xbee.Send(AtCmd.NetworkAddress).Value);
+            var addressBytes = xbee.Send2(AtCmd.NetworkAddress).GetResponsePayload();
+
+            var xbeeAddress = xbee.Config.HardwareVersion == HardwareVersions.Series6
+                        ? (XBeeAddress) new XBeeAddressIp(addressBytes)
+                        : new XBeeAddress16(addressBytes);
+
             Debug.Print("XBee address: " + xbeeAddress);
 
             // setting Node Identifier
