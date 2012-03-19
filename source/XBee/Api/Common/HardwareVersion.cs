@@ -1,0 +1,48 @@
+﻿using System.Collections;
+using NETMF.OpenSource.XBee.Api.At;
+
+namespace NETMF.OpenSource.XBee.Api.Common
+{
+    public static class HardwareVersion
+    {
+        private static readonly Hashtable HardwareVersionNames;
+
+        static HardwareVersion()
+        {
+            HardwareVersionNames = new Hashtable
+            {
+                {HardwareVersions.Unknown,"Unknown"},
+                {HardwareVersions.Series1,"Series 1"},
+                {HardwareVersions.Series1Pro,"Series 1 Pro"},
+                {HardwareVersions.Series2,"Series 2"},
+                {HardwareVersions.Series2Pro,"Series 2 Pro"},
+                {HardwareVersions.Series2BPro,"Series 2B Pro"},
+            };
+        }
+
+        public static HardwareVersions Read(XBee xbee)
+        {
+            var request = xbee.Send2(AtCmd.HardwareVersion);
+            return Parse(request.GetResponse());
+        }
+
+        public static HardwareVersions Read(XBee sender, XBeeAddress remoteXBee)
+        {
+            var request = sender.Send2(AtCmd.HardwareVersion).To(remoteXBee);
+            return Parse((AtResponse) request.GetResponse());
+        }
+
+        public static HardwareVersions Parse(AtResponse response)
+        {
+            if (!response.IsOk)
+                throw new XBeeException("Attempt to query remote HV parameter failed");
+
+            return (HardwareVersions)response.Value[0];
+        }
+
+        public static string GetName(HardwareVersions radiotype)
+        {
+            return (string) HardwareVersionNames[radiotype];
+        }
+    }
+}
