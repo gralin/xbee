@@ -17,6 +17,7 @@ namespace NETMF.OpenSource.XBee.Api.Common
                 {HardwareVersions.Series2,"Series 2"},
                 {HardwareVersions.Series2Pro,"Series 2 Pro"},
                 {HardwareVersions.Series2BPro,"Series 2B Pro"},
+                {HardwareVersions.Series6,"Series 6"}
             };
         }
 
