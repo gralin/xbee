@@ -30,14 +30,14 @@ namespace NETMF.OpenSource.XBee.Api
                 : LocalXBee.CreateRequest(AtCommand, DestinationAddress, Value);
         }
 
-        public new AtResponse GetResponse(int timeout = -1)
+        public new AtResponse GetResponse()
         {
-            return (AtResponse) base.GetResponse(timeout);
+            return (AtResponse)base.GetResponse();
         }
 
-        public byte[] GetResponsePayload(int timeout = -1)
+        public byte[] GetResponsePayload()
         {
-            return GetResponse(timeout).Value;
+            return GetResponse().Value;
         }
     }
 }

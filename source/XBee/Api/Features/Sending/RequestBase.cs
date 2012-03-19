@@ -105,16 +105,16 @@ namespace NETMF.OpenSource.XBee.Api
             }
         }
 
-        public XBeeResponse[] GetResponses(int timeout = -1)
+        public XBeeResponse[] GetResponses()
         {
             ExpectedResponse = Response.Multiple;
-            return Invoke().EndReceive(timeout);
+            return Invoke().EndReceive(TimeoutValue);
         }
 
-        public XBeeResponse GetResponse(int timeout = -1)
+        public XBeeResponse GetResponse()
         {
             ExpectedResponse = Response.Single;
-            return Invoke().EndReceive(timeout)[0];
+            return Invoke().EndReceive(TimeoutValue)[0];
         }
 
         public void NoResponse()

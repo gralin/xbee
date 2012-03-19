@@ -16,7 +16,7 @@ namespace NETMF.OpenSource.XBee.Api
         AsyncSendResult Invoke();
 
         void NoResponse();
-        XBeeResponse[] GetResponses(int timeout = -1);
-        XBeeResponse GetResponse(int timeout = -1);
+        XBeeResponse[] GetResponses();
+        XBeeResponse GetResponse();
     }
 }
