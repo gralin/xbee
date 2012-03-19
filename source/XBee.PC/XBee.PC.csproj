@@ -172,12 +172,6 @@
     <Compile Include="..\XBee\Api\IPacketParser.cs">
       <Link>Api\IPacketParser.cs</Link>
     </Compile>
-    <Compile Include="..\XBee\Api\IResponseFilter.cs">
-      <Link>Api\IResponseFilter.cs</Link>
-    </Compile>
-    <Compile Include="..\XBee\Api\IXBeePacketHandler.cs">
-      <Link>Api\IXBeePacketHandler.cs</Link>
-    </Compile>
     <Compile Include="..\XBee\Api\ModemStatusResponse.cs">
       <Link>Api\ModemStatusResponse.cs</Link>
     </Compile>
