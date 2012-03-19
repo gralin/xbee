@@ -33,12 +33,15 @@ namespace PC.Tester
             {
                 WpanTests.Run(xbee);
             }
-            else
+            else if (xbee.Config.IsSeries2())
             {
                 ZigbeeTest.Run(xbee);
             }
 
             xbee.Close();
+
+            Debug.Print("Press any key to exit...");
+            Console.ReadLine();
         }
     }
 }

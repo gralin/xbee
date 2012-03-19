@@ -34,6 +34,7 @@
     <Compile Include="Api\ApiId.cs" />
     <Compile Include="Api\AsyncSendResult.cs" />
     <Compile Include="Api\Common\ApiModes.cs" />
+    <Compile Include="Api\Features\Address\XBeeAddressIp.cs" />
     <Compile Include="Api\Features\At\AtCommand.cs" />
     <Compile Include="Api\Features\At\AtCommandQueue.cs" />
     <Compile Include="Api\Features\At\AtResponse.cs" />

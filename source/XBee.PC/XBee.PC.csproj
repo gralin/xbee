@@ -91,6 +91,9 @@
     <Compile Include="..\XBee\Api\Features\Address\XBeeAddress64.cs">
       <Link>Api\Features\Address\XBeeAddress64.cs</Link>
     </Compile>
+    <Compile Include="..\XBee\Api\Features\Address\XBeeAddressIp.cs">
+      <Link>Api\Features\Address\XBeeAddressIp.cs</Link>
+    </Compile>
     <Compile Include="..\XBee\Api\Features\At\AtCommand.cs">
       <Link>Api\Features\At\AtCommand.cs</Link>
     </Compile>
