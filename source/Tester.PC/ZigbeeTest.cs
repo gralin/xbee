@@ -45,7 +45,7 @@ namespace PC.Tester
 
             // reading supply voltage
 
-            var voltage = UshortUtils.ToUshort(xbee.Send(AtCmd.SupplyVoltage).Value);
+            var voltage = UshortUtils.ToUshort(xbee.Send2(AtCmd.SupplyVoltage).GetResponsePayload());
             var voltageVolts = (voltage*1200/1024.0) / 1000.0;
             Debug.Print("Supply voltage: " + voltageVolts.ToString("F2") + "V");
 
@@ -69,13 +69,13 @@ namespace PC.Tester
 
         private static int GetRssi(XBee xbee)
         {
-            var response = xbee.Send(AtCmd.ReceivedSignalStrength);
+            var response = xbee.Send2(AtCmd.ReceivedSignalStrength).GetResponse();
             return -1 * response.Value[0];
         }
 
         private static bool SendText(XBee xbee, XBeeAddress destination, string message)
         {
-            var response = (TxStatusResponse)xbee.Send(message, destination);
+            var response = (TxStatusResponse)xbee.Send2(message).To(destination).GetResponse();
             return response.DeliveryStatus == TxStatusResponse.DeliveryResult.Success;
         }
     }

@@ -55,5 +55,11 @@ namespace NETMF.OpenSource.XBee.Util
             var value = new byte[] { 0xF1, 0x23 };
             Assert.AreEqual(0x0123, UshortUtils.Parse10BitAnalog(value));
         }
+
+        [Test]
+        public void from_single_byte_to_ushort_test()
+        {
+            Assert.AreEqual(0x0001, UshortUtils.ToUshort(0x01));
+        }
     }
 }

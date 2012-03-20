@@ -167,18 +167,15 @@ namespace NETMF.OpenSource.XBee.Api
 
         public NodeInfo[] DiscoverNodes()
         {
-            var discoveryTimeout = Send(Common.AtCmd.NodeDiscoverTimeout);
-
-            // it seems that Zigbee modules have longer timeout (2 bytes)
-            int timeout = discoveryTimeout.Value.Length == 1
-                              ? discoveryTimeout.Value[0]
-                              : UshortUtils.ToUshort(discoveryTimeout.Value);
+            var timeoutResponse = Send2(Common.AtCmd.NodeDiscoverTimeout).GetResponse();
+            int timeout = UshortUtils.ToUshort(timeoutResponse.Value);
 
             // ms + 1 extra second
             timeout = timeout * 100 + 1000;
 
-            var request = CreateRequest(Common.AtCmd.NodeDiscover);
-            var responses = BeginSend(request, new NodeDiscoveryListener()).EndReceive(timeout);
+            var filter = new NodeDiscoveryFilter();
+            var request = Send2(Common.AtCmd.NodeDiscover).Use(filter).Timeout(timeout);
+            var responses = request.GetResponses();
             var result = new NodeInfo[responses.Length];
 
             for (var i = 0; i < responses.Length; i++)
@@ -221,7 +218,72 @@ namespace NETMF.OpenSource.XBee.Api
             }
         }
 
-        // New send methods idea
+        // Creating requests
+
+        public XBeeRequest CreateRequest(string payload, XBeeAddress destination)
+        {
+            return CreateRequest(Arrays.ToByteArray(payload), destination);
+        }
+
+        public XBeeRequest CreateRequest(byte[] payload, XBeeAddress destination)
+        {
+            if (Config.IsSeries1())
+                return new Wpan.TxRequest(destination, payload) 
+                    {FrameId = _idGenerator.GetNext()};
+
+            if (!(destination is XBeeAddress64) || destination == null)
+                throw new ArgumentException("64 bit address expected", "destination");
+
+            var serialNumber = (XBeeAddress64) destination;
+
+            var networkAddress = AddressLookup.Contains(destination)
+                ? (XBeeAddress16)AddressLookup[destination]
+                : XBeeAddress16.Unknown;
+
+            return new Zigbee.TxRequest(serialNumber, networkAddress, payload) 
+                { FrameId = _idGenerator.GetNext() };
+        }
+
+        public XBeeRequest CreateRequest(string payload, NodeInfo destination)
+        {
+            return CreateRequest(Arrays.ToByteArray(payload), destination);
+        }
+
+        public XBeeRequest CreateRequest(byte[] payload, NodeInfo destination)
+        {
+            if (Config.IsSeries1())
+                return new Wpan.TxRequest(destination.SerialNumber, payload) 
+                    { FrameId = _idGenerator.GetNext() };
+
+            return new Zigbee.TxRequest(destination.SerialNumber, destination.NetworkAddress, payload)
+                { FrameId = _idGenerator.GetNext() };
+        }
+
+        public AtCommand CreateRequest(ushort atCommand, params byte[] value)
+        {
+            return new AtCommand(atCommand, value) { FrameId = _idGenerator.GetNext() };
+        }
+
+        public RemoteAtCommand CreateRequest(ushort atCommand, XBeeAddress destination, params byte[] value)
+        {
+            if (destination is XBeeAddress16)
+                throw new ArgumentException("64 bit address expected", "destination");
+
+            var networkAddress = AddressLookup.Contains(destination)
+                        ? (XBeeAddress16) AddressLookup[destination]
+                        : XBeeAddress16.Unknown;
+
+            return new RemoteAtCommand(atCommand, (XBeeAddress64) destination, networkAddress, value) 
+                { FrameId = _idGenerator.GetNext() };
+        }
+
+        public RemoteAtCommand CreateRequest(ushort atCommand, NodeInfo destination, params byte[] value)
+        {
+            return new RemoteAtCommand(atCommand, destination.SerialNumber, destination.NetworkAddress, value) 
+                { FrameId = _idGenerator.GetNext() };
+        }
+
+        // Sending requests
 
         public DataRequest Send2(string payload)
         {
@@ -266,196 +328,6 @@ namespace NETMF.OpenSource.XBee.Api
         }
 
         public delegate byte[] PayloadDelegate();
-
-        // Creating requests
-
-        public XBeeRequest CreateRequest(string payload, XBeeAddress destination)
-        {
-            return CreateRequest(Arrays.ToByteArray(payload), destination);
-        }
-
-        public XBeeRequest CreateRequest(byte[] payload, XBeeAddress destination)
-        {
-            if (Config.IsSeries1())
-                return new Wpan.TxRequest(destination, payload) 
-                    {FrameId = _idGenerator.GetNext()};
-
-            if (!(destination is XBeeAddress64) || destination == null)
-                throw new ArgumentException("64 bit address expected", "destination");
-
-            var serialNumber = (XBeeAddress64) destination;
-
-            var networkAddress = AddressLookup.Contains(destination)
-                ? (XBeeAddress16)AddressLookup[destination]
-                : XBeeAddress16.Unknown;
-
-            return new Zigbee.TxRequest(serialNumber, networkAddress, payload) 
-                { FrameId = _idGenerator.GetNext() };
-        }
-
-        public XBeeRequest CreateRequest(string payload, NodeInfo destination)
-        {
-            return CreateRequest(Arrays.ToByteArray(payload), destination);
-        }
-
-        public XBeeRequest CreateRequest(byte[] payload, NodeInfo destination)
-        {
-            if (Config.IsSeries1())
-                return new Wpan.TxRequest(destination.SerialNumber, payload) 
-                    { FrameId = _idGenerator.GetNext() };
-
-            return new Zigbee.TxRequest(destination.SerialNumber, destination.NetworkAddress, payload)
-                { FrameId = _idGenerator.GetNext() };
-        }
-
-        public AtCommand CreateRequest(Common.AtCmd atCommand, params byte[] value)
-        {
-            return new AtCommand((ushort)atCommand, value) { FrameId = _idGenerator.GetNext() };
-        }
-
-        public AtCommand CreateRequest(Wpan.AtCmd atCommand, params byte[] value)
-        {
-            return new AtCommand((ushort) atCommand, value) { FrameId = _idGenerator.GetNext() };
-        }
-
-        public AtCommand CreateRequest(Zigbee.AtCmd atCommand, params byte[] value)
-        {
-            return new AtCommand((ushort) atCommand, value) { FrameId = _idGenerator.GetNext() };
-        }
-
-        public AtCommand CreateRequest(ushort atCommand, params byte[] value)
-        {
-            return new AtCommand(atCommand, value) { FrameId = _idGenerator.GetNext() };
-        }
-
-        public RemoteAtCommand CreateRequest(Common.AtCmd atCommand, XBeeAddress destination, params byte[] value)
-        {
-            return CreateRequest((ushort)atCommand, destination, value);
-        }
-
-        public RemoteAtCommand CreateRequest(Wpan.AtCmd atCommand, XBeeAddress destination, params byte[] value)
-        {
-            return CreateRequest((ushort)atCommand, destination, value);
-        }
-
-        public RemoteAtCommand CreateRequest(Zigbee.AtCmd atCommand, XBeeAddress destination, params byte[] value)
-        {
-            return CreateRequest((ushort)atCommand, destination, value);
-        }
-
-        public RemoteAtCommand CreateRequest(ushort atCommand, XBeeAddress destination, params byte[] value)
-        {
-            if (destination is XBeeAddress16)
-                throw new ArgumentException("64 bit address expected", "destination");
-
-            return new RemoteAtCommand(atCommand, (XBeeAddress64) destination, value) 
-                { FrameId = _idGenerator.GetNext() };
-        }
-
-        public RemoteAtCommand CreateRequest(ushort atCommand, XBeeAddress64 destSerial, XBeeAddress16 destAddress, params byte[] value)
-        {
-            return new RemoteAtCommand(atCommand, destSerial, destAddress, value) 
-                { FrameId = _idGenerator.GetNext() };
-        }
-
-        public RemoteAtCommand CreateRequest(ushort atCommand, NodeInfo destination, params byte[] value)
-        {
-            return new RemoteAtCommand(atCommand, destination.SerialNumber, destination.NetworkAddress, value) 
-                { FrameId = _idGenerator.GetNext() };
-        }
-
-        // Sending requests
-
-        public XBeeResponse Send(byte[] payload, XBeeAddress destination = null)
-        {
-            return Send(CreateRequest(payload, destination));
-        }
-
-        public XBeeResponse Send(string payload, XBeeAddress destination = null)
-        {
-            return Send(CreateRequest(payload, destination));
-        }
-
-        public AtResponse Send(Common.AtCmd atCommand, byte[] value = null, int timeout = PacketParser.DefaultParseTimeout)
-        {
-            return (AtResponse)Send(CreateRequest(atCommand, value), timeout);
-        }
-
-        public AtResponse Send(Wpan.AtCmd atCommand, byte[] value = null, int timeout = PacketParser.DefaultParseTimeout)
-        {
-            return (AtResponse)Send(CreateRequest(atCommand, value), timeout);
-        }
-
-        public AtResponse Send(Zigbee.AtCmd atCommand, byte[] value = null, int timeout = PacketParser.DefaultParseTimeout)
-        {
-            return (AtResponse)Send(CreateRequest(atCommand, value), timeout);
-        }
-
-        public RemoteAtResponse Send(Common.AtCmd atCommand, XBeeAddress remoteXbee, byte[] value = null, int timeout = PacketParser.DefaultParseTimeout)
-        {
-            return (RemoteAtResponse)Send(CreateRequest(atCommand, remoteXbee, value), timeout);
-        }
-
-        public RemoteAtResponse Send(Wpan.AtCmd atCommand, XBeeAddress remoteXbee, byte[] value = null, int timeout = PacketParser.DefaultParseTimeout)
-        {
-            return (RemoteAtResponse) Send(CreateRequest(atCommand, remoteXbee, value), timeout);
-        }
-
-        public RemoteAtResponse Send(Zigbee.AtCmd atCommand, XBeeAddress remoteXbee, byte[] value = null, int timeout = PacketParser.DefaultParseTimeout)
-        {
-            return (RemoteAtResponse)Send(CreateRequest(atCommand, remoteXbee, value), timeout);
-        }
-
-        public XBeeResponse Send(XBeeRequest xbeeRequest, int timeout = PacketParser.DefaultParseTimeout)
-        {
-            if (xbeeRequest.FrameId == PacketIdGenerator.NoResponseId)
-            {
-                SendRequest(xbeeRequest);
-                return null;
-            }
-
-            var filter = xbeeRequest is AtCommand
-                            ? new AtResponseFilter((AtCommand)xbeeRequest)
-                            : new PacketIdFilter(xbeeRequest);
-
-            var listener = new SinglePacketListener(filter);
-
-            try
-            {
-                AddPacketListener(listener);
-                SendRequest(xbeeRequest);
-                return listener.GetResponse(timeout);
-            }
-            finally
-            {
-                _parser.RemovePacketListener(listener);
-            }
-        }
-
-        public void SendNoReply(Common.AtCmd atCommand, byte[] value = null)
-        {
-            SendNoReply(CreateRequest(atCommand, value));
-        }
-
-        public void SendNoReply(Wpan.AtCmd atCommand, byte[] value = null)
-        {
-            SendNoReply(CreateRequest(atCommand, value));
-        }
-
-        public void SendNoReply(Zigbee.AtCmd atCommand, byte[] value = null)
-        {
-            SendNoReply(CreateRequest(atCommand, value));
-        }
-
-        public void SendNoReply(byte[] payload, XBeeAddress destination = null)
-        {
-            SendNoReply(CreateRequest(payload, destination));
-        }
-
-        public void SendNoReply(string payload, XBeeAddress destination = null)
-        {
-            SendNoReply(CreateRequest(payload, destination));
-        }
 
         public void SendNoReply(XBeeRequest request)
         {

@@ -24,7 +24,7 @@
             if (!(packet is AtResponse))
                 return false;
 
-            var accepted = (ushort)(packet as AtResponse).Command == _atCmd;
+            var accepted = (packet as AtResponse).Command == _atCmd;
 
             _finished = accepted;
             return accepted;

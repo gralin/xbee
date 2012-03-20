@@ -4,7 +4,7 @@
     {
         private bool _finished;
 
-        public NodeDiscoveryFilter(int packetId)
+        public NodeDiscoveryFilter(int packetId = PacketIdGenerator.DefaultId)
             : base((ushort) Common.AtCmd.NodeDiscover, packetId)
         {
         }

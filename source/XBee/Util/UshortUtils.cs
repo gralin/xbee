@@ -4,22 +4,20 @@ namespace NETMF.OpenSource.XBee.Util
 {
     public static class UshortUtils
     {
-        public static ushort ToUshort(byte[] values)
+        /// <summary>
+        /// Converts bytes into ushort value.
+        /// </summary>
+        /// <param name="bytes">1-2 bytes</param>
+        /// <returns>Ushort value</returns>
+        public static ushort ToUshort(params byte[] bytes)
         {
-            if (values.Length < 2)
-                throw new ArgumentException();
+            if (bytes.Length < 0 || bytes.Length > 2)
+                throw new ArgumentOutOfRangeException("bytes");
 
-            return ToUshort(values[0], values[1]);
-        }
+            if (bytes.Length == 1)
+                return bytes[0];
 
-        public static ushort ToUshort(int msb, int lsb)
-        {
-            return ToUshort((byte) msb, (byte) lsb);
-        }
-
-        public static ushort ToUshort(byte msb, byte lsb)
-        {
-            return (ushort) ((msb << 8) + lsb);
+            return (ushort)((bytes[0] << 8) + bytes[1]);
         }
 
         public static ushort FromAscii(string value)
@@ -27,7 +25,7 @@ namespace NETMF.OpenSource.XBee.Util
             if (value.Length < 2)
                 throw new ArgumentException("Value lenght should be 2");
 
-            return ToUshort(value[0], value[1]);
+            return ToUshort((byte)value[0], (byte)value[1]);
         }
 
         public static byte Msb(ushort value)
