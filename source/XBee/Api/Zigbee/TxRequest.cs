@@ -10,10 +10,12 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
     /// </summary>
     public class TxRequest : XBeeRequest, IZigbeePacket
     {
+        [Flags]
 	    public enum Options
         {
-		    Unicast = 0,
-		    Broadcast = 8
+            DisableAck = 0x01,
+            EnableEncryption = 0x20,
+            ExtendedTimeout = 0x40
 	    }
 
         // 10/28/08 the datasheet states 72 is maximum payload size but I was able to push 75 through successfully, 
@@ -65,7 +67,7 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         {
             Payload = payload;
             BroadcastRadius = DefaultBroadcastRadius;
-            Option = Options.Unicast;
+            Option = 0;
         }
 
         protected OutputStream GetFrameDataAsIntArrayOutputStream()

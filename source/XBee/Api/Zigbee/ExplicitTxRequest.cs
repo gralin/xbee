@@ -30,8 +30,8 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         public ushort ClusterId { get; set; }
         public ushort ProfileId { get; set; }
 
-        public static ushort ZnetProfileId = UshortUtils.ToUshort(0xC1, 0x05);
-        public static ushort ZdoProfileId = UshortUtils.ToUshort(0x00, 0x00);
+        public static ushort ZnetProfileId = 0xC105;
+        public static ushort ZdoProfileId = 0x0000;
 
         // this is one big ctor ;)
 
