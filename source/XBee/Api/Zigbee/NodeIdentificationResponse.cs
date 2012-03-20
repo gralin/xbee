@@ -44,15 +44,17 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
             PowerCycle = 3
         }
 
-        // serial and network address of node that transmited this packet
-        // this will be equal to remote serial and address if there were
-        // not hops in between
-        public XBeeAddress64 SenderSerial { get; set; }
-        public XBeeAddress16 SenderAddress { get; set; }
+        /// <summary>
+        /// Serial and network address of node that transmited this packet
+        /// this will be equal to remote serial and address if there were
+        /// not hops in between.
+        /// </summary>
+        public NodeInfo Sender { get; set; }
 
-        // serial and netowork address of remote node that was identified
-        public XBeeAddress64 RemoteSerial { get; set; }
-        public XBeeAddress16 RemoteAddress { get; set; }
+        /// <summary>
+        /// Serial and netowork address of remote node that was identified
+        /// </summary>
+        public NodeInfo Remote { get; set; }
 
         public PacketOption Option { get; set; }
         
@@ -74,25 +76,29 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
 
         public override void Parse(IPacketParser parser)
         {
-            SenderSerial = parser.ParseAddress64();
-            SenderAddress = parser.ParseAddress16();
+            Sender = new NodeInfo
+            {
+                SerialNumber = parser.ParseAddress64(),
+                NetworkAddress = parser.ParseAddress16()
+            };
 
             Option = (PacketOption) parser.Read("Option");
 
-            RemoteAddress = parser.ParseAddress16();
-            RemoteSerial = parser.ParseAddress64();
+            Remote = new NodeInfo
+            {
+                NetworkAddress = parser.ParseAddress16(), 
+                SerialNumber = parser.ParseAddress64()
+            };
 
-            var nodeIdentifier = string.Empty;
             byte ch;
 
             // NI is terminated with 0
             while ((ch = parser.Read("Node Identifier")) != 0)
             {
                 if (ch > 32 && ch < 126)
-                    nodeIdentifier += (char) ch;
+                    Remote.NodeIdentifier += (char) ch;
             }
 
-            NodeIdentifier = nodeIdentifier;
             ParentAddress = parser.ParseAddress16();
             NodeType = (NodeType) parser.Read("Device Type");
             SourceAction = (SourceActions) parser.Read("Source Action");
@@ -103,10 +109,8 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         public override string ToString()
         {
             return base.ToString()
-                   + ", senderAddress=" + SenderAddress
-                   + ", senderSerial=" + SenderSerial
-                   + ", remoteAddress=" + RemoteAddress
-                   + ", remoteSerial=" + RemoteSerial
+                   + ", sender=" + Sender
+                   + ", remote=" + Remote
                    + ", nodeType=" + NodeType
                    + ", mfgId=" + MfgId
                    + ", nodeIdentifier=" + NodeIdentifier

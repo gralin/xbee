@@ -11,11 +11,18 @@
         {
         }
 
-        public NodeInfo(XBeeAddress64 serialNumber, XBeeAddress16 networkAddress, string nodeIdentifier = default(string))
+        public NodeInfo(XBeeAddress64 serialNumber, XBeeAddress16 networkAddress)
         {
             NetworkAddress = networkAddress;
             SerialNumber = serialNumber;
-            NodeIdentifier = nodeIdentifier;
+            NodeIdentifier = string.Empty;
+        }
+
+        public override string ToString()
+        {
+            return "S/N=" + SerialNumber
+                   + ", address=" + NetworkAddress
+                   + ", id='" + NodeIdentifier + "'";
         }
     }
 }

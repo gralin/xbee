@@ -218,6 +218,16 @@ namespace NETMF.OpenSource.XBee.Api
             }
         }
 
+        protected XBeeAddress16 GetNetworkAddress(XBeeAddress serialAddress)
+        {
+            if (!(serialAddress is XBeeAddress64))
+                throw new ArgumentException();
+
+            return _addressLookupEnabled && AddressLookup.Contains(serialAddress)
+                ? (XBeeAddress16)AddressLookup[serialAddress]
+                : XBeeAddress16.Unknown;
+        }
+
         // Creating requests
 
         public XBeeRequest CreateRequest(string payload, XBeeAddress destination)
@@ -234,13 +244,7 @@ namespace NETMF.OpenSource.XBee.Api
             if (!(destination is XBeeAddress64) || destination == null)
                 throw new ArgumentException("64 bit address expected", "destination");
 
-            var serialNumber = (XBeeAddress64) destination;
-
-            var networkAddress = AddressLookup.Contains(destination)
-                ? (XBeeAddress16)AddressLookup[destination]
-                : XBeeAddress16.Unknown;
-
-            return new Zigbee.TxRequest(serialNumber, networkAddress, payload) 
+            return new Zigbee.TxRequest((XBeeAddress64)destination, GetNetworkAddress(destination), payload) 
                 { FrameId = _idGenerator.GetNext() };
         }
 
@@ -269,11 +273,7 @@ namespace NETMF.OpenSource.XBee.Api
             if (destination is XBeeAddress16)
                 throw new ArgumentException("64 bit address expected", "destination");
 
-            var networkAddress = AddressLookup.Contains(destination)
-                        ? (XBeeAddress16) AddressLookup[destination]
-                        : XBeeAddress16.Unknown;
-
-            return new RemoteAtCommand(atCommand, (XBeeAddress64) destination, networkAddress, value) 
+            return new RemoteAtCommand(atCommand, (XBeeAddress64) destination, GetNetworkAddress(destination), value) 
                 { FrameId = _idGenerator.GetNext() };
         }
 

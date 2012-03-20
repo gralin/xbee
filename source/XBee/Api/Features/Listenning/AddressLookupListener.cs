@@ -50,8 +50,8 @@ namespace NETMF.OpenSource.XBee.Api
             else if (packet is NodeIdentificationResponse)
             {
                 var identPacket = packet as NodeIdentificationResponse;
-                _addressLookup[identPacket.SenderSerial] = identPacket.SenderAddress;
-                _addressLookup[identPacket.RemoteSerial] = identPacket.RemoteAddress;
+                _addressLookup[identPacket.Sender.SerialNumber] = identPacket.Sender.NetworkAddress;
+                _addressLookup[identPacket.Remote.SerialNumber] = identPacket.Remote.NetworkAddress;
             }
         }
     }

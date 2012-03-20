@@ -50,6 +50,8 @@ namespace PC.Tester
 
             // sending text messages
 
+            xbee.AddPacketListener(new JoiningNodesListener());
+
             xbee.DataReceived += (r,d,s) =>
                 Console.WriteLine("Received '" + Arrays.ToString(d) + "' from " + s);
 
@@ -61,7 +63,7 @@ namespace PC.Tester
                 if (key.Key != ConsoleKey.Enter)
                     return;
 
-                if (!SendText(xbee, new XBeeAddress64(0x0013A2004086AD25), "Hello world!"))
+                if (!SendText(xbee, XBeeAddress64.Broadcast, "Hello world!"))
                     Console.WriteLine("Failed to send message!");
             }
         }
@@ -76,6 +78,29 @@ namespace PC.Tester
         {
             var response = (TxStatusResponse)xbee.Send(message).To(destination).GetResponse();
             return response.DeliveryStatus == TxStatusResponse.DeliveryResult.Success;
+        }
+
+        private class JoiningNodesListener : IPacketListener
+        {
+            public bool Finished
+            {
+                get { return false; }
+            }
+
+            public void ProcessPacket(XBeeResponse packet)
+            {
+                if (!(packet is NodeIdentificationResponse))
+                    return;
+
+                var identPacket = packet as NodeIdentificationResponse;
+                Console.WriteLine(identPacket.NodeType + " joined! "
+                    + identPacket.Remote + ", parent=" + identPacket.ParentAddress);
+            }
+
+            public XBeeResponse[] GetPackets(int timeout)
+            {
+                throw new NotSupportedException();
+            }
         }
     }
 }
