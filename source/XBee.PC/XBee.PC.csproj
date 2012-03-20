@@ -73,6 +73,9 @@
     <Compile Include="..\XBee\Api\Common\NodeInfo.cs">
       <Link>Api\Common\NodeInfo.cs</Link>
     </Compile>
+    <Compile Include="..\XBee\Api\Common\ResetMode.cs">
+      <Link>Api\Common\ResetMode.cs</Link>
+    </Compile>
     <Compile Include="..\XBee\Api\Common\SaveSettings.cs">
       <Link>Api\Common\SaveSettings.cs</Link>
     </Compile>

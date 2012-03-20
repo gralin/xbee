@@ -196,6 +196,31 @@ namespace NETMF.OpenSource.XBee.Api
             return result;
         }
 
+        public void Reset(ResetMode mode = ResetMode.Software)
+        {
+            switch (mode)
+            {
+                case ResetMode.Software:
+                    var modemStatusFilter = new PacketTypeFilter(typeof(ModemStatusResponse));
+                    var response = Send2(Common.AtCmd.SoftwareReset).Use(modemStatusFilter).GetResponse();
+                    var modemStatus = ((ModemStatusResponse) response).ResponseStatus;
+                    if (modemStatus != ModemStatusResponse.Status.WatchdogTimerReset)
+                        throw new XBeeException("Unexpected modem status: " + modemStatus);
+                    break;
+
+                case ResetMode.RestoreDefaults:
+                    Send2(Common.AtCmd.RestoreDefaults).GetResponse();
+                    break;
+
+                case ResetMode.Network:
+                    if (Config.IsSeries1())
+                        throw new NotSupportedException("Series 1 has no network reset command");
+
+                    Send2(Common.AtCmd.NetworkReset).GetResponse();
+                    break;
+            }
+        }
+
         // New send methods idea
 
         public DataRequest Send2(string payload)

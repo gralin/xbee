@@ -11,7 +11,7 @@
         public enum Status : byte
         {
             HardwareReset = 0,
-            WatchdogTmerReset = 1,
+            WatchdogTimerReset = 1,
 
             /// <summary>
             /// Joined network (routers and end devices)

@@ -96,6 +96,24 @@ namespace NETMF.OpenSource.XBee.Api.Common
         /// MY.
         /// <para>Read the network address of the module.</para>
         /// </summary>
-        NetworkAddress = 0x4D59
+        NetworkAddress = 0x4D59,
+
+        /// <summary>
+        /// RE. 
+        /// <para>Restore module parameters to factory defaults.</para>
+        /// </summary>
+        RestoreDefaults = 0x5245,
+
+        /// <summary>
+        /// FR. 
+        /// <para>Reset module.</para>
+        /// </summary>
+        SoftwareReset = 0x4652,
+
+        /// <summary>
+        /// NR.
+        /// <para>Reset network layer parameters.</para>
+        /// </summary>
+        NetworkReset = 0x4E52,
     }
 }
