@@ -8,13 +8,13 @@ namespace NETMF.OpenSource.XBee.Api.Common
 
         public static string Read(XBee xbee)
         {
-            var request = xbee.Send2(AtCmd.NodeIdentifier);
+            var request = xbee.Send(AtCmd.NodeIdentifier);
             return Parse(request.GetResponse());
         }
 
         public static string Read(XBee sender, XBeeAddress remoteXbee)
         {
-            var request = sender.Send2(AtCmd.NodeIdentifier).To(remoteXbee);
+            var request = sender.Send(AtCmd.NodeIdentifier).To(remoteXbee);
             return Parse((AtResponse) request.GetResponse());
         }
 
@@ -29,7 +29,7 @@ namespace NETMF.OpenSource.XBee.Api.Common
         public static void Write(XBee xbee, string nodeIdentifier)
         {
             var value = Arrays.ToByteArray(nodeIdentifier, 0, MaxNodeIdentifierLength);
-            var response = xbee.Send2(AtCmd.NodeIdentifier, value).GetResponse();
+            var response = xbee.Send(AtCmd.NodeIdentifier, value).GetResponse();
 
             if (!response.IsOk)
                 throw new XBeeException("Failed to write node identifier");
@@ -38,7 +38,7 @@ namespace NETMF.OpenSource.XBee.Api.Common
         public static void Write(XBee sender, XBeeAddress remoteXbee, string nodeIdentifier)
         {
             var value = Arrays.ToByteArray(nodeIdentifier, 0, MaxNodeIdentifierLength);
-            var request = sender.Send2(AtCmd.NodeIdentifier, value).To(remoteXbee);
+            var request = sender.Send(AtCmd.NodeIdentifier, value).To(remoteXbee);
             var response = (AtResponse) request.GetResponse();
 
             if (!response.IsOk)

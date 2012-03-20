@@ -22,13 +22,13 @@ namespace NETMF.OpenSource.XBee.Api.Common
 
         public static HardwareVersions Read(XBee xbee)
         {
-            var request = xbee.Send2(AtCmd.HardwareVersion);
+            var request = xbee.Send(AtCmd.HardwareVersion);
             return Parse(request.GetResponse());
         }
 
         public static HardwareVersions Read(XBee sender, XBeeAddress remoteXBee)
         {
-            var request = sender.Send2(AtCmd.HardwareVersion).To(remoteXBee);
+            var request = sender.Send(AtCmd.HardwareVersion).To(remoteXBee);
             return Parse((AtResponse) request.GetResponse());
         }
 

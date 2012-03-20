@@ -6,13 +6,13 @@ namespace NETMF.OpenSource.XBee.Api.Common
     {
         public static string Read(XBee xbee)
         {
-            var request = xbee.Send2(AtCmd.FirmwareVersion);
+            var request = xbee.Send(AtCmd.FirmwareVersion);
             return Parse(request.GetResponse());
         }
 
         public static string Read(XBee sender, XBeeAddress remoteXbee)
         {
-            var request = sender.Send2(AtCmd.FirmwareVersion).To(remoteXbee);
+            var request = sender.Send(AtCmd.FirmwareVersion).To(remoteXbee);
             return Parse((AtResponse) request.GetResponse());
         }
 

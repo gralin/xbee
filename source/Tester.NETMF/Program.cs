@@ -34,8 +34,8 @@ namespace NETMF.Tester
 
             // reading network addresses of the connected modules
 
-            var xbee1Address = new XBeeAddress16(xbee1.Send(AtCmd.NetworkAddress).Value);
-            var xbee2Address = new XBeeAddress16(xbee2.Send(AtCmd.NetworkAddress).Value);
+            var xbee1Address = new XBeeAddress16(xbee1.Send(AtCmd.NetworkAddress).GetResponsePayload());
+            var xbee2Address = new XBeeAddress16(xbee2.Send(AtCmd.NetworkAddress).GetResponsePayload());
 
             Debug.Print("XBee 1 address: " + xbee1Address);
             Debug.Print("XBee 2 address: " + xbee2Address);
@@ -52,7 +52,7 @@ namespace NETMF.Tester
 
             try
             {
-                var remoteConfiguration = XBeeConfiguration.Read(xbee1, xbee2Address);
+                var remoteConfiguration = XBeeConfiguration.Read(xbee1, xbee2.Config.SerialNumber);
                 Debug.Print(remoteConfiguration.ToString());
             }
             catch (XBeeException e)

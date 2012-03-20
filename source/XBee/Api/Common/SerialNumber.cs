@@ -6,15 +6,15 @@ namespace NETMF.OpenSource.XBee.Api.Common
     {
         public static XBeeAddress64 Read(XBee xbee)
         {
-            var sh = xbee.Send2(AtCmd.SerialNumberHigh).GetResponse();
-            var sl = xbee.Send2(AtCmd.SerialNumberLow).GetResponse();
+            var sh = xbee.Send(AtCmd.SerialNumberHigh).GetResponse();
+            var sl = xbee.Send(AtCmd.SerialNumberLow).GetResponse();
             return Parse(sl, sh);
         }
 
         public static XBeeAddress64 Read(XBee sender, XBeeAddress remoteXbee)
         {
-            var sh = sender.Send2(AtCmd.SerialNumberHigh).To(remoteXbee).GetResponse();
-            var sl = sender.Send2(AtCmd.SerialNumberLow).To(remoteXbee).GetResponse();
+            var sh = sender.Send(AtCmd.SerialNumberHigh).To(remoteXbee).GetResponse();
+            var sl = sender.Send(AtCmd.SerialNumberLow).To(remoteXbee).GetResponse();
             return Parse((AtResponse)sl, (AtResponse)sh);
         }
 

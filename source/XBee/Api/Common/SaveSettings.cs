@@ -4,13 +4,13 @@
     {
         public static void Write(XBee xbee)
         {
-            var request = xbee.Send2(AtCmd.Write);
+            var request = xbee.Send(AtCmd.Write);
             Parse(request.GetResponse());
         }
 
         public static void Write(XBee sender, XBeeAddress remoteXbee)
         {
-            var request = sender.Send2(AtCmd.Write).To(remoteXbee);
+            var request = sender.Send(AtCmd.Write).To(remoteXbee);
             Parse((AtResponse) request.GetResponse());
         }
 

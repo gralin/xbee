@@ -19,13 +19,13 @@ namespace NETMF.OpenSource.XBee.Api.Common
 
         public static ApiModes Read(XBee xbee)
         {
-            var request = xbee.Send2(AtCmd.ApiEnable);
+            var request = xbee.Send(AtCmd.ApiEnable);
             return Parse(request.GetResponse());
         }
 
         public static ApiModes Read(XBee sender, XBeeAddress remoteXbee)
         {
-            var request = sender.Send2(AtCmd.ApiEnable).To(remoteXbee);
+            var request = sender.Send(AtCmd.ApiEnable).To(remoteXbee);
             return Parse((AtResponse) request.GetResponse());
         }
 
@@ -39,7 +39,7 @@ namespace NETMF.OpenSource.XBee.Api.Common
 
         public static void Write(XBee xbee, ApiModes mode)
         {
-            var request = xbee.Send2(AtCmd.ApiEnable, new[] {(byte) mode});
+            var request = xbee.Send(AtCmd.ApiEnable, new[] {(byte) mode});
             var response = request.GetResponse();
 
             if (!response.IsOk)
@@ -48,7 +48,7 @@ namespace NETMF.OpenSource.XBee.Api.Common
 
         public static void Write(XBee sender, XBeeAddress remoteXbee, ApiModes mode)
         {
-            var request = sender.Send2(AtCmd.ApiEnable, new[] {(byte) mode}).To(remoteXbee);
+            var request = sender.Send(AtCmd.ApiEnable, new[] {(byte) mode}).To(remoteXbee);
             var response = (AtResponse) request.GetResponse();
 
             if (!response.IsOk)

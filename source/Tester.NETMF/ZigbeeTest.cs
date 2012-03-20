@@ -39,13 +39,13 @@ namespace NETMF.Tester
             coordinator.DataReceived += OnDataReceived;
             router.DataReceived += OnDataReceived;
 
-            router.Send("Hello coordinator", coordinator.Config.SerialNumber);
-            coordinator.Send("Hello router", router.Config.SerialNumber);
+            router.Send("Hello coordinator").To(coordinator.Config.SerialNumber).NoResponse();
+            coordinator.Send("Hello router").To(router.Config.SerialNumber).NoResponse();
 
             // reading supply voltage
 
-            var voltage1 = UshortUtils.ToUshort(coordinator.Send(AtCmd.SupplyVoltage).Value);
-            var voltage2 = UshortUtils.ToUshort(router.Send(AtCmd.SupplyVoltage).Value);
+            var voltage1 = UshortUtils.ToUshort(coordinator.Send(AtCmd.SupplyVoltage).GetResponsePayload());
+            var voltage2 = UshortUtils.ToUshort(router.Send(AtCmd.SupplyVoltage).GetResponsePayload());
             var voltage1Volts = AdcHelper.ToMilliVolts(voltage1) / 1000.0;
             var voltage2Volts = AdcHelper.ToMilliVolts(voltage1) / 1000.0;
 
@@ -55,7 +55,7 @@ namespace NETMF.Tester
 
         private static int GetRssi(XBee xbee)
         {
-            var response = xbee.Send(AtCmd.ReceivedSignalStrength);
+            var response = xbee.Send(AtCmd.ReceivedSignalStrength).GetResponse();
             return -1 * response.Value[0];
         }
 

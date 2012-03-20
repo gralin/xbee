@@ -167,14 +167,14 @@ namespace NETMF.OpenSource.XBee.Api
 
         public NodeInfo[] DiscoverNodes()
         {
-            var timeoutResponse = Send2(Common.AtCmd.NodeDiscoverTimeout).GetResponse();
+            var timeoutResponse = Send(Common.AtCmd.NodeDiscoverTimeout).GetResponse();
             int timeout = UshortUtils.ToUshort(timeoutResponse.Value);
 
             // ms + 1 extra second
             timeout = timeout * 100 + 1000;
 
             var filter = new NodeDiscoveryFilter();
-            var request = Send2(Common.AtCmd.NodeDiscover).Use(filter).Timeout(timeout);
+            var request = Send(Common.AtCmd.NodeDiscover).Use(filter).Timeout(timeout);
             var responses = request.GetResponses();
             var result = new NodeInfo[responses.Length];
 
@@ -199,21 +199,21 @@ namespace NETMF.OpenSource.XBee.Api
             {
                 case ResetMode.Software:
                     var modemStatusFilter = new PacketTypeFilter(typeof(ModemStatusResponse));
-                    var response = Send2(Common.AtCmd.SoftwareReset).Use(modemStatusFilter).GetResponse();
+                    var response = Send(Common.AtCmd.SoftwareReset).Use(modemStatusFilter).GetResponse();
                     var modemStatus = ((ModemStatusResponse) response).ResponseStatus;
                     if (modemStatus != ModemStatusResponse.Status.WatchdogTimerReset)
                         throw new XBeeException("Unexpected modem status: " + modemStatus);
                     break;
 
                 case ResetMode.RestoreDefaults:
-                    Send2(Common.AtCmd.RestoreDefaults).GetResponse();
+                    Send(Common.AtCmd.RestoreDefaults).GetResponse();
                     break;
 
                 case ResetMode.Network:
                     if (Config.IsSeries1())
                         throw new NotSupportedException("Series 1 has no network reset command");
 
-                    Send2(Common.AtCmd.NetworkReset).GetResponse();
+                    Send(Common.AtCmd.NetworkReset).GetResponse();
                     break;
             }
         }
@@ -285,43 +285,43 @@ namespace NETMF.OpenSource.XBee.Api
 
         // Sending requests
 
-        public DataRequest Send2(string payload)
+        public DataRequest Send(string payload)
         {
             _dataRequest.Init(payload);
             return _dataRequest;
         }
 
-        public DataRequest Send2(params byte[] payload)
+        public DataRequest Send(params byte[] payload)
         {
             _dataRequest.Init(payload);
             return _dataRequest;
         }
 
-        public AtRequest Send2(Common.AtCmd atCommand, params byte[] value)
+        public AtRequest Send(Common.AtCmd atCommand, params byte[] value)
         {
             _atRequest.Init((ushort)atCommand, value);
             return _atRequest;
         }
 
-        public AtRequest Send2(Wpan.AtCmd atCommand, params byte[] value)
+        public AtRequest Send(Wpan.AtCmd atCommand, params byte[] value)
         {
             _atRequest.Init((ushort)atCommand, value);
             return _atRequest;
         }
 
-        public AtRequest Send2(Zigbee.AtCmd atCommand, params byte[] value)
+        public AtRequest Send(Zigbee.AtCmd atCommand, params byte[] value)
         {
             _atRequest.Init((ushort)atCommand, value);
             return _atRequest;
         }
 
-        public RawRequest Send2(XBeeRequest request)
+        public RawRequest Send(XBeeRequest request)
         {
             _rawRequest.Init(request);
             return _rawRequest;
         }
 
-        public DataDelegateRequest Send2(PayloadDelegate payloadDelegate)
+        public DataDelegateRequest Send(PayloadDelegate payloadDelegate)
         {
             _dataDelegateRequest.Init(payloadDelegate);
             return _dataDelegateRequest;

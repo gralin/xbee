@@ -1,4 +1,6 @@
-﻿namespace NETMF.OpenSource.XBee.Api.Zigbee
+﻿using System;
+
+namespace NETMF.OpenSource.XBee.Api.Zigbee
 {
     /// <summary>
     /// Series 2 XBee.  This is sent out the UART of the transmitting XBee immediately following
@@ -68,12 +70,12 @@
             MessageUnrequested = 0x75
         }
 
+        [Flags]
         public enum DiscoveryResult
         {
             NoOverhead = 0x00,
             Address = 0x01,
             Route = 0x02,
-            AddressAndRoute = 0x03,
             ExtendedTimeout = 0x40
         }
 

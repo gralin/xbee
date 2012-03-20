@@ -10,15 +10,15 @@ namespace NETMF.Tester
     {
         public static void Run(XBee xbee1, XBee xbee2)
         {
-            Debug.Print("XBee 1: " + (xbee1.Send(AtCmd.CoordinatorEnable).Value[0] > 0 ? "coordinator" : "end device"));
-            Debug.Print("XBee 2: " + (xbee2.Send(AtCmd.CoordinatorEnable).Value[0] > 0 ? "coordinator" : "end device"));
+            Debug.Print("XBee 1: " + (xbee1.Send(AtCmd.CoordinatorEnable).GetResponsePayload()[0] > 0 ? "coordinator" : "end device"));
+            Debug.Print("XBee 2: " + (xbee2.Send(AtCmd.CoordinatorEnable).GetResponsePayload()[0] > 0 ? "coordinator" : "end device"));
             
             Debug.Print("Performing energy scan...");
-            var result = xbee1.Send(AtCmd.EnergyScan, new byte[] { 3 }).Value;
+            var result = xbee1.Send(AtCmd.EnergyScan, new byte[] { 3 }).GetResponsePayload();
             for (var i = 0; i < result.Length; i++)
                 Debug.Print("Channel " + (i + 0x0B) + ": " + result[i] + "-dBi");
 
-            Debug.Print("Active channel: " + xbee1.Send(AtCmd.Channel).Value[0]);
+            Debug.Print("Active channel: " + xbee1.Send(AtCmd.Channel).GetResponsePayload()[0]);
 
             // disovering nodes
 
@@ -65,8 +65,8 @@ namespace NETMF.Tester
             xbee1.AddPacketListener(listener);
             xbee2.AddPacketListener(listener);
 
-            xbee1.SendNoReply(AtCmd.ForceSample);
-            xbee2.SendNoReply(AtCmd.ForceSample);
+            xbee1.Send(AtCmd.ForceSample).NoResponse();
+            xbee2.Send(AtCmd.ForceSample).NoResponse();
 
             var packets = listener.GetPackets(5000);
 
@@ -94,13 +94,13 @@ namespace NETMF.Tester
 
             const string message1 = "serial unicast";
             Debug.Print(xbee1Address + " -> " + xbee2Serial + " (" + message1 + ")");
-            xbee1.Send(message1, xbee2Serial);
+            xbee1.Send(message1).To(xbee2Serial).NoResponse();
 
             Thread.Sleep(1000);
 
             const string message2 = "address unicast";
             Debug.Print(xbee2Address + " -> " + xbee1Address + " (" + message2 + ")");
-            xbee2.Send(message2, xbee1Address);
+            xbee2.Send(message2).To(xbee1Address).NoResponse();
 
             Thread.Sleep(1000);
 
@@ -108,23 +108,25 @@ namespace NETMF.Tester
 
             const string message3 = "serial broadcast";
             Debug.Print(xbee1Address + " -> " + XBeeAddress64.Broadcast + " (" + message3 + ")");
-            xbee1.SendNoReply(message3, XBeeAddress64.Broadcast);
+            xbee1.Send(message3).To(XBeeAddress64.Broadcast).NoResponse();
 
             Thread.Sleep(1000);
 
             const string message4 = "address broadcast";
             Debug.Print(xbee1Address + " -> "+ XBeeAddress16.Broadcast + " (" + message4 + ")");
-            xbee1.SendNoReply(message4, XBeeAddress16.Broadcast);
+            xbee1.Send(message4).To(XBeeAddress16.Broadcast).NoResponse();
         }
 
         private static void SetAddress(XBee xbee, XBeeAddress16 address)
         {
-            xbee.Send(AtCmd.SourceAddress, (address as XBeeAddress).Address);
+            var request = xbee.Send(AtCmd.SourceAddress, (address as XBeeAddress).Address);
+            request.GetResponse();
         }
 
         private static XBeeAddress16 GetAddress(XBee xbee)
         {
-            return new XBeeAddress16(xbee.Send(AtCmd.SourceAddress).Value);
+            var request = xbee.Send(AtCmd.SourceAddress);
+            return new XBeeAddress16(request.GetResponsePayload());
         }
 
         private static void OnDataReceived(XBee receiver, byte[] data, XBeeAddress sender)
