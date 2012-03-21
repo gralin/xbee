@@ -115,5 +115,12 @@ namespace NETMF.OpenSource.XBee.Api.Common
         /// <para>Reset network layer parameters.</para>
         /// </summary>
         NetworkReset = 0x4E52,
+
+        /// <summary>
+        /// AC.
+        /// <para>Applies changes to all command registers causing queued command 
+        /// register values to be applied.</para>
+        /// </summary>
+        ApplyChanges = 0x4143
     }
 }
