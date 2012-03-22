@@ -28,8 +28,8 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         public override string ToString()
         {
             return base.ToString() +
-                   ",sourceEndpoint=" + ByteUtils.ToBase16(SourceEndpoint) +
-                   ",destinationEndpoint=" + ByteUtils.ToBase16(DestinationEndpoint) +
+                   ",srcEndpoint=" + ByteUtils.ToBase16(SourceEndpoint) +
+                   ",dstEndpoint=" + ByteUtils.ToBase16(DestinationEndpoint) +
                    ",clusterId=" + ByteUtils.ToBase16(ClusterId) +
                    ",profileId=" + ByteUtils.ToBase16(ProfileId);
         }

@@ -70,37 +70,6 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
             Option = 0;
         }
 
-        protected OutputStream GetFrameDataAsIntArrayOutputStream()
-        {
-            if (MaxPayloadSize > 0 && Payload.Length > MaxPayloadSize)
-                throw new ArgumentException("Payload exceeds user-defined maximum payload size of " 
-                    + MaxPayloadSize + " bytes. Please package into multiple packets");
-
-            var output = new OutputStream();
-        
-            // api id
-		    output.Write((byte) ApiId); 
-		
-		    // frame id (arbitrary byte that will be sent back with ack)
-            output.Write(FrameId);
-		
-		    // add 64-bit dest address
-            output.Write(DestinationSerial.Address);
-		
-		    // add 16-bit dest address
-            output.Write(DestinationAddress.Address);
-		
-		    // write broadcast radius
-            output.Write(BroadcastRadius);
-		
-		    // write options byte
-            output.Write((byte) Option);
-
-            output.Write(Payload);
-
-            return output;
-        }
-
         public override ApiId ApiId
         {
             get { return ApiId.ZnetTxRequest; }
@@ -108,7 +77,47 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
 
         public override byte[] GetFrameData()
         {
-            return GetFrameDataAsIntArrayOutputStream().ToArray();
+            if (MaxPayloadSize > 0 && Payload.Length > MaxPayloadSize)
+                throw new ArgumentException("Payload exceeds user-defined maximum payload size of "
+                    + MaxPayloadSize + " bytes. Please package into multiple packets");
+
+            var output = new OutputStream();
+
+            GetFrameHeader(output);
+            GetFrameOptions(output);
+            GetFramePayload(output);
+
+            return output.ToArray();
+        }
+
+        protected virtual void GetFrameHeader(OutputStream output)
+        {
+            // api id
+            output.Write((byte)ApiId);
+
+            // frame id (arbitrary byte that will be sent back with ack)
+            output.Write(FrameId);
+
+            // add 64-bit dest address
+            output.Write(DestinationSerial.Address);
+
+            // add 16-bit dest address
+            output.Write(DestinationAddress.Address);
+        }
+
+        protected virtual void GetFrameOptions(OutputStream output)
+        {
+            // write broadcast radius
+            output.Write(BroadcastRadius);
+
+            // write options byte
+            output.Write((byte)Option);
+        }
+
+        protected virtual void GetFramePayload(OutputStream output)
+        {
+            // write frame payload
+            output.Write(Payload);
         }
 
         public override string ToString()

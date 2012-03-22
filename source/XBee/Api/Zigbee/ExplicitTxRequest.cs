@@ -11,7 +11,7 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
     {
         public enum Endpoint
         {
-            ZdoEndpoint = 0,
+            ZigbeeDeviceObject = 0,
             Command = 0xe6,
             Data = 0xe8
         }
@@ -45,41 +45,18 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
             ProfileId = profileId;
         }
 
-        public override byte[] GetFrameData()
+        protected override void GetFrameHeader(OutputStream output)
         {
-            // get frame id from tx request
-            var frameData = GetFrameDataAsIntArrayOutputStream();
-
-            // api id
-            frameData.Write((byte)ApiId);
-
-            // frame id (arbitrary byte that will be sent back with ack)
-            frameData.Write(FrameId);
-
-            // add 64-bit dest address
-            frameData.Write(DestinationSerial.Address);
-
-            // add 16-bit dest address
-            frameData.Write(DestinationAddress.Address);
+            base.GetFrameHeader(output);
 
             // source endpoint
-            frameData.Write(SourceEndpoint);
+            output.Write(SourceEndpoint);
             // dest endpoint
-            frameData.Write(DestinationEndpoint);
+            output.Write(DestinationEndpoint);
             // cluster id
-            frameData.Write(ClusterId);
+            output.Write(ClusterId);
             // profile id
-            frameData.Write(ProfileId);
-
-            // write broadcast radius
-            frameData.Write(BroadcastRadius);
-
-            // write options byte
-            frameData.Write((byte)Option);
-
-            frameData.Write(Payload);
-
-            return frameData.ToArray();
+            output.Write(ProfileId);
         }
 
         public override ApiId ApiId
