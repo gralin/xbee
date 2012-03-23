@@ -114,6 +114,7 @@
     <Compile Include="Api\Zigbee\ExplicitTxRequest.cs" />
     <Compile Include="Api\Zigbee\NodeIdentificationResponse.cs" />
     <Compile Include="Api\Zigbee\IoSampleResponse.cs" />
+    <Compile Include="Api\Zigbee\ProfileId.cs" />
     <Compile Include="Api\Zigbee\RxResponse.cs" />
     <Compile Include="Api\Zigbee\RxResponseBase.cs" />
     <Compile Include="Api\Zigbee\TxRequest.cs" />

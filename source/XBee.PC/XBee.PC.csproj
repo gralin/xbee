@@ -289,6 +289,9 @@
     <Compile Include="..\XBee\Api\Zigbee\NodeType.cs">
       <Link>Api\Zigbee\NodeType.cs</Link>
     </Compile>
+    <Compile Include="..\XBee\Api\Zigbee\ProfileId.cs">
+      <Link>Api\Zigbee\ProfileId.cs</Link>
+    </Compile>
     <Compile Include="..\XBee\Api\Zigbee\RxResponse.cs">
       <Link>Api\Zigbee\RxResponse.cs</Link>
     </Compile>
