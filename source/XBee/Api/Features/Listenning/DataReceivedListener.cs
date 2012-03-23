@@ -25,6 +25,18 @@ namespace NETMF.OpenSource.XBee.Api
             }
             else if (packet is Zigbee.RxResponse)
             {
+                if (packet is Zigbee.ExplicitRxResponse)
+                {
+                    var profileId = (packet as Zigbee.ExplicitRxResponse).ProfileId;
+                    var clusterId = (packet as Zigbee.ExplicitRxResponse).ClusterId;
+
+                    // if module AtCmd.ApiOptions has been set to value other than default (0)
+                    // received API frames will be transported using explicit frames
+                    // those frames have profile id set to Zigbee.ProfileId.Digi and cluster id to ApiId
+                    if (profileId != (ushort)Zigbee.ProfileId.Digi || clusterId != (ushort)ApiId.ZnetTxRequest)
+                        return;
+                }
+
                 var response = packet as Zigbee.RxResponse;
                 _xbee.NotifyDataReceived(response.Payload, response.SourceSerial);
             }
