@@ -14,9 +14,8 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
     {
         public byte[] Payload { get; set; }
 
-        public override void Parse(IPacketParser parser)
+        protected override void ParseFramePayload(IPacketParser parser)
         {
-            base.Parse(parser);
             Payload = parser.ReadRemainingBytes();	
         }
 

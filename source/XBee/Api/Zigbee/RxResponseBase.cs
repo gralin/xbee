@@ -19,10 +19,23 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
 
         public override void Parse(IPacketParser parser)
         {
+            ParseFrameHeader(parser);
+            ParseFrameOptions(parser);
+            ParseFramePayload(parser);
+        }
+
+        protected virtual void ParseFrameHeader(IPacketParser parser)
+        {
             SourceSerial = parser.ParseAddress64();
             SourceAddress = parser.ParseAddress16();
+        }
+
+        protected virtual void ParseFrameOptions(IPacketParser parser)
+        {
             Option = (Options)parser.Read("ZNet RX Option");
         }
+
+        protected abstract void ParseFramePayload(IPacketParser parser);
 
         public override string ToString()
         {

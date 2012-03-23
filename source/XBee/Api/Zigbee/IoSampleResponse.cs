@@ -60,18 +60,7 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
 		    return sample;
 	    }
 
-        public override void Parse(IPacketParser parser)
-        {
-            base.Parse(parser);
-            ParseIoSample(parser);
-        }
-
-        /// <summary>
-        /// This method is a bit non standard since it needs to parse an IO sample
-        /// from either a RX response or a Remote AT/Local AT response (IS).
-        /// </summary>
-        /// <param name="parser"></param>
-        public void ParseIoSample(IPacketParser parser)
+        protected override void ParseFramePayload(IPacketParser parser)
         {
             // eat sample size.. always 1
             var size = parser.Read("ZNet RX IO Sample Size");
@@ -90,7 +79,7 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
 
             if (ContainsDigital)
                 Digital = UshortUtils.ToUshort(parser.Read("ZNet RX IO DIO MSB"),
-                                               parser.Read("ZNet RX IO DIO LSB"));  
+                                               parser.Read("ZNet RX IO DIO LSB"));
 
             // parse 10-bit analog values
 

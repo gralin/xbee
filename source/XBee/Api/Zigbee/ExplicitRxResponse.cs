@@ -13,16 +13,14 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         public ushort ClusterId { get; set; }
         public ushort ProfileId { get; set; }
 
-        public override void Parse(IPacketParser parser)
+        protected override void ParseFrameHeader(IPacketParser parser)
         {
-            SourceSerial = parser.ParseAddress64();
-            SourceAddress = parser.ParseAddress16();
+            base.ParseFrameHeader(parser);
+
             SourceEndpoint = parser.Read("Reading Source Endpoint");
             DestinationEndpoint = parser.Read("Reading Destination Endpoint");
             ClusterId = UshortUtils.ToUshort(parser.Read("Reading Cluster Id MSB"), parser.Read("Reading Cluster Id LSB"));
             ProfileId = UshortUtils.ToUshort(parser.Read("Reading Profile Id MSB"), parser.Read("Reading Profile Id LSB"));
-            Option = (Options)parser.Read("ZNet RX Option");
-            Payload = parser.ReadRemainingBytes();
         }
 
         public override string ToString()

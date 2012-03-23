@@ -32,9 +32,22 @@ namespace NETMF.OpenSource.XBee.Api
 
                     // if module AtCmd.ApiOptions has been set to value other than default (0)
                     // received API frames will be transported using explicit frames
-                    // those frames have profile id set to Zigbee.ProfileId.Digi and cluster id to ApiId
-                    if (profileId != (ushort)Zigbee.ProfileId.Digi || clusterId != (ushort)ApiId.ZnetTxRequest)
+                    // those frames have profile id set to Zigbee.ProfileId.Digi
+                    if (profileId != (ushort)Zigbee.ProfileId.Digi)
                         return;
+
+                    // cluster id will be set to ApiId value
+                    switch ((ApiId)clusterId)
+                    {
+                        case ApiId.TxRequest16:
+                        case ApiId.TxRequest64:
+                        case ApiId.ZnetTxRequest:
+                        case ApiId.ZnetExplicitTxRequest:
+                            break;
+
+                        default:
+                            return;
+                    }
                 }
 
                 var response = packet as Zigbee.RxResponse;

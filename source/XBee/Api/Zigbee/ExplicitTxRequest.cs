@@ -21,15 +21,31 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         public ushort ClusterId { get; set; }
         public ushort ProfileId { get; set; }
 
-        public static ushort ZnetProfileId = 0xC105;
-        public static ushort ZdoProfileId = 0x0000;
-
-        // this is one big ctor ;)
-
-        public ExplicitTxRequest(XBeeAddress64 destSerial, XBeeAddress16 destAddress, byte[] payload, byte srcEndpoint, byte destEndpoint, ushort clusterId, ushort profileId) 
-            : base(destSerial, payload)
+        public ExplicitTxRequest(XBeeAddress destination, byte[] payload, byte srcEndpoint, byte destEndpoint, ushort clusterId, ushort profileId)
+            : this(payload, srcEndpoint, destEndpoint, clusterId, profileId)
         {
+            if (destination is XBeeAddress16)
+            {
+                DestinationSerial = XBeeAddress64.Broadcast;
+                DestinationAddress = (XBeeAddress16)destination;
+            }
+            else
+            {
+                DestinationSerial = (XBeeAddress64)destination;
+                DestinationAddress = XBeeAddress16.Unknown;
+            }
+        }
+
+        public ExplicitTxRequest(XBeeAddress64 destSerial, XBeeAddress16 destAddress, byte[] payload, byte srcEndpoint, byte destEndpoint, ushort clusterId, ushort profileId)
+            : this(payload, srcEndpoint, destEndpoint, clusterId, profileId)
+        {
+            DestinationSerial = destSerial;
             DestinationAddress = destAddress;
+        }
+
+        protected ExplicitTxRequest(byte[] payload, byte srcEndpoint, byte destEndpoint, ushort clusterId, ushort profileId)
+            : base(payload)
+        {
             SourceEndpoint = srcEndpoint;
             DestinationEndpoint = destEndpoint;
             ClusterId = clusterId;
@@ -40,13 +56,9 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         {
             base.GetFrameHeader(output);
 
-            // source endpoint
             output.Write(SourceEndpoint);
-            // dest endpoint
             output.Write(DestinationEndpoint);
-            // cluster id
             output.Write(ClusterId);
-            // profile id
             output.Write(ProfileId);
         }
 
@@ -58,10 +70,10 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         public override string ToString()
         {
             return base.ToString() +
-                ",sourceEndpoint=" + ByteUtils.ToBase16(SourceEndpoint) +
-                ",destinationEndpoint=" + ByteUtils.ToBase16(DestinationEndpoint) +
-                ",clusterId=" + ByteUtils.ToBase16(ClusterId) +
-                ",profileId=" + ByteUtils.ToBase16(ProfileId);
+                ",srcEndpoint=" + ByteUtils.ToBase16(SourceEndpoint) +
+                ",dstEndpoint=" + ByteUtils.ToBase16(DestinationEndpoint) +
+                ",cluster=" + ByteUtils.ToBase16(ClusterId) +
+                ",profile=" + ByteUtils.ToBase16(ProfileId);
         }
     }
 }

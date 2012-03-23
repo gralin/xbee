@@ -92,31 +92,20 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
 
         protected virtual void GetFrameHeader(OutputStream output)
         {
-            // api id
             output.Write((byte)ApiId);
-
-            // frame id (arbitrary byte that will be sent back with ack)
             output.Write(FrameId);
-
-            // add 64-bit dest address
             output.Write(DestinationSerial.Address);
-
-            // add 16-bit dest address
             output.Write(DestinationAddress.Address);
         }
 
         protected virtual void GetFrameOptions(OutputStream output)
         {
-            // write broadcast radius
             output.Write(BroadcastRadius);
-
-            // write options byte
             output.Write((byte)Option);
         }
 
         protected virtual void GetFramePayload(OutputStream output)
         {
-            // write frame payload
             output.Write(Payload);
         }
 
