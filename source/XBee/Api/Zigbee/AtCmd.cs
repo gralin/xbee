@@ -1,3 +1,5 @@
+using NETMF.OpenSource.XBee.Api.Common;
+
 namespace NETMF.OpenSource.XBee.Api.Zigbee
 {
     /// <summary>
@@ -14,8 +16,7 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         #region Adressing
 
         /// <summary>
-        /// DH.
-        /// <para>Set/Read the upper 32 bits of the 64-bit destination address.</para>
+        /// Set/Read the upper 32 bits of the 64-bit destination address.
         /// </summary>
         /// <remarks>
         /// When combined with DL, it defines the destination address used for transmission. 
@@ -26,11 +27,11 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: 0.</para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+        [AtString("DH")]
         DestinationAddressHigh = 0x4448,
 
         /// <summary>
-        /// DL.
-        /// <para>Set/Read the lower 32 bits of the 64-bit destination address.</para>
+        /// Set/Read the lower 32 bits of the 64-bit destination address.
         /// </summary>
         /// <remarks>
         /// When combined with DH, DL defines the destination address used for transmission. 
@@ -41,11 +42,11 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: 0xFFFF(Coordinator), 0 (Router/End Device).</para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+        [AtString("DL")]
         DestinationAddressLow = 0x444C,
 
         /// <summary>
-        /// MY.
-        /// <para>Read the 16-bit network address of the module.</para>
+        /// Read the 16-bit network address of the module.
         /// </summary>
         /// <remarks>
         /// A value of 0xFFFE means the module has not joined a ZigBee network.
@@ -53,11 +54,11 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: 0xFFFE.</para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+        [AtString("MY")]
         NetworkAddress = 0x4D59,
 
         /// <summary>
-        /// MP.
-        /// <para>Read the 16-bit network address of the module's parent.</para>
+        /// Read the 16-bit network address of the module's parent.
         /// </summary>
         /// <remarks>
         /// A value of 0xFFFE means the module does not have a parent.
@@ -65,11 +66,11 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: 0xFFFE.</para>
         /// <para>Applicable: End Device.</para>
         /// </remarks>
+        [AtString("MP")]
         ParentAddress = 0x4D50,
 
         /// <summary>
-        /// NC.
-        /// <para>Read the number of end device children that can join the device.</para>
+        /// Read the number of end device children that can join the device.
         /// </summary>
         /// <remarks>
         /// If NC returns 0, then the device cannot allow any more end device children to join.
@@ -77,33 +78,33 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: read-only.</para>
         /// <para>Applicable: Coordinator, Router.</para>
         /// </remarks>
+        [AtString("NC")]
         NumberOfRemainingChildren = 0x4E43,
 
         /// <summary>
-        /// SH.
-        /// <para>Read the high 32 bits of the module's unique 64-bit address.</para>
+        /// Read the high 32 bits of the module's unique 64-bit address.
         /// </summary>
         /// <remarks>
         /// <para>Range: 0 - 0xFFFFFFFF É[read-only].</para>
         /// <para>Default: factory-set.</para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+		[AtString("SH")]
         SerialNumberHigh = 0x5348,
 
         /// <summary>
-        /// SL.
-        /// <para>Read the low 32 bits of the module's unique 64-bit address.</para>
+        /// Read the low 32 bits of the module's unique 64-bit address.
         /// </summary>
         /// <remarks>
         /// <para>Range: 0 - 0xFFFFFFFF É[read-only].</para>
         /// <para>Default: factory-set.</para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+        [AtString("SL")]
         SerialNumberLow = 0x534C,
 
         /// <summary>
-        /// NI.
-        /// <para>Set/read a string identifier</para>
+        /// Set/read a string identifier.
         /// </summary>
         /// <remarks>
         /// The register only accepts printable ASCII data. 
@@ -117,11 +118,11 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: ASCII space character (0x20).</para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+        [AtString("NI")]
         NodeIdentifier = 0x4E49,
 
         /// <summary>
-        /// SE.
-        /// <para>Set/read the ZigBee application layer source endpoint value.</para>
+        /// Set/read the ZigBee application layer source endpoint value.
         /// </summary>
         /// <remarks>
         /// This value will be used as the source endpoint for all data transmissions. 
@@ -131,11 +132,11 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: 0xE8.</para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+        [AtString("SE")]
         SourceEndpoint = 0x5345,
 
         /// <summary>
-        /// DE.
-        /// <para>Set/read Zigbee application layer destination ID value.</para>
+        /// Set/read Zigbee application layer destination ID value.
         /// </summary>
         /// <remarks>
         /// This value will be used as the destination endpoint all data transmissions. 
@@ -145,11 +146,11 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: 0xE8.</para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+        [AtString("DE")]
         DestinationEndpoint = 0x4445,
 
         /// <summary>
-        /// CI.
-        /// <para>Set/read Zigbee application layer cluster ID value.</para>
+        /// Set/read Zigbee application layer cluster ID value.
         /// </summary>
         /// <remarks>
         /// This value will be used as the cluster ID for all data transmissions. 
@@ -159,11 +160,11 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: 0x11.</para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+        [AtString("CI")]
         ClusterIdentifier = 0x4349,
 
         /// <summary>
-        /// NP.
-        /// <para>This value returns the maximum number of RF payload bytes that can be sent in a unicast transmission.</para>
+        /// This value returns the maximum number of RF payload bytes that can be sent in a unicast transmission.
         /// </summary>
         /// <remarks>
         /// If APS encryption is used (API transmit option bit enabled), the maximum payload size is reduced by 9 bytes. 
@@ -173,11 +174,11 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: [read-only].</para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+        [AtString("NP")]
         MaxRFPayloadBytes = 0x4E50,
 
         /// <summary>
-        /// DD.
-        /// <para>Stores a device type value</para>
+        /// Stores a device type value.
         /// </summary>
         /// <remarks>
         /// This value can be used to differentiate different XBee-based devices. 
@@ -187,6 +188,7 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
         /// <returns><see cref="DeviceType"/></returns>
+        [AtString("DD")]
         DeviceTypeIdentifier = 0x4444,
 
         #endregion
@@ -194,8 +196,7 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         #region Networking
 
         /// <summary>
-        /// CH.
-        /// <para>Set/Read the channel number used for transmitting and receiving data between RF modules</para>
+        /// Set/Read the channel number used for transmitting and receiving data between RF modules.
         /// </summary>
         /// <remarks>
         /// Uses 802.15.4 channel numbers. A value of 0 means the device 
@@ -208,20 +209,20 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: [read-only].</para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+        [AtString("CH")]
         OperatingChannel = 0x4348,
 
         /// <summary>
-        /// DA.
-        /// <para>End device will immediately disassociate from a Coordinator (if associated) and reattempt to associate.</para>
+        /// End device will immediately disassociate from a Coordinator (if associated) and reattempt to associate.
         /// </summary>
         /// <remarks>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+        [AtString("DA")]
         ForceDisassociation = 0x4441,
 
         /// <summary>
-        /// ID. 
-        /// <para>Set/read the 64-bit extended PAN ID.</para>
+        /// Set/read the 64-bit extended PAN ID.
         /// </summary>
         /// <remarks>
         /// If set to 0, the coordinator will select a random extended PAN ID, 
@@ -232,11 +233,11 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: 0.</para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+        [AtString("ID")]
         ExtendedPanId = 0x4944,
 
         /// <summary>
-        /// OP.
-        /// <para>Read the 64-bit extended PAN ID</para>
+        /// Read the 64-bit extended PAN ID.
         /// </summary>
         /// <remarks>
         /// The OP value reflects the operating extended PAN ID that the module is running on. 
@@ -245,11 +246,11 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: [read-only].</para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+        [AtString("OP")]
         OperatingExtendedPanId = 0x4F50,
 
         /// <summary>
-        /// NH.
-        /// <para>Set / read the maximum hops limit.</para>
+        /// Set / read the maximum hops limit.
         /// </summary>
         /// <remarks>
         /// This limit sets the maximum broadcast hops value (BH) and determines the unicast timeout. 
@@ -259,21 +260,23 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: 0x1E.</para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+        [AtString("NH")]
         MaximumUnicastHops = 0x4E48,
 
         /// <summary>
-        /// BH.
-        /// <para>Set/Read the maximum number of hops for each broadcast data
-        /// transmission. Setting this to 0 will use the maximum number of hops</para>
+        /// Set/Read the maximum number of hops for each broadcast data transmission.
+        /// </summary>
+        /// <remarks>
+        /// Setting this to 0 will use the maximum number of hops.
         /// <para>Range: 0 - 0xFF.</para>
         /// <para>Default: 0x1E.</para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
-        /// </summary>
+        /// </remarks>
+        [AtString("BH")]
         BroadcastHops = 0x4248,
 
         /// <summary>
-        /// OI.
-        /// <para>Read the 16-bit PAN ID.</para>
+        /// Read the 16-bit PAN ID.
         /// </summary>
         /// <remarks>
         /// The OI value reflects the actual 16-bit PAN ID the module is running on.
@@ -281,11 +284,11 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: [read-only].</para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+        [AtString("OI")]
         OperatingPanId = 0x4F49,
 
         /// <summary>
-        /// NT.
-        /// <para>Set/Read the node discovery timeout</para>
+        /// Set/Read the node discovery timeout.
         /// </summary>
         /// <remarks>
         /// When the network discovery (ND) command is issued, the NT value is included 
@@ -295,11 +298,11 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: 0x3C (60 dec).</para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+        [AtString("NT")]
         NodeDiscoverTimeout = 0x4E54,
 
         /// <summary>
-        /// NO.
-        /// <para>Set/Read the options value for the network discovery command.</para>
+        /// Set/Read the options value for the network discovery command.
         /// </summary>
         /// <remarks>
         /// The options bitfield value can change the behavior of the ND (network 
@@ -311,11 +314,11 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: 0.</para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+        [AtString("NO")]
         NetworkDiscoveryOptions = 0x4E4F,
 
         /// <summary>
-        /// SC.
-        /// <para>Set/Read bit field list of channels to scan.</para>
+        /// Set/Read bit field list of channels to scan.
         /// </summary>
         /// <remarks>
         /// Changes to SC should be written using WR command to preserve the SC setting if a power cycle occurs.
@@ -329,11 +332,11 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: 1FFE.</para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+        [AtString("SC")]
         ScanChannels = 0x5343,
 
         /// <summary>
-        /// SD.
-        /// <para>Set/Read the scan duration exponent.</para>
+        /// Set/Read the scan duration exponent.
         /// </summary>
         /// <remarks>
         /// Scan Time is measured as: (# Channels to Scan) * (2 ^ SD) * 15.36ms - The number of 
@@ -351,11 +354,11 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: 3.</para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+        [AtString("SD")]
         ScanDuration = 0x5344,
 
         /// <summary>
-        /// ZS.
-        /// <para>Set / read the ZigBee stack profile value.</para>
+        /// Set / read the ZigBee stack profile value.
         /// </summary>
         /// <remarks>
         /// This must be set the same on all devices that should join the same network.
@@ -363,11 +366,11 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: 0.</para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+        [AtString("ZS")]
         ZigBeeStackProfile = 0x5A53,
 
         /// <summary>
-        /// NJ.
-        /// <para>Set/Read the time that a Coordinator/Router allows nodes to join.</para>
+        /// Set/Read the time that a Coordinator/Router allows nodes to join.
         /// </summary>
         /// <remarks>
         /// This value can be changed at run time without requiring a Coordinator or Router to
@@ -384,11 +387,11 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: 0xFF É(always allows joining).</para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+        [AtString("NJ")]
         NodeJoinTime = 0x4E4A,
 
         /// <summary>
-        /// JV.
-        /// <para>Set/Read the channel verification parameter.</para>
+        /// Set/Read the channel verification parameter.
         /// </summary>
         /// <remarks>
         /// If JV=1, a router will verify the coordinator is on its operating channel when joining or coming up from a
@@ -399,11 +402,11 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: 0.</para>
         /// <para>Applicable: Router.</para>
         /// </remarks>
+        [AtString("JV")]
         ChannelVerification = 0x4A56,
 
         /// <summary>
-        /// NW.
-        /// <para>Set/read the network watchdog timeout value.</para>
+        /// Set/read the network watchdog timeout value.
         /// </summary>
         /// <remarks>
         /// If NW is set greater than 0, the router will monitor communication from the coordinator (or data collector) 
@@ -413,11 +416,11 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: 0 (disabled).</para>
         /// <para>Applicable: Router.</para>
         /// </remarks>
+        [AtString("NW")]
         NetworkWatchdogTimeout = 0x4E57,
 
         /// <summary>
-        /// JN.
-        /// <para>Set / read the join notification setting.</para>
+        /// Set / read the join notification setting.
         /// </summary>
         /// <remarks>
         /// If enabled, the module will transmit a broadcast node identification packet on power up and when joining. 
@@ -428,11 +431,11 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: 0.</para>
         /// <para>Applicable: Router, End Device.</para>
         /// </remarks>
+        [AtString("JN")]
         JoinNotification = 0x4A4E,
 
         /// <summary>
-        /// AR.
-        /// <para>Set/read time between consecutive aggregate route broadcast messages.</para>
+        /// Set/read time between consecutive aggregate route broadcast messages.
         /// </summary>
         /// <remarks>
         /// If used, AR may be set on only one device to enable many-to-one routing to the device. 
@@ -441,11 +444,11 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: 0xFF.</para>
         /// <para>Applicable: Coordinator, Router.</para>
         /// </remarks>
+        [AtString("AR")]
         AggregateRoutingNotification = 0x4152,
 
         /// <summary>
-        /// DJ.
-        /// <para>Setting this register to 1 will disable the device from joining.</para>
+        /// Setting this register to 1 will disable the device from joining.
         /// </summary>
         /// <remarks>
         /// This setting is not writeable (WR) and will reset to zero after a power cycle.
@@ -453,11 +456,11 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: 0 [not writeable].</para>
         /// <para>Applicable: Router, End Device.</para>
         /// </remarks>
+        [AtString("DJ")]
         DisableJoining = 0x444A,
 
         /// <summary>
-        /// II.
-        /// <para>This register determines the operating 16-bit PAN ID for the network.</para>
+        /// This register determines the operating 16-bit PAN ID for the network.
         /// </summary>
         /// <remarks>
         /// Changing this value will cause the Coordinator to leave the network and form another. 
@@ -467,6 +470,7 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: 0xFFFF [not writeable].</para>
         /// <para>Applicable: Coordinator.</para>
         /// </remarks>
+        [AtString("II")]
         InitialId = 0x4949,
 
         #endregion
@@ -474,19 +478,18 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         #region Security
 
         /// <summary>
-        /// EE.
-        /// <para>Set/Read the encryption enable setting.</para>
+        /// Set/Read the encryption enable setting.
         /// </summary>
         /// <remarks>
         /// <para>Range: 0 (disabled), 1 (enabled).</para>
         /// <para>Default: 0.</para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+        [AtString("EE")]
         EncryptionEnable = 0x4545,
 
         /// <summary>
-        /// EO.
-        /// <para>Options for encryption.</para>
+        /// Options for encryption.
         /// </summary>
         /// <remarks>
         /// Unused option bits should be set to 0. Options include: 
@@ -495,11 +498,11 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Range: 0 - 0xFF.</para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+        [AtString("EO")]
         EncryptionOptions = 0x454F,
 
         /// <summary>
-        /// NK.
-        /// <para>Set the 128-bit AES network encryption key.</para>
+        /// Set the 128-bit AES network encryption key.
         /// </summary>
         /// <remarks>
         /// This command is write-only; NK cannot be read. If set to 0 (default), 
@@ -508,11 +511,11 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: 0.</para>
         /// <para>Applicable: Coordinator.</para>
         /// </remarks>
+        [AtString("NK")]
         EncryptionKey = 0x4E4B,
 
         /// <summary>
-        /// KY.
-        /// <para>Set the 128-bit AES link key.</para>
+        /// Set the 128-bit AES link key.
         /// </summary>
         /// <remarks>
         /// This command is write only; KY cannot be read. Setting KY to 0 will cause the 
@@ -522,6 +525,7 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: 0.</para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+        [AtString("KY")]
         LinkKey = 0x4B59,
 
         #endregion
@@ -529,8 +533,7 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         #region RF Interfacing
 
         /// <summary>
-        /// PL.
-        /// <para>Select/Read the power level at which the RF module transmits conducted power.</para>
+        /// Select/Read the power level at which the RF module transmits conducted power.
         /// </summary>
         /// <remarks>
         /// For XBee-PRO (S2B) Power Level 4 is calibrated and the other power levels are approximate. 
@@ -539,11 +542,11 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: 4.</para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+        [AtString("PL")]
         PowerLevel = 0x504C,
 
         /// <summary>
-        /// PM.
-        /// <para>Set/read the power mode of the device.</para>
+        /// Set/read the power mode of the device.
         /// </summary>
         /// <remarks>
         /// Enabling boost mode will improve the receive sensitivity by 1dB 
@@ -554,11 +557,11 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: 1.</para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+        [AtString("PM")]
         PowerMode = 0x504D,
 
         /// <summary>
-        /// DB.
-        /// <para>This command reports the received signal strength of the last received RF data packet.</para>
+        /// This command reports the received signal strength of the last received RF data packet.
         /// </summary>
         /// <remarks>
         /// The DB command only indicates the signal strength of the last hop. 
@@ -572,11 +575,11 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <example>
         /// If DB returns 0x50, then the RSSI of the last packet received was -80dBm.
         /// </example>
+        [AtString("DB")]
         ReceivedSignalStrength = 0x4442,
 
         /// <summary>
-        /// PP.
-        /// <para>Read the dBm output when maximum power is selected (PL4).</para>
+        /// Read the dBm output when maximum power is selected (PL4).
         /// </summary>
         /// <remarks>
         /// Enabling boost mode will improve the receive sensitivity by 1dB 
@@ -587,6 +590,7 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: [read only].</para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+        [AtString("PP")]
         PeakPower = 0x5050,
 
         #endregion
@@ -594,8 +598,7 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         #region Serial Interfacing
 
         /// <summary>
-        /// AP.
-        /// <para>Enable API Mode.</para>
+        /// Enable API Mode.
         /// </summary>
         /// <remarks>
         /// The AP command is only supported when using API firmware: 21xx (API coordinator), 23xx (API router), 29xx (API end device).
@@ -603,11 +606,11 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: 1.</para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+        [AtString("AP")]
         ApiEnable = 0x4150,
 
         /// <summary>
-        /// AO.
-        /// <para>Configure options for API.</para>
+        /// Configure options for API.
         /// </summary>
         /// <remarks>
         /// Current options select the type of receive API frame to send out the Uart for received RF data packets.
@@ -620,11 +623,11 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: 0.</para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+        [AtString("AO")]
         ApiOptions = 0x414F,
 
         /// <summary>
-        /// BD.
-        /// <para>Set/Read the serial interface data rate for communication between the module serial port and host.</para>
+        /// Set/Read the serial interface data rate for communication between the module serial port and host.
         /// </summary>
         /// <remarks>
         /// Any value above 0x07 will be interpreted as an actual baud rate. When a value above 0x07 is sent, the closest
@@ -636,11 +639,11 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: 3 (9600 Kbps).</para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+        [AtString("BD")]
         InterfaceDataRate = 0x4244,
 
         /// <summary>
-        /// NB.
-        /// <para>Set/Read the serial parity setting on the module.</para>
+        /// Set/Read the serial parity setting on the module.
         /// </summary>
         /// <remarks>
         /// <para>Range: 
@@ -652,11 +655,11 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: 0 (No parity).</para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+        [AtString("NB")]
         SerialParity = 0x4E42,
 
         /// <summary>
-        /// SB.
-        /// <para>Set/read the number of stop bits for the UART.</para>
+        /// Set/read the number of stop bits for the UART.
         /// </summary>
         /// <remarks>
         /// Two stop bits are not supported if mark parity is enabled.
@@ -664,11 +667,11 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: 0 (1 stop bit).</para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+        [AtString("SB")]
         StopBits = 0x5342,
 
         /// <summary>
-        /// RO.
-        /// <para>Set/Read number of character times of inter-character silence required before packetization.</para>
+        /// Set/Read number of character times of inter-character silence required before packetization.
         /// </summary>
         /// <remarks>
         /// Set (RO=0) to transmit characters as they arrive instead of buffering them into one RF packet The RO 
@@ -677,11 +680,11 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: 3.</para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+        [AtString("RO")]
         PacketizationTimeout = 0x524F,
 
         /// <summary>
-        /// D7.
-        /// <para>Select/Read options for the DIO7 line of the RF module.</para>
+        /// Select/Read options for the DIO7 line of the RF module.
         /// </summary>
         /// <remarks>
         /// Options include CTS flow control and I/O line settings.
@@ -698,11 +701,11 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: 1.</para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+        [AtString("D7")]
         DIO7Config = 0x4437,
 
         /// <summary>
-        /// D6.
-        /// <para>Configure options for the DIO6 line of the RF module.</para>
+        /// Configure options for the DIO6 line of the RF module.
         /// </summary>
         /// <remarks>
         /// Options include RTS flow control and I/O line settings.
@@ -717,6 +720,7 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: 0.</para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+        [AtString("D6")]
         DIO6Config = 0x4436,
 
         #endregion
@@ -724,8 +728,7 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         #region I/O Commands
 
         /// <summary>
-        /// IR.
-        /// <para>Set/Read the IO sample rate to enable periodic sampling.</para>
+        /// Set/Read the IO sample rate to enable periodic sampling.
         /// </summary>
         /// <remarks>
         /// For periodic sampling to be enabled, IR must be set to a non-zero value, 
@@ -735,11 +738,11 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: 0.</para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+        [AtString("IR")]
         SampleRate = 0x4952,
 
         /// <summary>
-        /// IC.
-        /// <para>Set/Read the digital IO pins to monitor for changes in the IO state.</para>
+        /// Set/Read the digital IO pins to monitor for changes in the IO state.
         /// </summary>
         /// <remarks>
         /// IC works with the individual pin configuration commands (D0-D8, P0-P2). 
@@ -751,11 +754,11 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: 0.</para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+        [AtString("IC")]
         DIOChangeDetect = 0x4943,
 
         /// <summary>
-        /// P0.
-        /// <para>Select/Read function for PWM0.</para>
+        /// Select/Read function for PWM0.
         /// </summary>
         /// <remarks>
         /// <para>Range: 
@@ -768,11 +771,11 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: 1.</para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
-        PWM0Config = 0x5130,
+        [AtString("P0")]
+        PWM0Config = 0x5030,
 
         /// <summary>
-        /// P1.
-        /// <para>Configure options for the DIO11 line of the RF module.</para>
+        /// Configure options for the DIO11 line of the RF module.
         /// </summary>
         /// <remarks>
         /// <para>Range: 
@@ -784,11 +787,11 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: 0.</para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
-        DIO11Config = 0x5131,
+        [AtString("P1")]
+        DIO11Config = 0x5031,
 
         /// <summary>
-        /// P2.
-        /// <para>Configure options for the DIO12 line of the RF module.</para>
+        /// Configure options for the DIO12 line of the RF module.
         /// </summary>
         /// <remarks>
         /// <para>Range: 
@@ -800,11 +803,11 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: 0.</para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
-        DIO12Config = 0x5132,
+        [AtString("P2")]
+        DIO12Config = 0x5032,
 
         /// <summary>
-        /// P3.
-        /// <para>Set/Read function for DIO13.</para>
+        /// Set/Read function for DIO13.
         /// </summary>
         /// <remarks>
         /// This command is not yet supported.
@@ -816,11 +819,11 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// </para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
-        DIO13Config = 0x5133,
+        [AtString("P3")]
+        DIO13Config = 0x5033,
 
         /// <summary>
-        /// D0.
-        /// <para>Select/Read function for AD0/DIO0.</para>
+        /// Select/Read function for AD0/DIO0.
         /// </summary>
         /// <remarks>
         /// <para>Range: 
@@ -833,11 +836,11 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: 1.</para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+        [AtString("D0")]
         DIO0Config = 0x4430,
 
         /// <summary>
-        /// D1.
-        /// <para>Select/Read function for AD1/DIO1.</para>
+        /// Select/Read function for AD1/DIO1.
         /// </summary>
         /// <remarks>
         /// <para>Range: 
@@ -850,11 +853,11 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: 0.</para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+        [AtString("D1")]
         DIO1Config = 0x4431,
 
         /// <summary>
-        /// D2.
-        /// <para>Select/Read function for AD2/DIO2.</para>
+        /// Select/Read function for AD2/DIO2.
         /// </summary>
         /// <remarks>
         /// <para>Range: 
@@ -867,11 +870,11 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: 0.</para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+        [AtString("D2")]
         DIO2Config = 0x4432,
 
         /// <summary>
-        /// D3.
-        /// <para>Select/Read function for AD3/DIO3.</para>
+        /// Select/Read function for AD3/DIO3.
         /// </summary>
         /// <remarks>
         /// <para>Range: 
@@ -884,11 +887,11 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: 0.</para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+        [AtString("D3")]
         DIO3Config = 0x4433,
 
         /// <summary>
-        /// D4.
-        /// <para>Select/Read function for DIO4.</para>
+        /// Select/Read function for DIO4.
         /// </summary>
         /// <remarks>
         /// <para>Range: 
@@ -900,11 +903,11 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: 0.</para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+        [AtString("D4")]
         DIO4Config = 0x4434,
 
         /// <summary>
-        /// D5.
-        /// <para>Configure options for the DIO5 line of the RF module.</para>
+        /// Configure options for the DIO5 line of the RF module.
         /// </summary>
         /// <remarks>
         /// <para>Range: 
@@ -917,11 +920,11 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: 1.</para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+        [AtString("D5")]
         DIO5Config = 0x4435,
 
         /// <summary>
-        /// D8.
-        /// <para>Set/Read function for DIO8.</para>
+        /// Set/Read function for DIO8.
         /// </summary>
         /// <remarks>
         /// This command is not yet supported.
@@ -933,11 +936,11 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// </para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+        [AtString("D8")]
         DIO8Config = 0x4438,
 
         /// <summary>
-        /// LT.
-        /// <para>Set/Read the Associate LED blink time.</para>
+        /// Set/Read the Associate LED blink time.
         /// </summary>
         /// <remarks>
         /// If the Associate LED functionality is enabled (D5 command), this value determines 
@@ -948,11 +951,11 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: 0.</para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+        [AtString("LT")]
         AssociateLedBlinkTime = 0x4C54,
 
         /// <summary>
-        /// PR.
-        /// <para>Set/Read bitfield to configure internal pull-up resistor status for I/O lines</para>
+        /// Set/Read bitfield to configure internal pull-up resistor status for I/O lines.
         /// </summary>
         /// <remarks>
         /// Bit set to '1' specifies pull-up enabled, '0' specifies no pull-up. 30k pull-up resistors.
@@ -960,12 +963,12 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: 0 - 0x1FFF.</para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
-        PullUpResistor = 0x4C52,
+        [AtString("PR")]
+        PullUpResistor = 0x5052,
 
         /// <summary>
-        /// RP.
-        /// <para>Time the RSSI signal will be output on the PWM after the last RF data 
-        /// reception or APS acknowledgment.</para>
+        /// Time the RSSI signal will be output on the PWM after the last RF data 
+        /// reception or APS acknowledgment.
         /// </summary>
         /// <remarks>
         /// When RP = 0xFF, output will always be on.
@@ -973,11 +976,12 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: 0x28 (40 dec).</para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
-        RssiPwmTimer = 0x524C,
+        [AtString("RP")]
+        RssiPwmTimer = 0x5250,
 
         /// <summary>
-        /// %V.
-        /// <para>Reads the voltage on the Vcc pin.</para>
+        /// Reads the voltage on the Vcc pin.
+        /// </summary>
         /// <remarks>
         /// Scale by 1200/1024 to convert to mV units. 
         /// <para>Range: 0x00 - 0xFFFF [read only].</para>
@@ -986,12 +990,12 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <example>
         /// A %V reading of 0x900 (2304 decimal) represents 2700mV or 2.70V.
         /// </example>
-        /// </summary>
+        [AtString("%V")]
         SupplyVoltage = 0x2556,
 
         /// <summary>
-        /// V+.
-        /// <para>The voltage supply threshold is set with the V+ command.</para>
+        /// The voltage supply threshold is set with the V+ command.
+        /// </summary>
         /// <remarks>
         /// If the measured supply voltage falls below or equal to this threshold, the supply voltage 
         /// will be included in the IO sample set. V+ is set to 0 by default (do not include the 
@@ -1008,12 +1012,12 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <example>
         /// For example, for a 2700mV threshold enter 0x900.
         /// </example>
-        /// </summary>
+        [AtString("V+")]
         VoltageSupplyMonitoring = 0x562B,
 
         /// <summary>
-        /// TP.
-        /// <para>Reads the module temperature in Degrees Celsius.</para>
+        /// Reads the module temperature in Degrees Celsius.
+        /// </summary>        
         /// <remarks>
         /// Accuracy +/- 7 degrees. 
         /// 1∞ C = 0x0001 and -1∞ C = 0xFFFF. 
@@ -1021,16 +1025,15 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Range: 0x0 - 0xFFFF.</para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
-        /// </summary>
-        Temperature = 0x5451,
+        [AtString("TP")]
+        Temperature = 0x5450,
 
         #endregion
 
         #region Diagnostics
 
         /// <summary>
-        /// VR.
-        /// <para>Read firmware version of the module.</para>
+        /// Read firmware version of the module.
         /// </summary>
         /// <remarks>
         /// The firmware version returns 4 hexadecimal values (2 bytes) "ABCD". 
@@ -1043,11 +1046,11 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: Factory-set.</para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+        [AtString("VR")]
         FirmwareVersion = 0x5652,
 
         /// <summary>
-        /// HV.
-        /// <para>Read the hardware version of the module.version of the module.</para>
+        /// Read the hardware version of the module.version of the module.
         /// </summary>
         /// <remarks>
         /// This command can be used to distinguish among different hardware platforms. 
@@ -1060,11 +1063,11 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: Factory-set.</para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+        [AtString("HV")]
         HardwareVersion = 0x4856,
 
         /// <summary>
-        /// AI.
-        /// <para>Read information regarding last node join request.</para>
+        /// Read information regarding last node join request.
         /// </summary>
         /// <remarks>
         /// New non-zero AI values may be added in later firmware versions. 
@@ -1074,6 +1077,7 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
         /// <returns><see cref="AssociationStatus"/></returns>
+        [AtString("AI")]
         AssociationIndication = 0x4149,
 
         #endregion
@@ -1081,43 +1085,42 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         #region AT Command Options
 
         /// <summary>
-        /// CT.
-        /// <para>Set/Read the period of inactivity (no valid commands received) after which 
-        /// the RF module automatically exits AT Command Mode and returns to Idle Mode.</para>
+        /// Set/Read the period of inactivity (no valid commands received) after which 
+        /// the RF module automatically exits AT Command Mode and returns to Idle Mode.
         /// </summary>
         /// <remarks>
         /// <para>Range: 2 - 0x028F [x 100 ms].</para>
         /// <para>Default: 0x64 (100 dec).</para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+        [AtString("CT")]
         CommandModeTimeout = 0x4354,
 
         /// <summary>
-        /// CN.
-        /// <para>Explicitly exit the module from AT Command Mode.</para>
+        /// Explicitly exit the module from AT Command Mode.
         /// </summary>
         /// <remarks>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+        [AtString("CN")]
         ExitCommandMode = 0x434E,
 
         /// <summary>
-        /// GT.
-        /// <para>Set required period of silence before and after the Command Sequence
-        /// Characters of the AT Command Mode Sequence (GT+ CC + GT). The period of silence
-        /// is used to prevent inadvertent entrance into AT Command Mode</para>
+        /// Set required period of silence before and after the Command Sequence
+        /// Characters of the AT Command Mode Sequence (GT+ CC + GT).
         /// </summary>
         /// <remarks>
+        /// The period of silence is used to prevent inadvertent entrance into AT Command Mode.
         /// <para>Range: 2 - 0x0CE4 [x 1 ms] (max of 3.3 decimal sec).</para>
         /// <para>Default: 0x3E8 (1000 dec).</para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+        [AtString("GT")]
         GuardTimes = 0x4754,
 
         /// <summary>
-        /// CC.
-        /// <para>Set/Read the ASCII character value to be used between Guard Times of the 
-        /// AT Command Mode Sequence (GT+CC+GT).</para>
+        /// Set/Read the ASCII character value to be used between Guard Times of the 
+        /// AT Command Mode Sequence (GT+CC+GT).
         /// </summary>
         /// <remarks>
         /// The AT Command Mode Sequence enters the RF module into AT Command Mode. 
@@ -1127,6 +1130,7 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: 0x2B ('+' in ASCII).</para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+        [AtString("CC")]
         CommandSequenceCharacter = 0x4343,
 
         #endregion
@@ -1134,8 +1138,7 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         #region Sleep Commands
 
         /// <summary>
-        /// SM.
-        /// <para>Sets the sleep mode on the RF module.</para>
+        /// Sets the sleep mode on the RF module.
         /// </summary>
         /// <remarks>
         /// An XBee loaded with router firmware can be configured as either a router (SM set to 0) 
@@ -1151,12 +1154,12 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: 0 (Router), 4 (End Device).</para>
         /// <para>Applicable: Router, End Device.</para>
         /// </remarks>
+        [AtString("SM")]
         SleepMode = 0x534D,
 
         /// <summary>
-        /// SN.
-        /// <para>Sets the number of sleep periods to not assert the On/Sleep
-        /// pin on wakeup if no RF data is waiting for the end device.</para>
+        /// Sets the number of sleep periods to not assert the On/Sleep
+        /// pin on wakeup if no RF data is waiting for the end device.
         /// </summary>
         /// <remarks>
         /// This command allows a host application to sleep for an extended time if no RF data is present.
@@ -1164,12 +1167,11 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: 1.</para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+        [AtString("SN")]
         NumberOfSleepPeriods = 0x534E,
 
         /// <summary>
-        /// SP.
-        /// <para>This value determines how long the end device will sleep at a time, up to
-        /// 28 seconds.</para>
+        /// This value determines how long the end device will sleep at a time, up to 28 seconds.
         /// </summary>
         /// <remarks>
         /// The sleep time can effectively be extended past 28 seconds using the SN
@@ -1180,11 +1182,11 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: 0x20.</para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
-        SleepPeriod = 0x534C,
+        [AtString("SP")]
+        SleepPeriod = 0x5350,
 
         /// <summary>
-        /// ST.
-        /// <para>Sets the time before sleep timer on an end device.</para>
+        /// Sets the time before sleep timer on an end device.
         /// </summary>
         /// <remarks>
         /// The timer is reset each time serial or RF data is received. Once the timer expires, 
@@ -1193,11 +1195,11 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: 0x1388 (5 seconds).</para>
         /// <para>Applicable: End Device.</para>
         /// </remarks>
+        [AtString("ST")]
         TimeBeforeSleep = 0x5354,
 
         /// <summary>
-        /// SO.
-        /// <para>Configure options for sleep.</para>
+        /// Configure options for sleep.
         /// </summary>
         /// <remarks>
         /// Unused option bits should be set to 0. Sleep options include: 
@@ -1210,11 +1212,11 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: 0.</para>
         /// <para>Applicable: End Device.</para>
         /// </remarks>
+        [AtString("SO")]
         SleepOptions = 0x534F,
 
         /// <summary>
-        /// WH.
-        /// <para>Set/Read the wake host timer value.</para>
+        /// Set/Read the wake host timer value.
         /// </summary>
         /// <remarks>
         /// If the wake host timer is set to a nonzero value, this timer specifies a time 
@@ -1224,21 +1226,21 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Range: 0 - 0xFFFF (x 1ms).</para>
         /// <para>Applicable: End Device.</para>
         /// </remarks>
+        [AtString("WH")]
         WakeHost = 0x5748,
 
         /// <summary>
-        /// SI.
-        /// <para>Cause a cyclic sleep module to sleep immediately rather than wait
-        /// for the ST timer to expire.</para>
+        /// Cause a cyclic sleep module to sleep immediately rather than wait
+        /// for the ST timer to expire.
         /// </summary>
         /// <remarks>
         /// <para>Applicable: End Device.</para>
         /// </remarks>
+        [AtString("SI")]
         SleepImmediately = 0x5349,
 
         /// <summary>
-        /// PO.
-        /// <para>Set/Read the end device poll rate.</para>
+        /// Set/Read the end device poll rate.
         /// </summary>
         /// <remarks>
         /// Setting this to 0 (default) enables polling at 100 ms (default rate). 
@@ -1248,6 +1250,7 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Default: 0x00 (100 msec).</para>
         /// <para>Applicable: End Device.</para>
         /// </remarks>
+        [AtString("PO")]
         PoolingRate = 0x504F,
 
         #endregion
@@ -1255,9 +1258,8 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         #region Execution Commands
 
         /// <summary>
-        /// AC.
-        /// <para>Applies changes to all command registers causing queued command 
-        /// register values to be applied.</para>
+        /// Applies changes to all command registers causing queued command 
+        /// register values to be applied.
         /// </summary>
         /// <remarks>
         /// For example, changing the serial interface rate with the BD command will 
@@ -1265,12 +1267,12 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// The CN command and 0x08 API command frame also apply changes.
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+        [AtString("AC")]
         ApplyChanges = 0x4143,
 
         /// <summary>
-        /// WR. 
-        /// <para>Write parameter values to non-volatile memory so that parameter modifications 
-        /// persist through subsequent resets.</para>
+        /// Write parameter values to non-volatile memory so that parameter modifications 
+        /// persist through subsequent resets.
         /// </summary>
         /// <remarks>
         /// Note: Once WR is issued, no additional characters should be sent to the module until 
@@ -1278,31 +1280,31 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// The EM250 supports a limited number of write cycles.
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+        [AtString("WR")]
         Write = 0x5752,
 
         /// <summary>
-        /// RE. 
-        /// <para>Restore module parameters to factory defaults.</para>
+        /// Restore module parameters to factory defaults.
         /// </summary>
         /// <remarks>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+        [AtString("RE")]
         RestoreDefaults = 0x5245,
 
         /// <summary>
-        /// FR. 
-        /// <para>Reset module.</para>
+        /// Reset module.
         /// </summary>
         /// <remarks>
         /// Responds immediately with an OK status, and then performs a software 
         /// reset about 2 seconds later.
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+        [AtString("FR")]
         SoftwareReset = 0x4652,
 
         /// <summary>
-        /// NR.
-        /// <para>Reset network layer parameters on one or more modules within a PAN.</para>
+        /// Reset network layer parameters on one or more modules within a PAN.
         /// </summary>
         /// <remarks>
         /// Responds immediately with an 'OK' then causes a network restart. All network
@@ -1313,6 +1315,7 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Range: 0 - 1.</para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+        [AtString("NR")]
         NetworkReset = 0x4E52,
 
         //*************************************************
@@ -1320,8 +1323,7 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         //*************************************************
 
         /// <summary>
-        /// CB.
-        /// <para>This command can be used to simulate commissioning button presses in software.</para>
+        /// This command can be used to simulate commissioning button presses in software.
         /// </summary>
         /// <remarks>
         /// The parameter value should be set to the number of button presses to be simulated. 
@@ -1335,11 +1337,11 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// </para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+        [AtString("CB")]
         CommissioningPushButton = 0x4342,
 
         /// <summary>
-        /// ND.
-        /// <para>Discovers and reports all RF modules found.</para>
+        /// Discovers and reports all RF modules found.
         /// </summary>
         /// <remarks>
         /// After (NT * 100) milliseconds, the command ends by returning a carrage return. 
@@ -1352,11 +1354,11 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Range: optional 20-Byte ÉNI or MY value.</para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+        [AtString("ND")]
         NodeDiscover = 0x4E44,
 
         /// <summary>
-        /// DN.
-        /// <para>Resolves an NI (Node Identifier) string to a physical address (casesensitive).</para>
+        /// Resolves an NI (Node Identifier) string to a physical address (casesensitive).
         /// </summary>
         /// <remarks>
         /// If there is no response from a module within (NT * 100) milliseconds or a parameter is 
@@ -1366,25 +1368,26 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
         /// <para>Range: up to 20-Byte printable ASCII string.</para>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+        [AtString("DN")]
         DestinationNode = 0x444E,
 
         /// <summary>
-        /// IS.
-        /// <para>Forces a read of all enabled digital and analog input lines.</para>
+        /// Forces a read of all enabled digital and analog input lines.
         /// </summary>
         /// <remarks>
         /// <para>Applicable: Coordinator, Router, End Device.</para>
         /// </remarks>
+        [AtString("IS")]
         ForceSample = 0x4953,
 
         /// <summary>
-        /// 1S.
-        /// <para>Forces a sample to be taken on an XBee Sensor device.</para>
+        /// Forces a sample to be taken on an XBee Sensor device.
         /// </summary>
         /// <remarks>
         /// This command can only be issued to an XBee sensor device using an API remote command.
         /// <para>Applicable: Router, End Device.</para>
         /// </remarks>
+        [AtString("1S")]
         XbeeSensorSample = 0x3153,
 
         #endregion

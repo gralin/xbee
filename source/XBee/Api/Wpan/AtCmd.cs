@@ -1,3 +1,5 @@
+using NETMF.OpenSource.XBee.Api.Common;
+
 namespace NETMF.OpenSource.XBee.Api.Wpan
 {
     /// <summary>
@@ -14,36 +16,30 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
         #region Special
 
         /// <summary>
-        /// WR. 
-        /// <para>
         /// Write parameter values to non-volatile memory so that parameter 
         /// modifications persist through subsequent power-up or reset.
-        /// </para>
         /// </summary>
         /// <remarks>
         /// Once WR is issued, no additional characters should be sent to the 
         /// module until after the response "OK\r" is received.
         /// </remarks>
+        [AtString("WR")]
         Write = 0x5752,
 
         /// <summary>
-        /// RE. 
-        /// <para>
         /// Restore module parameters to factory defaults.
-        /// </para>
         /// </summary>
+        [AtString("RE")]
         RestoreDefaults = 0x5245,
 
         /// <summary>
-        /// FR. 
-        /// <para>
         /// Responds immediately with an OK then performs 
         /// a hard reset ~100ms later.
-        /// </para>
         /// </summary>
         /// <remarks>
         /// Introduced in firmware v1.x80.
         /// </remarks>
+        [AtString("FR")]
         SoftwareReset = 0x4652,
 
         #endregion
@@ -51,32 +47,29 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
         #region Adressing
 
         /// <summary>
-        /// CH.
-        /// <para>
         /// Set/Read the channel number used for transmitting and 
         /// receiving data between RF modules.
-        /// </para>
         /// </summary>
         /// <remarks>
         /// <para>Range: 0x0B - 0x1A (XBee), 0x0C - 0x17 (XBee-PRO).</para>
         /// <para>Default: 0x0C (12 dec).</para>
         /// </remarks>
+        [AtString("CH")]
         Channel = 0x4348,
 
         /// <summary>
-        /// ID. 
-        /// <para>Set/Read the PAN (Personal Area Network) ID.</para>
+        /// Set/Read the PAN (Personal Area Network) ID.
         /// </summary>
         /// <remarks>
         /// Use 0xFFFF to broadcast messages to all PANs.
         /// <para>Range: 0 - 0xFFFF.</para>
         /// <para>Default: 0x3332 (13106 dec).</para>
         /// </remarks>
+        [AtString("ID")]
         PanId = 0x4944,
 
         /// <summary>
-        /// DH.
-        /// <para>Set/Read the upper 32 bits of the 64-bit destination address.</para>
+        /// Set/Read the upper 32 bits of the 64-bit destination address.
         /// </summary>
         /// <remarks>
         /// When combined with DL, it defines the destination address used for transmission. 
@@ -85,11 +78,11 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
         /// <para>Range: 0 - 0xFFFFFFFF.</para>
         /// <para>Default: 0.</para>
         /// </remarks>
+        [AtString("DH")]
         DestinationAddressHigh = 0x4448,
 
         /// <summary>
-        /// DL.
-        /// <para>Set/Read the lower 32 bits of the 64-bit destination address.</para>
+        /// Set/Read the lower 32 bits of the 64-bit destination address.
         /// </summary>
         /// <remarks>
         /// When combined with DH, DL defines the destination address used for transmission. 
@@ -98,11 +91,11 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
         /// <para>Range: 0 - 0xFFFFFFFF.</para>
         /// <para>Default: 0.</para>
         /// </remarks>
+        [AtString("DL")]
         DestinationAddressLow = 0x444C,
 
         /// <summary>
-        /// MY.
-        /// <para>Set/Read the RF module 16-bit source address.</para>
+        /// Set/Read the RF module 16-bit source address.
         /// </summary>
         /// <remarks>
         /// Set MY = 0xFFFF to disable reception of packets with 16-bit addresses. 64-bit source 
@@ -110,36 +103,34 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
         /// <para>Range: 0 - 0xFFFF.</para>
         /// <para>Default: 0.</para>
         /// </remarks>
+        [AtString("MY")]
         SourceAddress = 0x4D59,
 
         /// <summary>
-        /// SH.
-        /// <para>Read high 32 bits of the RF module's unique IEEE 64-bit address.</para>
+        /// Read high 32 bits of the RF module's unique IEEE 64-bit address.
         /// </summary>
         /// <remarks>
         /// 64-bit source address is always enabled.
         /// <para>Range: 0 - 0xFFFFFFFF (read-only).</para>
         /// <para>Default: factory-set.</para>
         /// </remarks>
+        [AtString("SH")]
         SerialNumberHigh = 0x5348,
 
         /// <summary>
-        /// SL.
-        /// <para>Read low 32 bits of the RF module's unique IEEE 64-bit address.</para>
+        /// Read low 32 bits of the RF module's unique IEEE 64-bit address.
         /// </summary>
         /// <remarks>
         /// 64-bit source address is always enabled.
         /// <para>Range: 0 - 0xFFFFFFFF (read-only).</para>
         /// <para>Default: factory-set.</para>
         /// </remarks>
+        [AtString("SL")]
         SerialNumberLow = 0x534C,
 
         /// <summary>
-        /// RR.
-        /// <para>
         /// Set/Read the maximum number of retries the module will execute in
         /// addition to the 3 retries provided by the 802.15.4 MAC.
-        /// </para>
         /// </summary>
         /// <remarks>
         /// For each XBee retry, the 802.15.4 MAC can execute up to 3 retries.
@@ -147,14 +138,12 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
         /// <para>Range: 0 - 6.</para>
         /// <para>Default: 0.</para>
         /// </remarks>
+        [AtString("RR")]
         XBeeRetries = 0x5252,
 
         /// <summary>
-        /// RN.
-        /// <para>
         /// Set/Read the minimum value of the back-off exponent in the CSMA-CA 
         /// algorithm that is used for collision avoidance.
-        /// </para>
         /// </summary>
         /// <remarks>
         /// If RN = 0, collision avoidance is disabled during the first iteration 
@@ -162,14 +151,12 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
         /// <para>Range: 0 - 3 (exponent).</para>
         /// <para>Default: 0.</para>
         /// </remarks>
+        [AtString("RN")]
         RandomDelaySlots = 0x524E,
 
         /// <summary>
-        /// MM.
-        /// <para>
         /// Set/Read MAC Mode value. MAC Mode enables/disables the
         /// use of a Digi header in the 802.15.4 RF packet.
-        /// </para>
         /// </summary>
         /// <remarks>
         /// When Modes 1 or 3 are enabled (MM=1,3), duplicate packet detection is enabled 
@@ -183,11 +170,11 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
         /// </para>
         /// <para>Default: 0</para>
         /// </remarks>
+        [AtString("MM")]
         MacMode = 0x4D4D,
 
         /// <summary>
-        /// NI.
-        /// <para>Set/Read node string identifier.</para>
+        /// Set/Read node string identifier.
         /// </summary>
         /// <remarks>
         /// The register only accepts printable ASCII data. In AT Command Mode, a string 
@@ -199,11 +186,11 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
         /// <para>Range: 20-character ASCII string.</para>
         /// <para>Default: empty.</para>
         /// </remarks>
+        [AtString("NI")]
         NodeIdentifier = 0x4E49,
 
         /// <summary>
-        /// ND.
-        /// <para>Discover and report all RF modules found.</para>
+        /// Discover and report all RF modules found.
         /// </summary>
         /// <remarks>
         /// After (<see cref="NodeDiscoverTime"/> * 100) milliseconds, the command ends 
@@ -217,11 +204,11 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
         /// Introduced in firmware v1.x80.
         /// <para>Range: optional 20-character NI value.</para>
         /// </remarks>
+        [AtString("ND")]
         NodeDiscover = 0x4E44,
 
         /// <summary>
-        /// NT.
-        /// <para>Set/Read the node discovery timeout.</para>
+        /// Set/Read the node discovery timeout.
         /// </summary>
         /// <remarks>
         /// When the network discovery (<see cref="NodeDiscover"/>) command is issued, 
@@ -231,22 +218,22 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
         /// <para>Range: 0x01 - 0xFC (x 100 ms).</para>
         /// <para>Default: 0x19 (25 dec).</para>
         /// </remarks>
+        [AtString("NT")]
         NodeDiscoverTime = 0x4E54,
 
         /// <summary>
-        /// NO.
-        /// <para>Enables node discover self-response on the module.</para>
+        /// Enables node discover self-response on the module.
         /// </summary>
         /// <remarks>
         /// Introduced in firmware v1xC5.
         /// <para>Range: 0 - 1.</para>
         /// <para>Default: 0.</para>
         /// </remarks>
+        [AtString("NO")]
         NetworkDiscoveryOptions = 0x4E4F,
 
         /// <summary>
-        /// DN.
-        /// <para>Resolves an <see cref="NodeIdentifier"/> string to a physical address.</para>
+        /// Resolves an <see cref="NodeIdentifier"/> string to a physical address.
         /// </summary>
         /// <remarks>
         /// The following events occur upon successful command execution. <see cref="DestinationAddressHigh"/> 
@@ -258,22 +245,22 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
         /// <para>Range: 20-character ASCII string.</para>
         /// <para>Default: empty.</para>
         /// </remarks>
+        [AtString("DN")]
         DestinationNode = 0x444E,
 
         /// <summary>
-        /// CE.
-        /// <para>Set/Read the coordinator setting.</para>
+        /// Set/Read the coordinator setting.
         /// </summary>
         /// <remarks>
         /// Introduced in firmware v1.x80.
         /// <para>Range: 0 (End Device), 1 (Coordinator).</para>
         /// <para>Default: 0.</para>
         /// </remarks>
+        [AtString("CE")]
         CoordinatorEnable = 0x4345,
 
         /// <summary>
-        /// SC.
-        /// <para>Set/Read list of channels to scan for all Active and Energy Scans as a bitfield.</para>
+        /// Set/Read list of channels to scan for all Active and Energy Scans as a bitfield.
         /// </summary>
         /// <remarks>
         /// This affects scans initiated in command mode (AS, ED) and during End Device Association 
@@ -281,11 +268,11 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
         /// <para>Range: 0 - 0xFFFF [bitfield] (bits 0, 14, 15 not allowed on the XBee-PRO)</para>
         /// <para>Default: 0x1FFE (all XBee-PRO Channels)</para>
         /// </remarks>
+        [AtString("SC")]
         ScanChannels = 0x5343,
 
         /// <summary>
-        /// SD.
-        /// <para>Set/Read the scan duration exponent.</para>
+        /// Set/Read the scan duration exponent.
         /// </summary>
         /// <remarks>
         /// Time equals to (2 ^ SD) * 15.36ms. Introduced in firmware v1.x80.
@@ -313,11 +300,12 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
         /// <item><term>SD = 14</term><description>time = 50.33 min</description></item>
         /// </list>
         /// </example>
+        [AtString("SD")]
         ScanDuration = 0x5344,
 
         /// <summary>
-        /// A1.
-        /// <para>Set/Read End Device association options.</para>
+        /// Set/Read End Device association options.
+        /// </summary>
         /// <remarks>
         /// Introduced in firmware v1.x80.
         /// <list type="bullet">
@@ -355,12 +343,12 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
         /// <para>Range: 0 - 0x0F [bitfield].</para>
         /// <para>Default: 0.</para>
         /// </remarks>
-        /// </summary>
+        [AtString("A1")]
         EndDeviceAssociation = 0x4131,
 
         /// <summary>
-        /// A2.
-        /// <para>Set/Read Coordinator association options.</para>
+        /// Set/Read Coordinator association options.
+        /// </summary>
         /// <remarks>
         /// Introduced in firmware v1.x80.
         /// <list type="bullet">
@@ -395,42 +383,41 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
         /// <para>Range: 0 - 7 [bitfield].</para>
         /// <para>Default: 0.</para>
         /// </remarks>
-        /// </summary>
+        [AtString("A2")]
         CoordinatorAssociation = 0x4132,
 
         /// <summary>
-        /// AI.
-        /// <para>Read errors with the last association request.</para>
+        /// Read errors with the last association request.
         /// </summary>
         /// <remarks>
         /// Introduced in firmware v1.x80.
         /// <para>Range: 0 - 0x13 [read-only].</para>
         /// </remarks>
         /// <returns><see cref="AssociationStatus"/></returns>
+        [AtString("AI")]
         AssociationIndication = 0x4149,
 
         /// <summary>
-        /// DA.
-        /// <para>End Device will immediately disassociate from a Coordinator 
-        /// (if associated) and reattempt to associate.</para>
+        /// End Device will immediately disassociate from a Coordinator 
+        /// (if associated) and reattempt to associate.
         /// </summary>
         /// <remarks>
         /// Introduced in firmware v1.x80.
         /// </remarks>
+        [AtString("DA")]
         ForceDisassociation = 0x4441,
 
         /// <summary>
-        /// FP.
-        /// <para>Request indirect messages being held by a coordinator.</para>
+        /// Request indirect messages being held by a coordinator.
         /// </summary>
         /// <remarks>
         /// Introduced in firmware v1.x80
         /// </remarks>
+        [AtString("FP")]
         ForcePool = 0x4650,
 
         /// <summary>
-        /// AS.
-        /// <para>Send Beacon Request to Broadcast Address (0xFFFF) and Broadcast PAN (0xFFFF) on every channel.</para>
+        /// Send Beacon Request to Broadcast Address (0xFFFF) and Broadcast PAN (0xFFFF) on every channel.
         /// </summary>
         /// <remarks>
         /// The parameter determines the time the radio will listen for Beacons on each channel. 
@@ -442,11 +429,11 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
         /// Introduced in firmware v1.x80.
         /// <para>Range: 0 - 6.</para>
         /// </remarks>
+        [AtString("AS")]
         ActiveScan = 0x4153,
 
         /// <summary>
-        /// ED.
-        /// <para>Send an Energy Detect Scan.</para>
+        /// Send an Energy Detect Scan.
         /// </summary>
         /// <remarks>
         /// The parameter determines the length of scan on each channel. The maximal energy on each channel 
@@ -455,32 +442,30 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
         /// Total scan time is this time multiplied by the number of channels to be scanned. Introduced in firmware v1.x80
         /// <para>Range: 0 - 6.</para>
         /// </remarks>
+        [AtString("ED")]
         EnergyScan = 0x4544,
 
         /// <summary>
-        /// EE.
-        /// <para>
         /// Disable/Enable 128-bit AES encryption support. 
         /// Use in conjunction with the <see cref="AesEncryptionKey"/> command.
-        /// </para>
+        /// </summary>
         /// <remarks>
         /// Introduced in firmware v1.xA0.
         /// <para>Range: 0 - 1.</para>
         /// <para>Default: 0 (disabled).</para>
         /// </remarks>
+        [AtString("EE")]
         AesEncryptionEnable = 0x4545,
 
         /// <summary>
-        /// KY.
-        /// <para>
         /// Set the 128-bit AES (Advanced Encryption Standard) key for encrypting/decrypting data. 
         /// The <see cref="AesEncryptionKey"/> register cannot be read.
-        /// </para>
         /// </summary>
         /// <remarks>
         /// Introduced in firmware v1.xA0
         /// <para>Range: 0 - (any 16-Byte value).</para>
         /// </remarks>
+        [AtString("KY")]
         AesEncryptionKey = 0x4B59,
 
         #endregion
@@ -488,19 +473,18 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
         #region RF Interfacing
 
         /// <summary>
-        /// PL.
-        /// <para>Select/Read the power level at which the RF module transmits conducted power.</para>
+        /// Select/Read the power level at which the RF module transmits conducted power.
         /// </summary>
         /// <remarks>
         /// <para>Range: 0 - 4.</para>
         /// <para>Default: 4.</para>
         /// </remarks>
         /// <returns><see cref="PowerLevel"/></returns>
+        [AtString("PL")]
         PowerLevel = 0x504C,
 
         /// <summary>
-        /// CA.
-        /// <para>Set/read the CCA (Clear Channel Assessment) threshold.</para>
+        /// Set/read the CCA (Clear Channel Assessment) threshold.
         /// </summary>
         /// <remarks>
         /// Prior to transmitting a packet, a CCA is performed to detect energy on the channel. 
@@ -509,6 +493,7 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
         /// <para>Range: 0x24 - 0x50 [-dBm].</para>
         /// <para>Default: 0x2C (-44 dBm).</para>
         /// </remarks>
+        [AtString("CA")]
         CcaThreshold = 0x4341,
 
         #endregion
@@ -524,11 +509,11 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
         /// <para>Default: 0.</para>
         /// </remarks>
         /// <returns><see cref="SleepMode"/></returns>
+        [AtString("SM")]
         SleepMode = 0x534D,
 
         /// <summary>
-        /// SO.
-        /// <para>Set/Read the sleep mode options.</para>
+        /// Set/Read the sleep mode options.
         /// </summary>
         /// <remarks>
         /// <list type="bullet">
@@ -547,14 +532,12 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
         /// <para>Range: 0 - 4.</para>
         /// <para>Default: 0.</para>
         /// </remarks>
+        [AtString("SO")]
         SleepOptions = 0x534F,
 
         /// <summary>
-        /// ST.
-        /// <para>
         /// Set/Read time period of inactivity (no serial or RF data 
         /// is sent or received) before activating Sleep Mode
-        /// </para>
         /// </summary>
         /// <remarks>
         /// ST parameter is only valid with Cyclic Sleep settings (<see cref="SleepMode"/> = 4 - 5).
@@ -565,11 +548,11 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
         /// <para>Range: 1 - 0xFFFF [x 1 ms].</para>
         /// <para>Default: 0x1388 (5000 dec).</para>
         /// </remarks>
+        [AtString("ST")]
         TimeBeforeSleep = 0x5354,
 
         /// <summary>
-        /// SP.
-        /// <para>Set/Read sleep period for cyclic sleeping remotes</para>
+        /// Set/Read sleep period for cyclic sleeping remotes.
         /// </summary>
         /// <remarks>
         /// Coordinator and End Device SP values should always be equal. 
@@ -585,12 +568,12 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
         /// <para>Range: 0 - 0x68B0 [x 10 ms].</para>
         /// <para>Default: 0.</para>
         /// </remarks>
-        CyclicSleepPeriod = 0x534C,
+        [AtString("SP")]
+        CyclicSleepPeriod = 0x5350,
 
         /// <summary>
-        /// DP.
-        /// <para>Set/Read time period of sleep for cyclic sleeping remotes that are 
-        /// configured for Association but are not associated to a Coordinator.</para>
+        /// Set/Read time period of sleep for cyclic sleeping remotes that are 
+        /// configured for Association but are not associated to a Coordinator.
         /// </summary>
         /// <remarks>
         /// If a device is configured to associate, configured as a Cyclic Sleep remote, 
@@ -600,6 +583,7 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
         /// <para>Range: 0 - 0x68B0 [x 10 ms].</para>
         /// <para>Default: 0x3E8 (1000 dec).</para>
         /// </remarks>
+        [AtString("DP")]
         DisassociatedCyclicSleepPeriod = 0x4450,
 
         #endregion
@@ -607,9 +591,8 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
         #region Serial Interfacing
 
         /// <summary>
-        /// BD.
-        /// <para>Set/Read the serial interface data rate for communication between
-        /// the module serial port and host.</para>
+        /// Set/Read the serial interface data rate for communication between
+        /// the module serial port and host.
         /// </summary>
         /// <remarks>
         /// Request non-standard baud rates with values above 0x80 using a terminal window. 
@@ -620,43 +603,43 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
         /// </para>
         /// <para>Default: 3 (9600 Kbps).</para>
         /// </remarks>
+        [AtString("BD")]
         InterfaceDataRate = 0x4244,
 
         /// <summary>
-        /// RO.
-        /// <para>Set/Read number of character times of inter-character delay required before transmission.</para>
+        /// Set/Read number of character times of inter-character delay required before transmission.
         /// </summary>
         /// <remarks>
         /// Set to zero to transmit characters as they arrive instead of buffering them into one RF packet.
         /// <para>Range: 0 - 0xFF [x character times]</para>
         /// <para>Default: 3.</para>
         /// </remarks>
+        [AtString("RO")]
         PacketizationTimeout = 0x524F,
 
         /// <summary>
-        /// AP.
-        /// <para>Disable/Enable API Mode</para>
+        /// Disable/Enable API Mode.
         /// </summary>
         /// <remarks>
         /// Introduced in firmware v1.x80.
         /// <para>Range: 0-2.</para>
         /// <para>Default: 0 (Disabled).</para>
         /// </remarks>
+        [AtString("AP")]
         ApiEnable = 0x4150,
 
         /// <summary>
-        /// NB.
-        /// <para>Set/Read parity settings.</para>
+        /// Set/Read parity settings.
         /// </summary>
         /// <remarks>
         /// <para>Range: 0 - 4.</para>
         /// <para>Default: 0 (8-bit no parity).</para>
         /// </remarks>
+        [AtString("NB")]
         Parity = 0x4E42,
 
         /// <summary>
-        /// PR.
-        /// <para>Set/Read bitfield to configure internal pull-up resistor status for I/O lines</para>
+        /// Set/Read bitfield to configure internal pull-up resistor status for I/O lines.
         /// </summary>
         /// <remarks>
         /// Bit set to '1' specifies pull-up enabled, '0' specifies no pull-up.
@@ -673,25 +656,25 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
         /// <para>Range: 0 - 0xFF.</para>
         /// <para>Default: 0xFF.</para>
         /// </remarks>
-        PullUpResistorEnable = 0x4C52,
+        [AtString("PR")]
+        PullUpResistorEnable = 0x5052,
 
         #endregion
 
         #region IO Settings
 
         /// <summary>
-        /// D8.
-        /// <para>Select/Read options for the DI8 line (pin 9) of the RF module.</para>
+        /// Select/Read options for the DI8 line (pin 9) of the RF module.
         /// </summary>
         /// <remarks>
         /// <para>Range: 0 (Disabled), 3 (DI).</para>
         /// <para>Default: 0.</para>
         /// </remarks>
+        [AtString("D8")]
         DIO8Config = 0x4438,
 
         /// <summary>
-        /// D7.
-        /// <para>Select/Read settings for the DIO7 line (pin 12) of the RF module.</para>
+        /// Select/Read settings for the DIO7 line (pin 12) of the RF module.
         /// </summary>
         /// <remarks>
         /// Options include CTS flow control and I/O line settings.
@@ -707,11 +690,11 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
         /// </para>
         /// <para>Default: 1.</para>
         /// </remarks>
+        [AtString("D7")]
         DIO7Config = 0x4437,
 
         /// <summary>
-        /// D6.
-        /// <para>Select/Read settings for the DIO6 line (pin 16) of the RF module.</para>
+        /// Select/Read settings for the DIO6 line (pin 16) of the RF module.
         /// </summary>
         /// <remarks>
         /// Options include RTS flow control and I/O line settings.
@@ -725,11 +708,11 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
         /// </para>
         /// <para>Default: 0.</para>
         /// </remarks>
+        [AtString("D6")]
         DIO6Config = 0x4436,
 
         /// <summary>
-        /// D5.
-        /// <para>Configure settings for the DIO5 line (pin 15) of the RF module.</para>
+        /// Configure settings for the DIO5 line (pin 15) of the RF module.
         /// </summary>
         /// <remarks>
         /// Options include Associated LED indicator (blinks when associated) and I/O line settings.
@@ -744,11 +727,11 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
         /// </para>
         /// <para>Default: 1.</para>
         /// </remarks>
+        [AtString("D5")]
         DIO5Config = 0x4435,
 
         /// <summary>
-        /// D4.
-        /// <para>Select/Read settings for the AD4/DIO4 (pin 11).</para>
+        /// Select/Read settings for the AD4/DIO4 (pin 11).
         /// </summary>
         /// <remarks>
         /// Options include: Analog-to-digital converter, Digital Input and Digital Output.
@@ -762,11 +745,11 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
         /// </para>
         /// <para>Default: 0.</para>
         /// </remarks>
+        [AtString("D4")]
         DIO4Config = 0x4434,
 
         /// <summary>
-        /// D3.
-        /// <para>Select/Read settings for the AD3/DIO3 (pin 17).</para>
+        /// Select/Read settings for the AD3/DIO3 (pin 17).
         /// </summary>
         /// <remarks>
         /// Options include: Analog-to-digital converter, Digital Input and Digital Output.
@@ -780,11 +763,11 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
         /// </para>
         /// <para>Default: 0.</para>
         /// </remarks>
+        [AtString("D3")]
         DIO3Config = 0x4433,
 
         /// <summary>
-        /// D2.
-        /// <para>Select/Read settings for the AD2/DIO2 (pin 18).</para>
+        /// Select/Read settings for the AD2/DIO2 (pin 18).
         /// </summary>
         /// <remarks>
         /// Options include: Analog-to-digital converter, Digital Input and Digital Output.
@@ -798,11 +781,11 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
         /// </para>
         /// <para>Default: 0.</para>
         /// </remarks>
+        [AtString("D2")]
         DIO2Config = 0x4432,
 
         /// <summary>
-        /// D1.
-        /// <para>Select/Read settings for the AD1/DIO1 (pin 19).</para>
+        /// Select/Read settings for the AD1/DIO1 (pin 19).
         /// </summary>
         /// <remarks>
         /// Options include: Analog-to-digital converter, Digital Input and Digital Output.
@@ -816,11 +799,11 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
         /// </para>
         /// <para>Default: 0.</para>
         /// </remarks>
+        [AtString("D1")]
         DIO1Config = 0x4431,
 
         /// <summary>
-        /// D0.
-        /// <para>Select/Read settings for the AD0/DIO0 (pin 20).</para>
+        /// Select/Read settings for the AD0/DIO0 (pin 20).
         /// </summary>
         /// <remarks>
         /// Options include: Analog-to-digital converter, Digital Input and Digital Output.
@@ -834,11 +817,11 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
         /// </para>
         /// <para>Default: 0.</para>
         /// </remarks>
+        [AtString("D0")]
         DIO0Config = 0x4430,
 
         /// <summary>
-        /// IU.
-        /// <para>Disables/Enables I/O data received to be sent out UART.</para>
+        /// Disables/Enables I/O data received to be sent out UART.
         /// </summary>
         /// <remarks>
         /// The data is sent using an API frame regardless of the current AP parameter value.
@@ -846,11 +829,11 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
         /// <para>Range: 0 (Disabled), 1 (Enabled).</para>
         /// <para>Default: 1.</para>
         /// </remarks>
+        [AtString("IU")]
         IOOutputEnable = 0x4955,
 
         /// <summary>
-        /// IT.
-        /// <para>Set/Read the number of samples to collect before transmitting data.</para>
+        /// Set/Read the number of samples to collect before transmitting data.
         /// </summary>
         /// <remarks>
         /// Maximum number of samples is dependent upon the number of enabled inputs.
@@ -858,32 +841,32 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
         /// <para>Range: 1 - 0xFF.</para>
         /// <para>Default: 1.</para>
         /// </remarks>
+        [AtString("IT")]
         SamplesBeforeTx = 0x4954,
 
         /// <summary>
-        /// IS.
-        /// <para>Force a read of all enabled inputs (DI or ADC). Data is returned through the UART.</para>
+        /// Force a read of all enabled inputs (DI or ADC). Data is returned through the UART.
         /// </summary>
         /// <remarks>
         /// If no inputs are defined (DI or ADC), this command will return error.
         /// Introduced in firmware v1.xA0.
         /// <para>Range: 8-bit map (each bit represents the level of an I/O line setup as an output).</para>
         /// </remarks>
+        [AtString("IS")]
         ForceSample = 0x4953,
 
         /// <summary>
-        /// IO.
-        /// <para>Set digital output level to allow DIO lines that are setup as 
-        /// outputs to be changed through Command Mode.</para>
+        /// Set digital output level to allow DIO lines that are setup as 
+        /// outputs to be changed through Command Mode.
         /// </summary>
         /// <remarks>
         /// Introduced in firmware v1.xA0.
         /// </remarks>
+        [AtString("IO")]
         DigitalOutputLevel = 0x494F,
 
         /// <summary>
-        /// IC.
-        /// <para>Set/Read bitfield values for change detect monitoring.</para>
+        /// Set/Read bitfield values for change detect monitoring.
         /// </summary>
         /// <remarks>
         /// Each bit enables monitoring of DIO0 - DIO7 for changes. If detected, data is transmitted with 
@@ -892,11 +875,11 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
         /// <para>Range: 0 - 0xFF [bitfield].</para>
         /// <para>Default: 0 (disabled).</para>
         /// </remarks>
+        [AtString("IC")]
         DIOChangeDetect = 0x4943,
 
         /// <summary>
-        /// IR.
-        /// <para>Set/Read sample rate.</para>
+        /// Set/Read sample rate.
         /// </summary>
         /// <remarks>
         /// When set, this parameter causes the module to sample all enabled inputs at a specified interval.
@@ -904,6 +887,7 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
         /// <para>Range: 0 - 0xFFFF [x 1 msec].</para>
         /// <para>Default: 0.</para>
         /// </remarks>
+        [AtString("IR")]
         SampleRate = 0x4952,
 
         #endregion
@@ -911,8 +895,7 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
         #region I/O Line Passing
 
         /// <summary>
-        /// IA.
-        /// <para>Set/Read addresses of module to which outputs are bound.</para>
+        /// Set/Read addresses of module to which outputs are bound.
         /// </summary>
         /// <remarks>
         /// Setting all bytes to 0xFF will not allow any received I/O packet to change outputs. 
@@ -921,11 +904,11 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
         /// <para>Range: 0 - 0xFFFFFFFFFFFFFFFF.</para>
         /// <para>Default: 0xFFFFFFFFFFFFFFFF.</para>
         /// </remarks>
+        [AtString("IA")]
         IOInputAddress = 0x4941,
 
         /// <summary>
-        /// T0.
-        /// <para>Set/Read Output timeout values for corresponding digital line.</para>
+        /// Set/Read Output timeout values for corresponding digital line.
         /// </summary>
         /// <remarks>
         /// When output is set (due to I/O line passing) to a nondefault level, a timer is started which when 
@@ -934,11 +917,11 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
         /// <para>Range: 0 - 0xFF [x 100 ms].</para>
         /// <para>Default: 0xFF.</para>
         /// </remarks>
+        [AtString("T0")]
         DIO0OutputTimeout = 0x5430,
 
         /// <summary>
-        /// T1.
-        /// <para>Set/Read Output timeout values for corresponding digital line.</para>
+        /// Set/Read Output timeout values for corresponding digital line.
         /// </summary>
         /// <remarks>
         /// When output is set (due to I/O line passing) to a nondefault level, a timer is started which when 
@@ -947,11 +930,11 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
         /// <para>Range: 0 - 0xFF [x 100 ms].</para>
         /// <para>Default: 0xFF.</para>
         /// </remarks>
+        [AtString("T1")]
         DIO1OutputTimeout = 0x5431,
 
         /// <summary>
-        /// T2.
-        /// <para>Set/Read Output timeout values for corresponding digital line.</para>
+        /// Set/Read Output timeout values for corresponding digital line.
         /// </summary>
         /// <remarks>
         /// When output is set (due to I/O line passing) to a nondefault level, a timer is started which when 
@@ -960,11 +943,11 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
         /// <para>Range: 0 - 0xFF [x 100 ms].</para>
         /// <para>Default: 0xFF.</para>
         /// </remarks>
+        [AtString("T2")]
         DIO2OutputTimeout = 0x5432,
 
         /// <summary>
-        /// T3.
-        /// <para>Set/Read Output timeout values for corresponding digital line.</para>
+        /// Set/Read Output timeout values for corresponding digital line.
         /// </summary>
         /// <remarks>
         /// When output is set (due to I/O line passing) to a nondefault level, a timer is started which when 
@@ -973,11 +956,11 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
         /// <para>Range: 0 - 0xFF [x 100 ms].</para>
         /// <para>Default: 0xFF.</para>
         /// </remarks>
+        [AtString("T3")]
         DIO3OutputTimeout = 0x5433,
 
         /// <summary>
-        /// T4.
-        /// <para>Set/Read Output timeout values for corresponding digital line.</para>
+        /// Set/Read Output timeout values for corresponding digital line.
         /// </summary>
         /// <remarks>
         /// When output is set (due to I/O line passing) to a nondefault level, a timer is started which when 
@@ -986,11 +969,11 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
         /// <para>Range: 0 - 0xFF [x 100 ms].</para>
         /// <para>Default: 0xFF.</para>
         /// </remarks>
+        [AtString("T4")]
         DIO4OutputTimeout = 0x5434,
 
         /// <summary>
-        /// T0.
-        /// <para>Set/Read Output timeout values for corresponding digital line.</para>
+        /// Set/Read Output timeout values for corresponding digital line.
         /// </summary>
         /// <remarks>
         /// When output is set (due to I/O line passing) to a nondefault level, a timer is started which when 
@@ -999,11 +982,11 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
         /// <para>Range: 0 - 0xFF [x 100 ms].</para>
         /// <para>Default: 0xFF.</para>
         /// </remarks>
+        [AtString("T5")]
         DIO5OutputTimeout = 0x5435,
 
         /// <summary>
-        /// T6.
-        /// <para>Set/Read Output timeout values for corresponding digital line.</para>
+        /// Set/Read Output timeout values for corresponding digital line.
         /// </summary>
         /// <remarks>
         /// When output is set (due to I/O line passing) to a nondefault level, a timer is started which when 
@@ -1012,11 +995,11 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
         /// <para>Range: 0 - 0xFF [x 100 ms].</para>
         /// <para>Default: 0xFF.</para>
         /// </remarks>
+        [AtString("T6")]
         DIO6OutputTimeout = 0x5436,
 
         /// <summary>
-        /// T7.
-        /// <para>Set/Read Output timeout values for corresponding digital line.</para>
+        /// Set/Read Output timeout values for corresponding digital line.
         /// </summary>
         /// <remarks>
         /// When output is set (due to I/O line passing) to a nondefault level, a timer is started which when 
@@ -1025,52 +1008,52 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
         /// <para>Range: 0 - 0xFF [x 100 ms].</para>
         /// <para>Default: 0xFF.</para>
         /// </remarks>
+        [AtString("T7")]
         DIO7OutputTimeout = 0x5437,
 
         /// <summary>
-        /// P0.
-        /// <para>Select/Read function for PWM0 pin.</para>
+        /// Select/Read function for PWM0 pin.
         /// </summary>
         /// <remarks>
         /// <para>Range: 0 (Disabled), 1 (RSSI), 2 (PWM Output).</para>
         /// <para>Default: 1.</para>
         /// </remarks>
-        PWM0Config = 0x5130,
+        [AtString("P0")]
+        PWM0Config = 0x5030,
 
         /// <summary>
-        /// P1.
-        /// <para>Select/Read function for PWM0 pin.</para>
+        /// Select/Read function for PWM0 pin.
         /// </summary>
         /// <remarks>
         /// Introduced in firmware v1.xA0.
         /// <para>Range: 0 (Disabled), 1 (RSSI), 2 (PWM Output).</para>
         /// <para>Default: 0.</para>
         /// </remarks>
-        PWM1Config = 0x5131,
+        [AtString("P1")]
+        PWM1Config = 0x5031,
 
         /// <summary>
-        /// M0.
-        /// <para>Set/Read the PWM 0 output level.</para>
+        /// Set/Read the PWM 0 output level.
         /// </summary>
         /// <remarks>
         /// Introduced in firmware v1.xA0.
         /// <para>Range: 0 - 0x03FF.</para>
         /// </remarks>
+        [AtString("M0")]
         PWM0OutputLevel = 0x4D30,
 
         /// <summary>
-        /// M1.
-        /// <para>Set/Read the PWM 1 output level.</para>
+        /// Set/Read the PWM 1 output level.
         /// </summary>
         /// <remarks>
         /// Introduced in firmware v1.xA0.
         /// <para>Range: 0 - 0x03FF.</para>
         /// </remarks>
+        [AtString("M1")]
         PWM1OutputLevel = 0x4D31,
 
         /// <summary>
-        /// PT.
-        /// <para>Set/Read output timeout value for both PWM outputs.</para>
+        /// Set/Read output timeout value for both PWM outputs.
         /// </summary>
         /// <remarks>
         /// When PWM is set to a non-zero value: Due to I/O line passing, a time is started which when 
@@ -1079,11 +1062,11 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
         /// <para>Range: 0 - 0xFF [x 100 ms].</para>
         /// <para>Default: 0xFF.</para>
         /// </remarks>
-        PWMOutputTimeout = 0x5154,
+        [AtString("PT")]
+        PWMOutputTimeout = 0x5054,
 
         /// <summary>
-        /// RP.
-        /// <para>Set/Read PWM timer register.</para>
+        /// Set/Read PWM timer register.
         /// </summary>
         /// <remarks>
         /// Set the duration of PWM (pulse width modulation) signal output on the RSSI pin. 
@@ -1091,57 +1074,57 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
         /// <para>Range: 0 - 0xFF [x 100 ms].</para>
         /// <para>Default: 0x28 (40 dec).</para>
         /// </remarks>
-        RssiPwmTimer = 0x5251,
+        [AtString("RP")]
+        RssiPwmTimer = 0x5250,
 
         #endregion
 
         #region Diagnostics
 
         /// <summary>
-        /// VR.
-        /// <para>Read firmware version of the RF module.</para>
+        /// Read firmware version of the RF module.
         /// </summary>
         /// <remarks>
         /// <para>Range: 0 - 0xFFFF [read-only].</para>
         /// <para>Default: Factory-set.</para>
         /// </remarks>
+        [AtString("VR")]
         FirmwareVersion = 0x5652,
 
         /// <summary>
-        /// VL.
-        /// <para>Read detailed version information (including application build date, MAC, PHY and bootloader versions).</para>
+        /// Read detailed version information (including application build date, MAC, PHY and bootloader versions).
         /// </summary>
         /// <remarks>
         /// Introduced in firmware v1.x80. It has been deprecated in version 10C9. 
         /// It is not supported in firmware versions after 10C8.
         /// </remarks>
+        [AtString("VL")]
         FirmwareVersionVerbose = 0x564C,
 
         /// <summary>
-        /// HV.
-        /// <para>Read hardware version of the RF module.</para>
+        /// Read hardware version of the RF module.
         /// </summary>
         /// <remarks>
         /// Introduced in firmware v1.x80.
         /// <para>Range: 0 - 0xFFFF [read-only].</para>
         /// <para>Default: Factory-set.</para>
         /// </remarks>
+        [AtString("HV")]
         HardwareVersion = 0x4856,
 
         /// <summary>
-        /// DB.
-        /// <para>Read signal level [in dB] of last good packet received (RSSI).</para>
+        /// Read signal level [in dB] of last good packet received (RSSI).
         /// </summary>
         /// <remarks>
         /// Absolute value is reported. (For example: 0x58 = -88 dBm) Reported value 
         /// is accurate between -40 dBm and RX sensitivity.
         /// <para>Range: 0x17-0x5C (XBee), 0x24-0x64 (XBee-PRO) [read-only].</para>
         /// </remarks>
+        [AtString("DB")]
         ReceivedSignalStrength = 0x4442,
 
         /// <summary>
-        /// EC.
-        /// <para>Reset/Read count of CCA (Clear Channel Assessment) failures.</para>
+        /// Reset/Read count of CCA (Clear Channel Assessment) failures.
         /// </summary>
         /// <remarks>
         /// This parameter value increments when the module does not transmit a packet because it
@@ -1149,6 +1132,7 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
         /// at its maximum value. Set count to "0" to reset count. Introduced in firmware v1.x80.
         /// <para>Range: 0 - 0xFFFF.</para>
         /// </remarks>
+        [AtString("EC")]
         CcaFailures = 0x4543,
 
         /// <summary>
@@ -1161,7 +1145,8 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
         /// Set the parameter to "0" to reset count. Introduced in firmware v1.x80.
         /// <para>Range: 0 - 0xFFFF.</para>
         /// </remarks>
-        AckFailures = 0x4143,
+		[AtString("EA")]
+        AckFailures = 0x4541,
 
         //*********************************************
         // ED command is duplicated in Adressing region
@@ -1172,53 +1157,53 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
         #region AT Command Options
 
         /// <summary>
-        /// CT.
-        /// <para>Set/Read the period of inactivity (no valid commands received) 
+        /// Set/Read the period of inactivity (no valid commands received) 
         /// after which the RF module automatically exits AT Command Mode and returns
-        /// to Idle Mode.</para>
+        /// to Idle Mode.
         /// </summary>
         /// <remarks>
         /// <para>Range: 2 - 0xFFFF [x 100 ms].</para>
         /// <para>Default: 0x64 (100 dec).</para>
         /// </remarks>
+        [AtString("CT")]
         CommandModeTimeout = 0x4354,
 
         /// <summary>
-        /// CN.
-        /// <para>Explicitly exit the module from AT Command Mode.</para>
+        /// Explicitly exit the module from AT Command Mode.
         /// </summary>
+        [AtString("CN")]
         ExitCommandMode = 0x434E,
 
         /// <summary>
-        /// AC.
-        /// <para>Explicitly apply changes to queued parameter value(s) and reinitialize module.</para>
+        /// Explicitly apply changes to queued parameter value(s) and reinitialize module.
         /// </summary>
         /// <remarks>
         /// Introduced in firmware v1.xA0.
         /// </remarks>
+        [AtString("AC")]
         ApplyChanges = 0x4143,
 
         /// <summary>
-        /// GT.
-        /// <para>Set required period of silence before and after the Command Sequence
-        /// Characters of the AT Command Mode Sequence (GT+ CC + GT). The period of silence
-        /// is used to prevent inadvertent entrance into AT Command Mode</para>
+        /// Set required period of silence before and after the Command Sequence
+        /// Characters of the AT Command Mode Sequence (GT+ CC + GT).
         /// </summary>
         /// <remarks>
+        /// The period of silence is used to prevent inadvertent entrance into AT Command Mode.
         /// <para>Range: 2 - 0x0CE4 [x 1 ms].</para>
         /// <para>Default: 0x3E8 (1000 dec).</para>
         /// </remarks>
+        [AtString("GT")]
         GuardTimes = 0x4754,
 
         /// <summary>
-        /// CC.
-        /// <para>Set/Read the ASCII character value to be used between Guard Times of the AT Command Mode Sequence (GT+CC+GT).</para>
+        /// Set/Read the ASCII character value to be used between Guard Times of the AT Command Mode Sequence (GT+CC+GT).
         /// </summary>
         /// <remarks>
         /// The AT Command Mode Sequence enters the RF module into AT Command Mode.
         /// <para>Range: 0 - 0xFF.</para>
         /// <para>Default: 0x2B ('+' in ASCII).</para>
         /// </remarks>
+        [AtString("CC")]
         CommandSequenceCharacter = 0x4343,
 
         #endregion

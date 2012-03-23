@@ -58,6 +58,9 @@
     <Compile Include="..\XBee\Api\Common\AtCmd.cs">
       <Link>Api\Common\AtCmd.cs</Link>
     </Compile>
+    <Compile Include="..\XBee\Api\Common\AtString.cs">
+      <Link>Api\Common\AtString.cs</Link>
+    </Compile>
     <Compile Include="..\XBee\Api\Common\Firmware.cs">
       <Link>Api\Common\Firmware.cs</Link>
     </Compile>
