@@ -30,9 +30,15 @@ namespace NETMF.OpenSource.XBee.Api
                 : LocalXBee.CreateRequest(AtCommand, DestinationAddress, Value);
         }
 
+        public void Invoke(AtResponseHandler responseHandler)
+        {
+            Invoke((response, finished) => 
+                responseHandler.Invoke(response as AtResponse));
+        }
+
         public new AtResponse GetResponse()
         {
-            return (AtResponse)base.GetResponse();
+            return base.GetResponse() as AtResponse;
         }
 
         public byte[] GetResponsePayload()

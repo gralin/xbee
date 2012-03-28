@@ -2,7 +2,7 @@
 
 namespace NETMF.OpenSource.XBee
 {
-    internal class SerialConnection : IXBeeConnection
+    public class SerialConnection : IXBeeConnection
     {
         private readonly SerialPort _serialPort;
         private readonly byte[] _buffer;

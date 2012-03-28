@@ -15,11 +15,12 @@ namespace NETMF.OpenSource.XBee.Api
         private readonly IXBeeConnection _connection;
         private readonly PacketParser _parser;
         private readonly PacketIdGenerator _idGenerator;
-        
-        private AddressLookupListener _addressLookupListener;
-        private bool _addressLookupEnabled;
 
-        private DataReceivedListener _dataReceivedListener;
+        private IPacketListener _addressLookupListener;
+        private bool _addressLookupEnabled;
+        private XBeeRequest _currentRequest;
+
+        private IPacketListener _dataReceivedListener;
         private bool _dataReceivedEventEnabled;
 
         private readonly AtRequest _atRequest;
@@ -128,7 +129,7 @@ namespace NETMF.OpenSource.XBee.Api
                 AddressLookup = new Hashtable();
 
             if (_addressLookupListener == null)                 
-                _addressLookupListener = new AddressLookupListener(AddressLookup);
+                _addressLookupListener = new PacketListener(new AddressPacketFilter(), -1, OnAddressReceived);
             
             AddPacketListener(_addressLookupListener);
             _addressLookupEnabled = true;
@@ -150,7 +151,7 @@ namespace NETMF.OpenSource.XBee.Api
                 return;
 
             if (_dataReceivedListener == null)
-                _dataReceivedListener = new DataReceivedListener(this);
+                _dataReceivedListener = new PacketListener(new DataPacketFilter(), -1, OnDataReceived);
 
             AddPacketListener(_dataReceivedListener);
             _dataReceivedEventEnabled = true;
@@ -165,30 +166,24 @@ namespace NETMF.OpenSource.XBee.Api
             _dataReceivedEventEnabled = false;
         }
 
+        public void DiscoverNodes(DiscoveredNodeHandler handler)
+        {
+            var request = CreateNodeDiscoverRequest();
+            request.Invoke((response, finished) =>
+            {
+                if (response != null)
+                    handler(GetDiscoveredNode(response));   
+            });
+        }
+
         public NodeInfo[] DiscoverNodes()
         {
-            var timeoutResponse = Send(Common.AtCmd.NodeDiscoverTimeout).GetResponse();
-            int timeout = UshortUtils.ToUshort(timeoutResponse.Value);
-
-            // ms + 1 extra second
-            timeout = timeout * 100 + 1000;
-
-            var filter = new NodeDiscoveryFilter();
-            var request = Send(Common.AtCmd.NodeDiscover).Use(filter).Timeout(timeout);
+            var request = CreateNodeDiscoverRequest();
             var responses = request.GetResponses();
             var result = new NodeInfo[responses.Length];
 
             for (var i = 0; i < responses.Length; i++)
-            {
-                var foundNode = Config.IsSeries1()
-                    ? (NodeInfo)Wpan.NodeDiscover.Parse(responses[i])
-                    : Zigbee.NodeDiscover.Parse(responses[i]);
-
-                if (_addressLookupEnabled)
-                    AddressLookup[foundNode.SerialNumber] = foundNode.NetworkAddress;
-
-                result[i] = foundNode;
-            }
+                result[i] = GetDiscoveredNode(responses[i]);
 
             return result;
         }
@@ -227,6 +222,8 @@ namespace NETMF.OpenSource.XBee.Api
                 ? (XBeeAddress16)AddressLookup[serialAddress]
                 : XBeeAddress16.Unknown;
         }
+
+        public delegate void DiscoveredNodeHandler(NodeInfo node);
 
         // Creating requests
 
@@ -336,14 +333,18 @@ namespace NETMF.OpenSource.XBee.Api
             SendRequest(request);
         }
 
-        public AsyncSendResult BeginSend(XBeeRequest request, IPacketListener responseListener = null)
+        public AsyncSendResult BeginSend(XBeeRequest request, IPacketFilter filter = null, int timeout = 5000)
         {
-            if (responseListener == null)
-                responseListener = new SinglePacketListener();
-
+            var responseListener = new PacketListener(filter, timeout);
             AddPacketListener(responseListener);
             SendRequest(request);
             return new AsyncSendResult(this, responseListener);
+        }
+
+        public void BeginSend(XBeeRequest request, ResponseHandler responseHandler, IPacketFilter filter = null, int timeout = 5000)
+        {
+            AddPacketListener(new PacketListener(filter, timeout, responseHandler));
+            SendRequest(request);
         }
 
         protected void SendRequest(XBeeRequest request)
@@ -351,7 +352,7 @@ namespace NETMF.OpenSource.XBee.Api
             IsRequestSupported(request);
 
             if (_addressLookupEnabled)
-                _addressLookupListener.CurrentRequest = request;
+                _currentRequest = request;
 
             if (Logger.IsActive(LogLevel.Debug))
                 Logger.Debug("Sending " + request.GetType().Name + ": " + request);
@@ -386,12 +387,17 @@ namespace NETMF.OpenSource.XBee.Api
 
         public XBeeResponse Receive(Type expectedType = null, int timeout = PacketParser.DefaultParseTimeout)
         {
-            var listener = new SinglePacketListener(new PacketTypeFilter(expectedType ?? typeof(XBeeResponse)));
+            var listener = new PacketListener(new PacketTypeFilter(expectedType ?? typeof(XBeeResponse)));
 
             try
             {
                 AddPacketListener(listener);
-                return listener.GetResponse(timeout);
+                var responses =  listener.GetPackets(timeout);
+
+                if (responses.Length == 0)
+                    throw new XBeeTimeoutException();
+
+                return responses[0];
             }
             finally
             {
@@ -419,7 +425,101 @@ namespace NETMF.OpenSource.XBee.Api
             }
         }
 
-        internal void NotifyDataReceived(byte[] payload, XBeeAddress sender)
+        protected IRequest CreateNodeDiscoverRequest()
+        {
+            var timeoutResponse = Send(Common.AtCmd.NodeDiscoverTimeout).GetResponse();
+            int timeout = UshortUtils.ToUshort(timeoutResponse.Value);
+
+            // ms + 1 extra second
+            timeout = timeout * 100 + 1000;
+
+            var filter = new NodeDiscoveryFilter();
+            var request = Send(Common.AtCmd.NodeDiscover).Use(filter).Timeout(timeout);
+            return request;
+        }
+
+        protected NodeInfo GetDiscoveredNode(XBeeResponse response)
+        {
+            var foundNode = Config.IsSeries1()
+                                ? (NodeInfo)Wpan.NodeDiscover.Parse(response)
+                                : Zigbee.NodeDiscover.Parse(response);
+
+            if (_addressLookupEnabled)
+                AddressLookup[foundNode.SerialNumber] = foundNode.NetworkAddress;
+
+            return foundNode;
+        }
+
+        protected void OnAddressReceived(XBeeResponse response, bool finished)
+        {
+            if (response is RemoteAtResponse)
+            {
+                var atResponse = response as RemoteAtResponse;
+                AddressLookup[atResponse.RemoteSerial] = atResponse.RemoteAddress;
+            }
+            else if (response is Zigbee.RxResponse)
+            {
+                var zigbeeResponse = response as Zigbee.RxResponse;
+                AddressLookup[zigbeeResponse.SourceSerial] = zigbeeResponse.SourceAddress;
+            }
+            else if (response is Zigbee.TxStatusResponse && _currentRequest is Zigbee.TxRequest)
+            {
+                var txRequest = _currentRequest as Zigbee.TxRequest;
+                var txResponse = response as Zigbee.TxStatusResponse;
+                var dataDelivered = txResponse.DeliveryStatus == Zigbee.TxStatusResponse.DeliveryResult.Success;
+
+                AddressLookup[txRequest.DestinationSerial] = dataDelivered 
+                    ? txResponse.DestinationAddress 
+                    : XBeeAddress16.Unknown;
+            }
+            else if (response is NodeIdentificationResponse)
+            {
+                var identPacket = response as NodeIdentificationResponse;
+                AddressLookup[identPacket.Sender.SerialNumber] = identPacket.Sender.NetworkAddress;
+                AddressLookup[identPacket.Remote.SerialNumber] = identPacket.Remote.NetworkAddress;
+            }
+        }
+        
+        protected void OnDataReceived(XBeeResponse response, bool finished)
+        {
+            if (response is Wpan.RxResponse)
+            {
+                var rxResponse = response as Wpan.RxResponse;
+                NotifyDataReceived(rxResponse.Payload, rxResponse.Source);
+            }
+            else if (response is Zigbee.RxResponse)
+            {
+                if (response is Zigbee.ExplicitRxResponse)
+                {
+                    var profileId = (response as Zigbee.ExplicitRxResponse).ProfileId;
+                    var clusterId = (response as Zigbee.ExplicitRxResponse).ClusterId;
+
+                    // if module AtCmd.ApiOptions has been set to value other than default (0)
+                    // received API frames will be transported using explicit frames
+                    // those frames have profile id set to Zigbee.ProfileId.Digi
+                    if (profileId != (ushort)Zigbee.ProfileId.Digi)
+                        return;
+
+                    // cluster id will be set to ApiId value
+                    switch ((ApiId)clusterId)
+                    {
+                        case ApiId.TxRequest16:
+                        case ApiId.TxRequest64:
+                        case ApiId.ZnetTxRequest:
+                        case ApiId.ZnetExplicitTxRequest:
+                            break;
+
+                        default:
+                            return;
+                    }
+                }
+
+                var rxResponse = response as Zigbee.RxResponse;
+                NotifyDataReceived(rxResponse.Payload, rxResponse.SourceSerial);
+            }
+        }
+
+        protected void NotifyDataReceived(byte[] payload, XBeeAddress sender)
         {
             if (DataReceived != null)
                 DataReceived(this, payload, sender);
