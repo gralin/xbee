@@ -1,30 +1,36 @@
-﻿using System.Text;
-using Microsoft.SPOT;
-using NETMF.OpenSource.XBee.Api;
+﻿using Microsoft.SPOT;
 
 namespace Gadgeteer.Tester
 {
     public partial class Program
     {
-        // This method is run when the mainboard is powered up or reset.   
+        private Timer _timer;
+
         void ProgramStarted()
         {
-            try
-            {
-                Debug.Print("XBee config: " + xbee.Api.Config);
-                xbee.Api.DataReceived += OnDataReceived;
-                xbee.Api.Send("Hello World!");
-            }
-            catch (XBeeTimeoutException)
-            {
-                Debug.Print("XBee is not responding");
-            }
+            InitializeXBee();
+
+            _timer = new Timer(10000, Timer.BehaviorType.RunOnce);
+            _timer.Tick += DiscoverNodes;
+            _timer.Start();
         }
 
-        private static void OnDataReceived(XBee receiver, byte[] data, XBeeAddress sender)
+        private void InitializeXBee()
         {
-            var dataAsString = new string(Encoding.UTF8.GetChars(data));
-            Debug.Print(receiver.Config.SerialNumber + " <- " + dataAsString + " from " + sender);
+            xbee.Configure();
+            Debug.Print(xbee.Api.Config.ToString());
+        }
+
+        private void DiscoverNodes(Timer timer)
+        {
+            var nodeCounter = 0;
+
+            xbee.Api.DiscoverNodes(nodeInfo =>
+            {
+                nodeCounter++;
+                Debug.Print("#" + nodeCounter + " - " + nodeInfo);
+                lED7R.TurnLightOn(nodeCounter);
+            });
         }
     }
 }

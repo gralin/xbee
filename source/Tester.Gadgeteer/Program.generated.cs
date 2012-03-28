@@ -17,6 +17,7 @@ namespace Gadgeteer.Tester
     {
         // GTM.Module defintions
 		Gadgeteer.Modules.GHIElectronics.XBee xbee;
+		Gadgeteer.Modules.GHIElectronics.LED7R lED7R;
 
 		public static void Main()
         {
@@ -33,6 +34,8 @@ namespace Gadgeteer.Tester
         {   
 			// Initialize GTM.Modules and event handlers here.		
 			xbee = new GTM.GHIElectronics.XBee(7);
+		
+			lED7R = new GTM.GHIElectronics.LED7R(13);
 
         }
     }
