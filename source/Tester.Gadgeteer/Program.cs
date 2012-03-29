@@ -27,9 +27,9 @@ namespace Gadgeteer.Tester
             router.Api.StatusChanged += (x, s) => OnStatusChanged(s);
             router.Api.DataReceived += OnDataReceived;
 
-            Debug.Print(coordinator.Api.Config.ToString());
-            Debug.Print(router.Api.Config.ToString());
-            Debug.Print(endDevice.Api.Config.ToString());
+            Debug.Print("Coordinator config: " + coordinator.Api.Config);
+            Debug.Print("Router config: " + router.Api.Config);
+            Debug.Print("End device config: " + endDevice.Api.Config);
         }
 
         private void OnStatusChanged(ModemStatus status)
@@ -59,9 +59,9 @@ namespace Gadgeteer.Tester
             });
         }
 
-        private void PrintNode(int nodeNumber, NodeDiscover nodeInfo)
+        private void PrintNode(int nodeNumber, DiscoverResult info)
         {
-            Debug.Print("#" + nodeNumber + " - " + nodeInfo);
+            Debug.Print("#" + nodeNumber + " - " + info);
             lED7R.TurnLightOn(nodeNumber);
         }
 

@@ -4,7 +4,7 @@ using NETMF.OpenSource.XBee.Api.Common;
 using NETMF.OpenSource.XBee.Api.Wpan;
 using NETMF.OpenSource.XBee.Api.Zigbee;
 using NETMF.OpenSource.XBee.Util;
-using NodeDiscover = NETMF.OpenSource.XBee.Api.Common.NodeDiscover;
+using DiscoverResult = NETMF.OpenSource.XBee.Api.Common.DiscoverResult;
 
 namespace NETMF.OpenSource.XBee.Api
 {
@@ -192,7 +192,7 @@ namespace NETMF.OpenSource.XBee.Api
             _modemStatusEventEnabled = false;
         }
 
-        public void DiscoverNodes(DiscoveredNodeHandler handler)
+        public void DiscoverNodes(DiscoverResultHandler handler)
         {
             Send(Common.AtCmd.NodeDiscoverTimeout).Invoke(timeoutResponse =>
             {
@@ -206,13 +206,13 @@ namespace NETMF.OpenSource.XBee.Api
             });
         }
 
-        public NodeDiscover[] DiscoverNodes()
+        public DiscoverResult[] DiscoverNodes()
         {
             var timeoutResponse = Send(Common.AtCmd.NodeDiscoverTimeout).GetResponse();
             var timeout = GetDiscoverTimeout(timeoutResponse);
             var request = CreateDiscoverRequest(timeout);
             var responses = request.GetResponses();
-            var result = new NodeDiscover[responses.Length];
+            var result = new DiscoverResult[responses.Length];
 
             for (var i = 0; i < responses.Length; i++)
                 result[i] = GetDiscoverResponse(responses[i]);
@@ -255,7 +255,7 @@ namespace NETMF.OpenSource.XBee.Api
                 : XBeeAddress16.Unknown;
         }
 
-        public delegate void DiscoveredNodeHandler(NodeDiscover node);
+        public delegate void DiscoverResultHandler(DiscoverResult node);
 
         // Creating requests
 
@@ -470,11 +470,11 @@ namespace NETMF.OpenSource.XBee.Api
             return request;
         }
 
-        protected NodeDiscover GetDiscoverResponse(XBeeResponse response)
+        protected DiscoverResult GetDiscoverResponse(XBeeResponse response)
         {
             var discoverResponse = Config.IsSeries1()
-                    ? (NodeDiscover) Wpan.NodeDiscover.Parse(response)
-                    : Zigbee.NodeDiscover.Parse(response);
+                    ? (DiscoverResult) Wpan.DiscoverResult.Parse(response)
+                    : Zigbee.DiscoverResult.Parse(response);
 
             if (_addressLookupEnabled)
             {

@@ -1,6 +1,6 @@
 ﻿namespace NETMF.OpenSource.XBee.Api.Common
 {
-    public abstract class NodeDiscover
+    public abstract class DiscoverResult
     {
         public NodeInfo NodeInfo { get; set; }
 

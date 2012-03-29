@@ -7,16 +7,16 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
     /// Series 1 XBee.
     /// Parses a Node Discover (ND) AT Command Response
     /// </summary>
-    public class NodeDiscover : Common.NodeDiscover
+    public class DiscoverResult : Common.DiscoverResult
     {
         public int Rssi { get; set; }
 
-        public static NodeDiscover Parse(XBeeResponse response)
+        public static DiscoverResult Parse(XBeeResponse response)
         {
             return Parse(response as AtResponse);
         }
 
-        public static NodeDiscover Parse(AtResponse response)
+        public static DiscoverResult Parse(AtResponse response)
         {
             if (response.Command != (ushort) Common.AtCmd.NodeDiscover)
                 throw new ArgumentException("This method is only applicable for the ND command");
@@ -28,7 +28,7 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
 
             var input = new InputStream(response.Value);
 
-            var frame = new NodeDiscover
+            var frame = new DiscoverResult
             {
                 NodeInfo = new NodeInfo
                 {

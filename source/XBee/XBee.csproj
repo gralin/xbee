@@ -35,7 +35,7 @@
     <Compile Include="Api\AsyncSendResult.cs" />
     <Compile Include="Api\Common\ApiModes.cs" />
     <Compile Include="Api\Common\AtString.cs" />
-    <Compile Include="Api\Common\NodeDiscover.cs" />
+    <Compile Include="Api\Common\DiscoverResult.cs" />
     <Compile Include="Api\Common\ResetMode.cs" />
     <Compile Include="Api\Features\Address\XBeeAddressIp.cs" />
     <Compile Include="Api\Features\At\AtCommand.cs" />
@@ -93,7 +93,7 @@
     <Compile Include="Api\Wpan\SleepMode.cs" />
     <Compile Include="Api\Wpan\TxRequest.cs" />
     <Compile Include="Api\Wpan\TxStatusResponse.cs" />
-    <Compile Include="Api\Wpan\NodeDiscover.cs" />
+    <Compile Include="Api\Wpan\DiscoverResult.cs" />
     <Compile Include="Api\XBee.cs" />
     <Compile Include="Api\Features\Address\XBeeAddress.cs" />
     <Compile Include="Api\Features\Address\XBeeAddress16.cs" />
@@ -111,7 +111,7 @@
     <Compile Include="Api\Zigbee\DeviceType.cs" />
     <Compile Include="Api\Zigbee\NodeType.cs" />
     <Compile Include="Api\Zigbee\IZigbeePacket.cs" />
-    <Compile Include="Api\Zigbee\NodeDiscover.cs" />
+    <Compile Include="Api\Zigbee\DiscoverResult.cs" />
     <Compile Include="Api\Zigbee\ExplicitRxResponse.cs" />
     <Compile Include="Api\Zigbee\ExplicitTxRequest.cs" />
     <Compile Include="Api\Zigbee\NodeIdentificationResponse.cs" />
