@@ -70,6 +70,9 @@
     <Compile Include="..\XBee\Api\Common\HardwareVersions.cs">
       <Link>Api\Common\HardwareVersions.cs</Link>
     </Compile>
+    <Compile Include="..\XBee\Api\Common\NodeDiscover.cs">
+      <Link>Api\Common\NodeDiscover.cs</Link>
+    </Compile>
     <Compile Include="..\XBee\Api\Common\NodeIdentifier.cs">
       <Link>Api\Common\NodeIdentifier.cs</Link>
     </Compile>

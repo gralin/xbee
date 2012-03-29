@@ -7,7 +7,7 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
     /// Series 1 XBee.
     /// Parses a Node Discover (ND) AT Command Response
     /// </summary>
-    public class NodeDiscover : NodeInfo
+    public class NodeDiscover : Common.NodeDiscover
     {
         public int Rssi { get; set; }
 
@@ -30,9 +30,12 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
 
             var frame = new NodeDiscover
             {
-                NetworkAddress = new XBeeAddress16(input.Read(2)),
-                SerialNumber = new XBeeAddress64(input.Read(8)),
-                Rssi = -1*input.Read()
+                NodeInfo = new NodeInfo
+                {
+                    NetworkAddress = new XBeeAddress16(input.Read(2)),
+                    SerialNumber = new XBeeAddress64(input.Read(8)),
+                },
+                Rssi = -1 * input.Read()
             };
 
             byte ch;
@@ -40,16 +43,14 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
             // NI is terminated with 0
             while ((ch = input.Read()) != 0)
                 if (ch > 32 && ch < 126)
-                    frame.NodeIdentifier += (char)ch;
+                    frame.NodeInfo.NodeIdentifier += (char)ch;
 
             return frame;
         }
 
         public override string ToString()
         {
-            return "networkAddress=" + NetworkAddress
-                   + ",serialNumber=" + SerialNumber
-                   + ",nodeIdentifier=" + NodeIdentifier
+            return base.ToString()
                    + ",rssi=" + Rssi + "dBi";
         }
     }

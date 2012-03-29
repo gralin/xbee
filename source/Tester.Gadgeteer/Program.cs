@@ -1,25 +1,35 @@
-﻿using Microsoft.SPOT;
+﻿using System.Collections;
+using System.Text;
+using Microsoft.SPOT;
 using NETMF.OpenSource.XBee.Api;
-using Gadgeteer.Modules.GHIElectronics;
+using NETMF.OpenSource.XBee.Api.Common;
+using XBee = NETMF.OpenSource.XBee.Api.XBee;
 
 namespace Gadgeteer.Tester
 {
     public partial class Program
     {
+        private const string Ping = "PING";
+        private const string Pong = "PONG";
+        private ArrayList _nodes;
+
         void ProgramStarted()
         {
-            coordinator.Configure();
+            lED7R.TurnLightOn(7, true);
 
-            router.Configure();            
-            router.Api.StatusChanged += (x, s) => OnStatusChanged(s);
+            coordinator.Configure();
+            coordinator.Api.DataReceived += OnDataReceived;
 
             endDevice.Configure();
+            endDevice.Api.DataReceived += OnDataReceived;
+
+            router.Configure();
+            router.Api.StatusChanged += (x, s) => OnStatusChanged(s);
+            router.Api.DataReceived += OnDataReceived;
 
             Debug.Print(coordinator.Api.Config.ToString());
             Debug.Print(router.Api.Config.ToString());
             Debug.Print(endDevice.Api.Config.ToString());
-
-            lED7R.TurnLightOn(7, true);
         }
 
         private void OnStatusChanged(ModemStatus status)
@@ -30,19 +40,45 @@ namespace Gadgeteer.Tester
 
         private void DiscoverNodes()
         {
-            var nodeCounter = 0;
+            _nodes = new ArrayList();
 
-            router.Api.DiscoverNodes(nodeInfo =>
+            router.Api.DiscoverNodes(node =>
             {
-                nodeCounter++;
-                PrintNode(nodeCounter, nodeInfo);
+                var nodeInfo = node.NodeInfo;
+
+                if (_nodes.Contains(nodeInfo))
+                    return;
+
+                _nodes.Add(nodeInfo);
+
+                PrintNode(_nodes.Count, node);
+
+                // depending on XBee settings discovery may return local node info
+                if (nodeInfo.SerialNumber != router.Api.Config.SerialNumber)
+                    router.Api.Send(Ping).To(nodeInfo).NoResponse();
             });
         }
 
-        private void PrintNode(int nodeNumber, NodeInfo nodeInfo)
+        private void PrintNode(int nodeNumber, NodeDiscover nodeInfo)
         {
             Debug.Print("#" + nodeNumber + " - " + nodeInfo);
             lED7R.TurnLightOn(nodeNumber);
+        }
+
+        private static void OnDataReceived(XBee receiver, byte[] data, XBeeAddress sender)
+        {
+            var dataStr = new string(Encoding.UTF8.GetChars(data));
+
+            switch (dataStr)
+            {
+                case Ping:
+                    receiver.Send(Pong).To(sender).NoResponse();
+                    break;
+
+                case Pong:
+                    Debug.Print("Received Pong from " + sender);
+                    break;
+            }
         }
     }
 }

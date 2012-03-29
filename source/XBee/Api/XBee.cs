@@ -4,6 +4,7 @@ using NETMF.OpenSource.XBee.Api.Common;
 using NETMF.OpenSource.XBee.Api.Wpan;
 using NETMF.OpenSource.XBee.Api.Zigbee;
 using NETMF.OpenSource.XBee.Util;
+using NodeDiscover = NETMF.OpenSource.XBee.Api.Common.NodeDiscover;
 
 namespace NETMF.OpenSource.XBee.Api
 {
@@ -195,26 +196,26 @@ namespace NETMF.OpenSource.XBee.Api
         {
             Send(Common.AtCmd.NodeDiscoverTimeout).Invoke(timeoutResponse =>
             {
-                var timeout = GetNodeDiscoverTimeout(timeoutResponse);
-                var request = CreateNodeDiscoverRequest(timeout);
+                var timeout = GetDiscoverTimeout(timeoutResponse);
+                var request = CreateDiscoverRequest(timeout);
                 request.Invoke((response, finished) =>
                 {
                     if (response != null)
-                        handler(GetDiscoveredNode(response));
+                        handler(GetDiscoverResponse(response));
                 });
             });
         }
 
-        public NodeInfo[] DiscoverNodes()
+        public NodeDiscover[] DiscoverNodes()
         {
             var timeoutResponse = Send(Common.AtCmd.NodeDiscoverTimeout).GetResponse();
-            var timeout = GetNodeDiscoverTimeout(timeoutResponse);
-            var request = CreateNodeDiscoverRequest(timeout);
+            var timeout = GetDiscoverTimeout(timeoutResponse);
+            var request = CreateDiscoverRequest(timeout);
             var responses = request.GetResponses();
-            var result = new NodeInfo[responses.Length];
+            var result = new NodeDiscover[responses.Length];
 
             for (var i = 0; i < responses.Length; i++)
-                result[i] = GetDiscoveredNode(responses[i]);
+                result[i] = GetDiscoverResponse(responses[i]);
 
             return result;
         }
@@ -254,7 +255,7 @@ namespace NETMF.OpenSource.XBee.Api
                 : XBeeAddress16.Unknown;
         }
 
-        public delegate void DiscoveredNodeHandler(NodeInfo node);
+        public delegate void DiscoveredNodeHandler(NodeDiscover node);
 
         // Creating requests
 
@@ -456,29 +457,32 @@ namespace NETMF.OpenSource.XBee.Api
             }
         }
 
-        protected int GetNodeDiscoverTimeout(AtResponse response)
+        protected int GetDiscoverTimeout(AtResponse response)
         {
             // ms + 1 extra second
             return UshortUtils.ToUshort(response.Value) * 100 + 1000;
         }
 
-        protected IRequest CreateNodeDiscoverRequest(int timeout)
+        protected IRequest CreateDiscoverRequest(int timeout)
         {
             var filter = new NodeDiscoveryFilter();
             var request = Send(Common.AtCmd.NodeDiscover).Use(filter).Timeout(timeout);
             return request;
         }
 
-        protected NodeInfo GetDiscoveredNode(XBeeResponse response)
+        protected NodeDiscover GetDiscoverResponse(XBeeResponse response)
         {
-            var foundNode = Config.IsSeries1()
-                                ? (NodeInfo)Wpan.NodeDiscover.Parse(response)
-                                : Zigbee.NodeDiscover.Parse(response);
+            var discoverResponse = Config.IsSeries1()
+                    ? (NodeDiscover) Wpan.NodeDiscover.Parse(response)
+                    : Zigbee.NodeDiscover.Parse(response);
 
             if (_addressLookupEnabled)
-                AddressLookup[foundNode.SerialNumber] = foundNode.NetworkAddress;
+            {
+                var nodeInfo = discoverResponse.NodeInfo;
+                AddressLookup[nodeInfo.SerialNumber] = nodeInfo.NetworkAddress;
+            }
 
-            return foundNode;
+            return discoverResponse;
         }
 
         protected void OnAddressReceived(XBeeResponse response, bool finished)

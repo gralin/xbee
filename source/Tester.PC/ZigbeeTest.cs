@@ -30,7 +30,7 @@ namespace PC.Tester
                 {
                     Console.WriteLine("#" + (i + 1) + " - " + foundNodes[i]);
 
-                    if (foundNodes[i].SerialNumber != xbee.Config.SerialNumber)
+                    if (foundNodes[i].NodeInfo.SerialNumber != xbee.Config.SerialNumber)
                         foundNode = (NodeDiscover)foundNodes[i];
                 }
 
