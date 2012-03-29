@@ -70,6 +70,7 @@
     <Compile Include="Api\INoRequestResponse.cs" />
     <Compile Include="Api\Features\Listenning\IPacketListener.cs" />
     <Compile Include="Api\IPacketParser.cs" />
+    <Compile Include="Api\ModemStatus.cs" />
     <Compile Include="Api\ModemStatusResponse.cs" />
     <Compile Include="Api\Common\NodeInfo.cs" />
     <Compile Include="Api\PacketIdGenerator.cs" />

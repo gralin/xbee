@@ -23,6 +23,9 @@ namespace NETMF.OpenSource.XBee.Api
         private IPacketListener _dataReceivedListener;
         private bool _dataReceivedEventEnabled;
 
+        private IPacketListener _modemStatusListener;
+        private bool _modemStatusEventEnabled;
+
         private readonly AtRequest _atRequest;
         private readonly DataRequest _dataRequest;
         private readonly RawRequest _rawRequest;
@@ -69,6 +72,7 @@ namespace NETMF.OpenSource.XBee.Api
             _connection.Open();
             ReadConfiguration();
             EnableDataReceivedEvent();
+            EnableModemStatusEvent();
 
             if (Config.IsSeries2())
                 EnableAddressLookup();
@@ -166,19 +170,46 @@ namespace NETMF.OpenSource.XBee.Api
             _dataReceivedEventEnabled = false;
         }
 
+        public void EnableModemStatusEvent()
+        {
+            if (_modemStatusEventEnabled)
+                return;
+
+            if (_modemStatusListener == null)
+                _modemStatusListener = new PacketListener(new PacketTypeFilter(typeof(ModemStatusResponse)), -1, OnModemStatusReceived);
+
+            AddPacketListener(_modemStatusListener);
+            _modemStatusEventEnabled = true;
+        }
+
+        public void DisableModemStatusEvent()
+        {
+            if (!_modemStatusEventEnabled)
+                return;
+
+            RemovePacketListener(_modemStatusListener);
+            _modemStatusEventEnabled = false;
+        }
+
         public void DiscoverNodes(DiscoveredNodeHandler handler)
         {
-            var request = CreateNodeDiscoverRequest();
-            request.Invoke((response, finished) =>
+            Send(Common.AtCmd.NodeDiscoverTimeout).Invoke(timeoutResponse =>
             {
-                if (response != null)
-                    handler(GetDiscoveredNode(response));   
+                var timeout = GetNodeDiscoverTimeout(timeoutResponse);
+                var request = CreateNodeDiscoverRequest(timeout);
+                request.Invoke((response, finished) =>
+                {
+                    if (response != null)
+                        handler(GetDiscoveredNode(response));
+                });
             });
         }
 
         public NodeInfo[] DiscoverNodes()
         {
-            var request = CreateNodeDiscoverRequest();
+            var timeoutResponse = Send(Common.AtCmd.NodeDiscoverTimeout).GetResponse();
+            var timeout = GetNodeDiscoverTimeout(timeoutResponse);
+            var request = CreateNodeDiscoverRequest(timeout);
             var responses = request.GetResponses();
             var result = new NodeInfo[responses.Length];
 
@@ -195,8 +226,8 @@ namespace NETMF.OpenSource.XBee.Api
                 case ResetMode.Software:
                     var modemStatusFilter = new PacketTypeFilter(typeof(ModemStatusResponse));
                     var response = Send(Common.AtCmd.SoftwareReset).Use(modemStatusFilter).GetResponse();
-                    var modemStatus = ((ModemStatusResponse) response).ResponseStatus;
-                    if (modemStatus != ModemStatusResponse.Status.WatchdogTimerReset)
+                    var modemStatus = ((ModemStatusResponse) response).Status;
+                    if (modemStatus != ModemStatus.WatchdogTimerReset)
                         throw new XBeeException("Unexpected modem status: " + modemStatus);
                     break;
 
@@ -425,14 +456,14 @@ namespace NETMF.OpenSource.XBee.Api
             }
         }
 
-        protected IRequest CreateNodeDiscoverRequest()
+        protected int GetNodeDiscoverTimeout(AtResponse response)
         {
-            var timeoutResponse = Send(Common.AtCmd.NodeDiscoverTimeout).GetResponse();
-            int timeout = UshortUtils.ToUshort(timeoutResponse.Value);
-
             // ms + 1 extra second
-            timeout = timeout * 100 + 1000;
+            return UshortUtils.ToUshort(response.Value) * 100 + 1000;
+        }
 
+        protected IRequest CreateNodeDiscoverRequest(int timeout)
+        {
             var filter = new NodeDiscoveryFilter();
             var request = Send(Common.AtCmd.NodeDiscover).Use(filter).Timeout(timeout);
             return request;
@@ -519,14 +550,30 @@ namespace NETMF.OpenSource.XBee.Api
             }
         }
 
+        protected void OnModemStatusReceived(XBeeResponse response, bool finished)
+        {
+            var statusResponse = (ModemStatusResponse) response;
+            NotifyStatusChanged(statusResponse.Status);
+        }
+
         protected void NotifyDataReceived(byte[] payload, XBeeAddress sender)
         {
             if (DataReceived != null)
                 DataReceived(this, payload, sender);
         }
 
+        protected void NotifyStatusChanged(ModemStatus status)
+        {
+            if (StatusChanged != null)
+                StatusChanged(this, status);
+        }
+
         public event XBeeDataReceivedEventHandler DataReceived;
 
+        public event XBeeModemStatusEventHandler StatusChanged;
+
         public delegate void XBeeDataReceivedEventHandler(XBee receiver, byte[] data, XBeeAddress sender);
+
+        public delegate void XBeeModemStatusEventHandler(XBee xbee, ModemStatus status);
     }
 }

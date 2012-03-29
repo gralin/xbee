@@ -181,6 +181,9 @@
     <Compile Include="..\XBee\Api\IPacketParser.cs">
       <Link>Api\IPacketParser.cs</Link>
     </Compile>
+    <Compile Include="..\XBee\Api\ModemStatus.cs">
+      <Link>Api\ModemStatus.cs</Link>
+    </Compile>
     <Compile Include="..\XBee\Api\ModemStatusResponse.cs">
       <Link>Api\ModemStatusResponse.cs</Link>
     </Compile>
