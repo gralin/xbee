@@ -61,6 +61,9 @@
     <Compile Include="..\XBee\Api\Common\AtString.cs">
       <Link>Api\Common\AtString.cs</Link>
     </Compile>
+    <Compile Include="..\XBee\Api\Common\DiscoverResult.cs">
+      <Link>Api\Common\DiscoverResult.cs</Link>
+    </Compile>
     <Compile Include="..\XBee\Api\Common\Firmware.cs">
       <Link>Api\Common\Firmware.cs</Link>
     </Compile>
@@ -118,17 +121,17 @@
     <Compile Include="..\XBee\Api\Features\At\RemoteAtResponse.cs">
       <Link>Api\Features\At\RemoteAtResponse.cs</Link>
     </Compile>
-    <Compile Include="..\XBee\Api\Features\Listenning\AddressLookupListener.cs">
-      <Link>Api\Features\Listenning\AddressLookupListener.cs</Link>
+    <Compile Include="..\XBee\Api\Features\Listenning\AddressPacketFilter.cs">
+      <Link>Api\Features\Listenning\AddressPacketFilter.cs</Link>
     </Compile>
     <Compile Include="..\XBee\Api\Features\Listenning\AtResponseFilter.cs">
       <Link>Api\Features\Listenning\AtResponseFilter.cs</Link>
     </Compile>
-    <Compile Include="..\XBee\Api\Features\Listenning\AtResponseListener.cs">
-      <Link>Api\Features\Listenning\AtResponseListener.cs</Link>
+    <Compile Include="..\XBee\Api\Features\Listenning\AtResponseHandler.cs">
+      <Link>Api\Features\Listenning\AtResponseHandler.cs</Link>
     </Compile>
-    <Compile Include="..\XBee\Api\Features\Listenning\DataReceivedListener.cs">
-      <Link>Api\Features\Listenning\DataReceivedListener.cs</Link>
+    <Compile Include="..\XBee\Api\Features\Listenning\DataPacketFilter.cs">
+      <Link>Api\Features\Listenning\DataPacketFilter.cs</Link>
     </Compile>
     <Compile Include="..\XBee\Api\Features\Listenning\IPacketFilter.cs">
       <Link>Api\Features\Listenning\IPacketFilter.cs</Link>
@@ -138,9 +141,6 @@
     </Compile>
     <Compile Include="..\XBee\Api\Features\Listenning\NodeDiscoveryFilter.cs">
       <Link>Api\Features\Listenning\NodeDiscoveryFilter.cs</Link>
-    </Compile>
-    <Compile Include="..\XBee\Api\Features\Listenning\NodeDiscoveryListener.cs">
-      <Link>Api\Features\Listenning\NodeDiscoveryListener.cs</Link>
     </Compile>
     <Compile Include="..\XBee\Api\Features\Listenning\PacketCountFilter.cs">
       <Link>Api\Features\Listenning\PacketCountFilter.cs</Link>
@@ -154,8 +154,8 @@
     <Compile Include="..\XBee\Api\Features\Listenning\PacketTypeFilter.cs">
       <Link>Api\Features\Listenning\PacketTypeFilter.cs</Link>
     </Compile>
-    <Compile Include="..\XBee\Api\Features\Listenning\SinglePacketListener.cs">
-      <Link>Api\Features\Listenning\SinglePacketListener.cs</Link>
+    <Compile Include="..\XBee\Api\Features\Listenning\ResponseHandler.cs">
+      <Link>Api\Features\Listenning\ResponseHandler.cs</Link>
     </Compile>
     <Compile Include="..\XBee\Api\Features\Sending\AtRequest.cs">
       <Link>Api\Features\Sending\AtRequest.cs</Link>
@@ -184,6 +184,9 @@
     <Compile Include="..\XBee\Api\IPacketParser.cs">
       <Link>Api\IPacketParser.cs</Link>
     </Compile>
+    <Compile Include="..\XBee\Api\ModemStatus.cs">
+      <Link>Api\ModemStatus.cs</Link>
+    </Compile>
     <Compile Include="..\XBee\Api\ModemStatusResponse.cs">
       <Link>Api\ModemStatusResponse.cs</Link>
     </Compile>
@@ -202,6 +205,9 @@
     <Compile Include="..\XBee\Api\Wpan\AtCmd.cs">
       <Link>Api\Wpan\AtCmd.cs</Link>
     </Compile>
+    <Compile Include="..\XBee\Api\Wpan\DiscoverResult.cs">
+      <Link>Api\Wpan\DiscoverResult.cs</Link>
+    </Compile>
     <Compile Include="..\XBee\Api\Wpan\IoSample.cs">
       <Link>Api\Wpan\IoSample.cs</Link>
     </Compile>
@@ -210,9 +216,6 @@
     </Compile>
     <Compile Include="..\XBee\Api\Wpan\IWpanPacket.cs">
       <Link>Api\Wpan\IWpanPacket.cs</Link>
-    </Compile>
-    <Compile Include="..\XBee\Api\Wpan\NodeDiscover.cs">
-      <Link>Api\Wpan\NodeDiscover.cs</Link>
     </Compile>
     <Compile Include="..\XBee\Api\Wpan\Pin.cs">
       <Link>Api\Wpan\Pin.cs</Link>
@@ -271,6 +274,9 @@
     <Compile Include="..\XBee\Api\Zigbee\DeviceType.cs">
       <Link>Api\Zigbee\DeviceType.cs</Link>
     </Compile>
+    <Compile Include="..\XBee\Api\Zigbee\DiscoverResult.cs">
+      <Link>Api\Zigbee\DiscoverResult.cs</Link>
+    </Compile>
     <Compile Include="..\XBee\Api\Zigbee\ExplicitRxResponse.cs">
       <Link>Api\Zigbee\ExplicitRxResponse.cs</Link>
     </Compile>
@@ -282,9 +288,6 @@
     </Compile>
     <Compile Include="..\XBee\Api\Zigbee\IZigbeePacket.cs">
       <Link>Api\Zigbee\IZigbeePacket.cs</Link>
-    </Compile>
-    <Compile Include="..\XBee\Api\Zigbee\NodeDiscover.cs">
-      <Link>Api\Zigbee\NodeDiscover.cs</Link>
     </Compile>
     <Compile Include="..\XBee\Api\Zigbee\NodeIdentificationResponse.cs">
       <Link>Api\Zigbee\NodeIdentificationResponse.cs</Link>

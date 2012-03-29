@@ -14,6 +14,7 @@ namespace NETMF.OpenSource.XBee.Api
         IRequest ToAll();
 
         AsyncSendResult Invoke();
+        void Invoke(ResponseHandler responseHandler);
 
         void NoResponse();
         XBeeResponse[] GetResponses();

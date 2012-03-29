@@ -7,16 +7,16 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
     /// Series 1 XBee.
     /// Parses a Node Discover (ND) AT Command Response
     /// </summary>
-    public class NodeDiscover : NodeInfo
+    public class DiscoverResult : Common.DiscoverResult
     {
         public int Rssi { get; set; }
 
-        public static NodeDiscover Parse(XBeeResponse response)
+        public static DiscoverResult Parse(XBeeResponse response)
         {
             return Parse(response as AtResponse);
         }
 
-        public static NodeDiscover Parse(AtResponse response)
+        public static DiscoverResult Parse(AtResponse response)
         {
             if (response.Command != (ushort) Common.AtCmd.NodeDiscover)
                 throw new ArgumentException("This method is only applicable for the ND command");
@@ -28,11 +28,14 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
 
             var input = new InputStream(response.Value);
 
-            var frame = new NodeDiscover
+            var frame = new DiscoverResult
             {
-                NetworkAddress = new XBeeAddress16(input.Read(2)),
-                SerialNumber = new XBeeAddress64(input.Read(8)),
-                Rssi = -1*input.Read()
+                NodeInfo = new NodeInfo
+                {
+                    NetworkAddress = new XBeeAddress16(input.Read(2)),
+                    SerialNumber = new XBeeAddress64(input.Read(8)),
+                },
+                Rssi = -1 * input.Read()
             };
 
             byte ch;
@@ -40,16 +43,14 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
             // NI is terminated with 0
             while ((ch = input.Read()) != 0)
                 if (ch > 32 && ch < 126)
-                    frame.NodeIdentifier += (char)ch;
+                    frame.NodeInfo.NodeIdentifier += (char)ch;
 
             return frame;
         }
 
         public override string ToString()
         {
-            return "networkAddress=" + NetworkAddress
-                   + ",serialNumber=" + SerialNumber
-                   + ",nodeIdentifier=" + NodeIdentifier
+            return base.ToString()
                    + ",rssi=" + Rssi + "dBi";
         }
     }

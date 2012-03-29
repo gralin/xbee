@@ -4,7 +4,7 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
 {
     /// <summary>
     /// This frame is received when a module transmits a node identification message to identify itself (when AO=0).
-    /// The data portion of this frame is similar to a network discovery response frame (see <see cref="NodeDiscover"/>).
+    /// The data portion of this frame is similar to a network discovery response frame (see <see cref="DiscoverResult"/>).
     /// </summary>
     /// <example>
     /// If the commissioning push button is pressed on a remote router device with 64-bit address 0x0013A20040522BAA, 

@@ -47,7 +47,6 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="XBee.cs" />
-    <Compile Include="XBeeConnection.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Gadgeteer">
@@ -81,7 +80,7 @@
   <ItemGroup>
     <ProjectReference Include="..\XBee\XBee.csproj">
       <Project>{7F280F44-4AE1-4917-83BC-36825E729EC2}</Project>
-      <Name>XBee.Core</Name>
+      <Name>XBee</Name>
     </ProjectReference>
   </ItemGroup>
   <!--Stuff for wix-->

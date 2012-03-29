@@ -1,79 +1,81 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Threading;
-using NETMF.OpenSource.XBee.Util;
 
 namespace NETMF.OpenSource.XBee.Api
 {
     public class PacketListener : IPacketListener
     {
+        private bool _finished;
+
         protected IPacketFilter Filter;
         protected readonly ArrayList Packets;
-        protected AutoResetEvent PacketProcessed;
+        protected Timer TimeoutTimer;
+        protected ResponseHandler ResponseHandler;
+        protected AutoResetEvent FinishedFlag;
 
-        public PacketListener(IPacketFilter filter = null)
+        public bool Finished
+        {
+            get { return _finished; }
+            protected set
+            {
+                _finished = value;
+
+                if (!_finished) 
+                    return;
+
+                if (TimeoutTimer != null)
+                    TimeoutTimer.Dispose();
+                    
+                FinishedFlag.Set();
+            }
+        }
+
+        public PacketListener(IPacketFilter filter = null, int timeout = 5000, ResponseHandler responseHandler = null)
         {
             Filter = filter;
             Packets = new ArrayList();
-            PacketProcessed = new AutoResetEvent(false);
+            FinishedFlag = new AutoResetEvent(false);
+            ResponseHandler = responseHandler;
+           
+            if (timeout > 0)
+                TimeoutTimer = new Timer(s => OnTimeout(), null, timeout, -1); 
         }
 
-        public bool Finished { get; protected set; }
-
-        public void ProcessPacket(XBeeResponse packet)
+        public virtual void ProcessPacket(XBeeResponse packet)
         {
             if (Finished)
                 return;
 
+            var packetAccepted = false;
+
             if (Filter == null || Filter.Accepted(packet))
+            {
                 Packets.Add(packet);
+                packetAccepted = true;
+            }
 
             Finished = (Filter != null && Filter.Finished());
 
-            PacketProcessed.Set();
+            if (packetAccepted && ResponseHandler != null)
+                ResponseHandler.Invoke(packet, Finished);
         }
 
-        public virtual XBeeResponse[] GetPackets(int timeout = -1)
+        public XBeeResponse[] GetPackets(int timeout = -1)
         {
-            if (Filter == null)
-            {
-                // if there is no Filter and timeout has been specified
-                // it will cause the method to block for given timeout time
-                if (timeout != -1)
-                    Thread.Sleep(timeout);
+            FinishedFlag.WaitOne(timeout, false);
 
-                return GetPacketsAsArray();   
-            }
+            if (Packets.Count == 0)
+                return new XBeeResponse[0];
 
-            while (!Finished)
-            {
-                var startTime = DateTime.Now;
-
-                // wait max timeout time for any packet to be processed
-                if (!PacketProcessed.WaitOne(timeout, false))
-                {
-                    Logger.LowDebug("Packet listener timeout");
-                    break;
-                }
-
-                // -1 means timeout is not used
-                if (timeout == -1) 
-                    continue;
-                
-                // decrement next iteration timeout value by elasped time
-                timeout -= (int) (DateTime.Now.Subtract(startTime).Ticks/TimeSpan.TicksPerMillisecond);
-                    
-                // end waiting if no timeout time is left
-                if (timeout <= 0)
-                    break;
-            }
-
-            return GetPacketsAsArray();
-        }
-
-        protected XBeeResponse[] GetPacketsAsArray()
-        {
             return (XBeeResponse[])Packets.ToArray(typeof(XBeeResponse));
+        }
+
+        protected virtual void OnTimeout()
+        {
+            Finished = true;
+
+            if (ResponseHandler != null)
+                ResponseHandler.Invoke(null, Finished);
         }
     }
 }

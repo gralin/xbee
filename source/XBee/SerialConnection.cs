@@ -2,37 +2,27 @@
 
 namespace NETMF.OpenSource.XBee
 {
-    internal class SerialConnection : IXBeeConnection
+    public class SerialConnection : IXBeeConnection
     {
         private readonly SerialPort _serialPort;
         private readonly byte[] _buffer;
-
+        
         public SerialConnection(string portName, int baudRate)
         {
             _serialPort = new SerialPort(portName, baudRate);
             _buffer = new byte[1024];
-
-            _serialPort.DataReceived += (sender, args) =>
-            {
-                while (_serialPort.BytesToRead > 0)
-                {
-                    var bytesRead = _serialPort.Read(_buffer, 0, _serialPort.BytesToRead);
-
-                    if (bytesRead <= 0)
-                        return;
-
-                    DataReceived(_buffer, 0, bytesRead);
-                }
-            };
         }
 
         public void Open()
         {
+            // .NET MF 4.1 requires to subscribe to serial events after openning the port
             _serialPort.Open();
+            _serialPort.DataReceived += OnDataReceived;
         }
 
         public void Close()
         {
+            _serialPort.DataReceived -= OnDataReceived;
             _serialPort.Close();
         }
 
@@ -49,6 +39,19 @@ namespace NETMF.OpenSource.XBee
         public void Send(byte[] data, int offset, int count)
         {
             _serialPort.Write(data, offset, count);
+        }
+
+        private void OnDataReceived(object sender, SerialDataReceivedEventArgs args)
+        {
+            while (_serialPort.BytesToRead > 0)
+            {
+                var bytesRead = _serialPort.Read(_buffer, 0, _serialPort.BytesToRead);
+
+                if (bytesRead <= 0)
+                    return;
+
+                DataReceived(_buffer, 0, bytesRead);
+            }
         }
 
         public event DataReceivedEventHandler DataReceived;

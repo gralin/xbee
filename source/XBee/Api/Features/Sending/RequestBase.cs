@@ -93,12 +93,30 @@ namespace NETMF.OpenSource.XBee.Api
                     return null;
 
                 case Response.Single:
-                    InitFilter(request);
-                    return LocalXBee.BeginSend(request, new SinglePacketListener(Filter));
-
                 case Response.Multiple:
                     InitFilter(request);
-                    return LocalXBee.BeginSend(request, new PacketListener(Filter));
+                    return LocalXBee.BeginSend(request, Filter, TimeoutValue);
+
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
+        public void Invoke(ResponseHandler responseHandler)
+        {
+            var request = CreateRequest();
+
+            switch (ExpectedResponse)
+            {
+                case Response.None:
+                    LocalXBee.SendNoReply(request);
+                    break;
+
+                case Response.Single:
+                case Response.Multiple:
+                    InitFilter(request);
+                    LocalXBee.BeginSend(request, responseHandler, Filter, TimeoutValue);
+                    break;
 
                 default:
                     throw new NotImplementedException();
@@ -114,7 +132,12 @@ namespace NETMF.OpenSource.XBee.Api
         public XBeeResponse GetResponse()
         {
             ExpectedResponse = Response.Single;
-            return Invoke().EndReceive(TimeoutValue)[0];
+            var responses = Invoke().EndReceive(TimeoutValue);
+
+            if (responses.Length == 0)
+                throw new XBeeTimeoutException();
+
+            return responses[0];
         }
 
         public void NoResponse()

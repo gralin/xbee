@@ -6,7 +6,7 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
     /// <summary>
     /// Series 2 XBee. Parses a Node Discover (ND) AT Command Response
     /// </summary>
-    public class NodeDiscover : NodeInfo
+    public class DiscoverResult : Common.DiscoverResult
     {
         public XBeeAddress16 Parent { get; set; }
         public NodeType NodeType { get; set; }
@@ -32,39 +32,36 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
             }
         }
 
-        public static NodeDiscover Parse(XBeeResponse response)
+        public static DiscoverResult Parse(XBeeResponse response)
         {
             return Parse(response as AtResponse);
         }
 
-        public static NodeDiscover Parse(AtResponse response)
+        public static DiscoverResult Parse(AtResponse response)
         {
             if (response.Command != (ushort) Common.AtCmd.NodeDiscover)
                 throw new ArgumentException("This method is only applicable for the ND command");
 
             var input = new InputStream(response.Value);
 
-            var frame = new NodeDiscover
+            var frame = new DiscoverResult
             {
-                NetworkAddress = new XBeeAddress16(input.Read(2)),
-                SerialNumber = new XBeeAddress64(input.Read(8))
+                NodeInfo = new NodeInfo
+                {
+                    NetworkAddress = new XBeeAddress16(input.Read(2)),
+                    SerialNumber = new XBeeAddress64(input.Read(8))   
+                }
             };
-
-            var nodeIdentifier = string.Empty;
 
             byte ch;
 
             // NI is terminated with 0
             while ((ch = input.Read()) != 0)
-            {
                 if (ch > 32 && ch < 126)
-                    nodeIdentifier += (char)ch;
-            }
+                    frame.NodeInfo.NodeIdentifier += (char)ch;
 
-            frame.NodeIdentifier = nodeIdentifier;
             frame.Parent = new XBeeAddress16(input.Read(2));
             frame.NodeType = (NodeType) input.Read();
-            // TODO: this is being reported as 1 (router) for my end device
             frame.Status = input.Read();
             frame.ProfileId = input.Read(2);
             frame.MfgId = input.Read(2);
@@ -74,10 +71,9 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
 
         public override string ToString()
         {
-            return NodeTypeName 
-                + ", S/N=" + SerialNumber 
-                + ", Address=" + NetworkAddress
-                + ", Parent=" + Parent;
+            return NodeTypeName
+                + ", " + base.ToString()
+                + ", parent=" + Parent;
         }
     }
 }
