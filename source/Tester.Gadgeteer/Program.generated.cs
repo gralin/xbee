@@ -16,8 +16,10 @@ namespace Gadgeteer.Tester
     public partial class Program : Gadgeteer.Program
     {
         // GTM.Module defintions
-		Gadgeteer.Modules.GHIElectronics.XBee xbee;
+		Gadgeteer.Modules.GHIElectronics.XBee router;
 		Gadgeteer.Modules.GHIElectronics.LED7R lED7R;
+		Gadgeteer.Modules.GHIElectronics.XBee coordinator;
+		Gadgeteer.Modules.GHIElectronics.XBee endDevice;
 
 		public static void Main()
         {
@@ -33,7 +35,11 @@ namespace Gadgeteer.Tester
         private void InitializeModules()
         {   
 			// Initialize GTM.Modules and event handlers here.		
-			xbee = new GTM.GHIElectronics.XBee(7);
+			coordinator = new GTM.GHIElectronics.XBee(4);
+		
+			endDevice = new GTM.GHIElectronics.XBee(6);
+		
+			router = new GTM.GHIElectronics.XBee(7);
 		
 			lED7R = new GTM.GHIElectronics.LED7R(13);
 

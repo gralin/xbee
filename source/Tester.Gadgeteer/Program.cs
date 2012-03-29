@@ -1,5 +1,6 @@
 ﻿using Microsoft.SPOT;
 using NETMF.OpenSource.XBee.Api;
+using Gadgeteer.Modules.GHIElectronics;
 
 namespace Gadgeteer.Tester
 {
@@ -7,9 +8,17 @@ namespace Gadgeteer.Tester
     {
         void ProgramStarted()
         {
-            xbee.Configure();
-            xbee.Api.StatusChanged += (x, s) => OnStatusChanged(s);
-            Debug.Print(xbee.Api.Config.ToString());
+            coordinator.Configure();
+
+            router.Configure();            
+            router.Api.StatusChanged += (x, s) => OnStatusChanged(s);
+
+            endDevice.Configure();
+
+            Debug.Print(coordinator.Api.Config.ToString());
+            Debug.Print(router.Api.Config.ToString());
+            Debug.Print(endDevice.Api.Config.ToString());
+
             lED7R.TurnLightOn(7, true);
         }
 
@@ -23,7 +32,7 @@ namespace Gadgeteer.Tester
         {
             var nodeCounter = 0;
 
-            xbee.Api.DiscoverNodes(nodeInfo =>
+            router.Api.DiscoverNodes(nodeInfo =>
             {
                 nodeCounter++;
                 PrintNode(nodeCounter, nodeInfo);
