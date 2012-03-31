@@ -1,4 +1,5 @@
 ﻿using System;
+using NETMF.OpenSource.XBee.Api.Common;
 using NETMF.OpenSource.XBee.Util;
 
 namespace NETMF.OpenSource.XBee.Api.Zigbee
@@ -39,7 +40,7 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
 
         public static DiscoverResult Parse(AtResponse response)
         {
-            if (response.Command != (ushort) Common.AtCmd.NodeDiscover)
+            if (response.Command != (ushort) AtCmd.NodeDiscover)
                 throw new ArgumentException("This method is only applicable for the ND command");
 
             var input = new InputStream(response.Value);

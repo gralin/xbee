@@ -1,4 +1,5 @@
 ﻿using System;
+using NETMF.OpenSource.XBee.Api.Common;
 using NETMF.OpenSource.XBee.Util;
 
 namespace NETMF.OpenSource.XBee.Api.Wpan
@@ -18,7 +19,7 @@ namespace NETMF.OpenSource.XBee.Api.Wpan
 
         public static DiscoverResult Parse(AtResponse response)
         {
-            if (response.Command != (ushort) Common.AtCmd.NodeDiscover)
+            if (response.Command != (ushort) AtCmd.NodeDiscover)
                 throw new ArgumentException("This method is only applicable for the ND command");
 
             // empty response is received after the last disovered node
