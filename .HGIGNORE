@@ -6,3 +6,6 @@ obj
 *.user
 libraries
 *.dat
+*.ncrunchsolution
+*.ncrunchproject
+*.crunchsolution.cache

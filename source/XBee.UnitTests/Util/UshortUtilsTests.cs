@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System;
+using NUnit.Framework;
 
 namespace NETMF.OpenSource.XBee.Util
 {
@@ -60,6 +61,29 @@ namespace NETMF.OpenSource.XBee.Util
         public void from_single_byte_to_ushort_test()
         {
             Assert.AreEqual(0x0001, UshortUtils.ToUshort(0x01));
+        }
+        
+        [Test]
+        public void get_lsb_bit_test()
+        {
+            const byte lsbIndex = 0;
+            const ushort value = 1 << lsbIndex;
+            Assert.AreEqual(true, UshortUtils.GetBit(value, lsbIndex));
+        }
+
+        [Test]
+        public void get_msb_bit_test()
+        {
+            const byte msbIndex = 15;
+            const ushort value = 1 << msbIndex;
+            Assert.AreEqual(true, UshortUtils.GetBit(value, msbIndex));
+        }
+
+        [Test]
+        public void get_bit_out_of_range_test()
+        {
+            Assert.Throws<IndexOutOfRangeException>(() =>
+                UshortUtils.GetBit(0x10, 16));
         }
     }
 }

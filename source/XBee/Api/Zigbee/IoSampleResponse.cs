@@ -102,7 +102,7 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
             var pinNumber = (byte)pin;
 
             if ((pinNumber >= 0 && pinNumber <= 3) || pin == Pin.SupplyVoltage)
-                return ByteUtils.GetBit(AnalogChannelMask, pinNumber + 1);
+                return ByteUtils.GetBit(AnalogChannelMask, pinNumber);
 
             throw new ArgumentOutOfRangeException("Unsupported pin: " + pin);
         }
@@ -112,10 +112,10 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
             var pinNumber = (byte)pin;
 
             if (pinNumber >= 0 && pinNumber <= 7)
-                return ByteUtils.GetBit(UshortUtils.Lsb(DigitalChannelMask), pinNumber + 1);
+                return ByteUtils.GetBit(UshortUtils.Lsb(DigitalChannelMask), pinNumber);
             
             if (pinNumber >= 10 && pinNumber <= 12)
-                return ByteUtils.GetBit(UshortUtils.Msb(DigitalChannelMask), pinNumber - 7);
+                return ByteUtils.GetBit(UshortUtils.Msb(DigitalChannelMask), pinNumber - 8);
 
             throw new ArgumentOutOfRangeException("Unsupported pin: " + pin);
         }
@@ -138,9 +138,9 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
             var pinNumber = (byte)pin;
 
             if (pinNumber >= 0 && pinNumber <= 7)
-                return ByteUtils.GetBit(UshortUtils.Lsb(Digital), pinNumber + 1);
+                return ByteUtils.GetBit(UshortUtils.Lsb(Digital), pinNumber);
             
-            return ByteUtils.GetBit(UshortUtils.Msb(Digital), pinNumber - 7);
+            return ByteUtils.GetBit(UshortUtils.Msb(Digital), pinNumber - 8);
         }
 
         /// <summary>

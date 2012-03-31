@@ -80,5 +80,14 @@ namespace NETMF.OpenSource.XBee.Util
             Assert.AreEqual(count, result.Length);
             Assert.AreEqual(testString.Substring(offset, count), Arrays.ToString(result));
         }
+
+        [Test]
+        public void ulong_to_array_test()
+        {
+            const ulong value = 0x1122334455667788;
+            var result = Arrays.ToByteArray(value);
+            Assert.AreEqual(8, result.Length);
+            Assert.AreEqual(new byte[]{0x11,0x22,0x33,0x44,0x55,0x66,0x77,0x88}, result);
+        }
     }
 }

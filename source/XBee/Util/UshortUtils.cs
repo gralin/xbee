@@ -66,7 +66,7 @@ namespace NETMF.OpenSource.XBee.Util
         public static bool GetBit(ushort value, byte bit)
         {
             if (bit > 15)
-                throw new ArgumentOutOfRangeException("bit");
+                throw new IndexOutOfRangeException("Bit value range is: 0 (lsb) - 15 (msb)");
 
             return ((value >> bit) & 0x1) == 0x1;
         }
