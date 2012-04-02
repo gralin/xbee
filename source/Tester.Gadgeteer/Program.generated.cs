@@ -20,6 +20,7 @@ namespace Gadgeteer.Tester
 		Gadgeteer.Modules.GHIElectronics.LED7R lED7R;
 		Gadgeteer.Modules.GHIElectronics.XBee coordinator;
 		Gadgeteer.Modules.GHIElectronics.XBee endDevice;
+		Gadgeteer.Modules.GHIElectronics.Joystick joystick;
 
 		public static void Main()
         {
@@ -42,6 +43,8 @@ namespace Gadgeteer.Tester
 			router = new GTM.GHIElectronics.XBee(7);
 		
 			lED7R = new GTM.GHIElectronics.LED7R(13);
+		
+			joystick = new GTM.GHIElectronics.Joystick(14);
 
         }
     }

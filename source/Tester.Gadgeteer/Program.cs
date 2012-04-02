@@ -15,27 +15,46 @@ namespace Gadgeteer.Tester
 
         void ProgramStarted()
         {
-            lED7R.TurnLightOn(7, true);
-
             coordinator.Configure();
+            coordinator.Api.StatusChanged += OnStatusChanged;
             coordinator.Api.DataReceived += OnDataReceived;
 
             endDevice.Configure();
+            endDevice.Api.StatusChanged += OnStatusChanged;
             endDevice.Api.DataReceived += OnDataReceived;
 
             router.Configure();
-            router.Api.StatusChanged += (x, s) => OnStatusChanged(s);
+            router.Api.StatusChanged += OnStatusChanged;
             router.Api.DataReceived += OnDataReceived;
+
+            joystick.JoystickPressed += (s, e) => lED7R.TurnLightOn(7, true);
+            joystick.JoystickReleased += (s, e) => DiscoverNodes();
 
             Debug.Print("Coordinator config: " + coordinator.Api.Config);
             Debug.Print("Router config: " + router.Api.Config);
             Debug.Print("End device config: " + endDevice.Api.Config);
         }
 
-        private void OnStatusChanged(ModemStatus status)
+        private static void OnStatusChanged(XBee sender, ModemStatus status)
         {
-            if (status == ModemStatus.Associated)
-                DiscoverNodes();
+            switch (status)
+            {
+                case ModemStatus.HardwareReset:
+                    Debug.Print(sender.Config.SerialNumber + " Hardware reset");
+                    break;
+                case ModemStatus.WatchdogTimerReset:
+                    Debug.Print(sender.Config.SerialNumber + " Software reset");
+                    break;
+                case ModemStatus.Associated:
+                    Debug.Print(sender.Config.SerialNumber + " Associated");
+                    break;
+                case ModemStatus.Disassociated:
+                    Debug.Print(sender.Config.SerialNumber + " Not associated");
+                    break;
+                default:
+                    Debug.Print(sender.Config.SerialNumber + " Status " + status);
+                    break;
+            }
         }
 
         private void DiscoverNodes()
