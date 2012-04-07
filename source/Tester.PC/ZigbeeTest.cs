@@ -12,7 +12,7 @@ namespace PC.Tester
             // discovering modules available in ZigBee network
 
             Console.WriteLine("Discovering nodes...");
-            NodeDiscover foundNode = null;
+            DiscoverResult foundNode = null;
 
             while (true)
             {
@@ -31,7 +31,7 @@ namespace PC.Tester
                     Console.WriteLine("#" + (i + 1) + " - " + foundNodes[i]);
 
                     if (foundNodes[i].NodeInfo.SerialNumber != xbee.Config.SerialNumber)
-                        foundNode = (NodeDiscover)foundNodes[i];
+                        foundNode = (DiscoverResult)foundNodes[i];
                 }
 
                 if (foundNode != null)
