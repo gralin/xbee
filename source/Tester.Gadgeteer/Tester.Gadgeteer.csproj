@@ -21,6 +21,8 @@
     <!-- Default transport and device-->
     <DeployDevice>Gadgeteer</DeployDevice>
     <DeployTransport>USB</DeployTransport>
+    <RootDir Condition="$(RootDir) == '' Or $(RootDir) == '*Undefined*'">..\..\</RootDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -122,4 +124,5 @@
       <Name>XBee</Name>
     </ProjectReference>
   </ItemGroup>
+  <Import Project="$(RootDir)\tools\NuGet\nuget.targets" />
 </Project>
