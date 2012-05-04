@@ -46,7 +46,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\XBee\XBee.csproj">
+    <ProjectReference Include="..\..\source\XBee\XBee.csproj">
       <Project>{7F280F44-4AE1-4917-83BC-36825E729EC2}</Project>
       <Name>XBee</Name>
     </ProjectReference>

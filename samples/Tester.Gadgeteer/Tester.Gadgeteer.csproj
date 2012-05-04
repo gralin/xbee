@@ -115,11 +115,11 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\XBee.Gadgeteer\XBee.Gadgeteer.csproj">
+    <ProjectReference Include="..\..\source\XBee.Gadgeteer\XBee.Gadgeteer.csproj">
       <Project>{9E0199D1-8B75-4A82-9F03-3F1718C9E9C2}</Project>
       <Name>XBee.Gadgeteer</Name>
     </ProjectReference>
-    <ProjectReference Include="..\XBee\XBee.csproj">
+    <ProjectReference Include="..\..\source\XBee\XBee.csproj">
       <Project>{7F280F44-4AE1-4917-83BC-36825E729EC2}</Project>
       <Name>XBee</Name>
     </ProjectReference>

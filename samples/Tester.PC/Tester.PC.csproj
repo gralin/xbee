@@ -54,7 +54,7 @@
     <Compile Include="ZigbeeTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\XBee.PC\XBee.PC.csproj">
+    <ProjectReference Include="..\..\source\XBee.PC\XBee.PC.csproj">
       <Project>{620FC049-E6BE-49ED-A9E9-C664A0850FE3}</Project>
       <Name>XBee.PC</Name>
     </ProjectReference>
