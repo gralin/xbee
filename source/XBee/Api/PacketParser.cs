@@ -96,17 +96,17 @@ namespace NETMF.OpenSource.XBee.Api
         public void AddPacketListener(IPacketListener listener)
         {
             lock (_packetListeners)
-            {
                 _packetListeners.Add(listener);
-            }
+
+            Logger.LowDebug("New listener added to parser");
         }
 
         public void RemovePacketListener(IPacketListener listener)
         {
             lock (_packetListeners)
-            {
                 _packetListeners.Remove(listener);
-            }
+
+            Logger.LowDebug("Parser removed finished listener");
         }
 
         private void ParsePackets()
@@ -128,21 +128,17 @@ namespace NETMF.OpenSource.XBee.Api
                     if (Logger.IsActive(LogLevel.Debug))
                         Logger.Debug("Received " + packet.GetType().Name + ": " + packet);
 
-                    lock (_packetListeners)
-                    {
-                        foreach (var obj in _packetListeners.ToArray())
-                        {
-                            var packetListener = (IPacketListener) obj;
+                    var listeners = _packetListeners.ToArray();
 
-                            if (packetListener.Finished)
-                            {
-                                RemovePacketListener(packetListener);
-                            }
-                            else
-                            {
-                                packetListener.ProcessPacket(packet);   
-                            }
-                        }
+                    for (var i = 0; i < listeners.Length; i++)
+                    {
+                        var packetListener = (IPacketListener)listeners[i];
+
+                        if (!packetListener.Finished)
+                            packetListener.ProcessPacket(packet);
+
+                        if (packetListener.Finished)
+                            RemovePacketListener(packetListener);
                     }
                 }
                 catch (XBeeTimeoutException)

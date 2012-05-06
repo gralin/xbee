@@ -11,6 +11,8 @@
     <TargetFrameworkVersion>v4.1</TargetFrameworkVersion>
     <NetMfTargetsBaseDir Condition="'$(NetMfTargetsBaseDir)'==''">$(MSBuildExtensionsPath32)\Microsoft\.NET Micro Framework\</NetMfTargetsBaseDir>
     <TargetFrameworkProfile />
+    <RootDir Condition="$(RootDir) == '' Or $(RootDir) == '*Undefined*'">..\..\</RootDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -143,4 +145,5 @@
     <Reference Include="System.IO" />
   </ItemGroup>
   <ItemGroup />
+  <Import Project="$(RootDir)\tools\NuGet\nuget.targets" />
 </Project>

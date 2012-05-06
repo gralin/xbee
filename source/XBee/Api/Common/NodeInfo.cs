@@ -1,4 +1,4 @@
-﻿namespace NETMF.OpenSource.XBee.Api
+﻿namespace NETMF.OpenSource.XBee.Api.Common
 {
     public class NodeInfo
     {

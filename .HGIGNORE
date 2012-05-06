@@ -4,5 +4,8 @@ obj
 *ReSharper*
 *.suo
 *.user
-libraries
+packages
 *.dat
+*.ncrunchsolution
+*.ncrunchproject
+*.crunchsolution.cache

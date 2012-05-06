@@ -21,6 +21,8 @@
     <!-- Default transport and device-->
     <DeployDevice>Gadgeteer</DeployDevice>
     <DeployTransport>USB</DeployTransport>
+    <RootDir Condition="$(RootDir) == '' Or $(RootDir) == '*Undefined*'">..\..\</RootDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -71,6 +73,9 @@
     <Reference Include="GHIElectronics.Gadgeteer.FEZHydra, Version=4.1.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
+    <Reference Include="GTM.GHIElectronics.Joystick, Version=4.1.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
     <Reference Include="GTM.GHIElectronics.LED7R, Version=4.1.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
@@ -110,13 +115,14 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\XBee.Gadgeteer\XBee.Gadgeteer.csproj">
+    <ProjectReference Include="..\..\source\XBee.Gadgeteer\XBee.Gadgeteer.csproj">
       <Project>{9E0199D1-8B75-4A82-9F03-3F1718C9E9C2}</Project>
       <Name>XBee.Gadgeteer</Name>
     </ProjectReference>
-    <ProjectReference Include="..\XBee\XBee.csproj">
+    <ProjectReference Include="..\..\source\XBee\XBee.csproj">
       <Project>{7F280F44-4AE1-4917-83BC-36825E729EC2}</Project>
       <Name>XBee</Name>
     </ProjectReference>
   </ItemGroup>
+  <Import Project="$(RootDir)\tools\NuGet\nuget.targets" />
 </Project>

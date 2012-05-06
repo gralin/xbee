@@ -1,4 +1,5 @@
-﻿using NETMF.OpenSource.XBee.Util;
+﻿using NETMF.OpenSource.XBee.Api.Common;
+using NETMF.OpenSource.XBee.Util;
 
 namespace NETMF.OpenSource.XBee.Api.Zigbee
 {

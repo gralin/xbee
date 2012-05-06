@@ -63,10 +63,10 @@ namespace NETMF.OpenSource.XBee.Util
 
         public static bool GetBit(byte value, int bit)
         {
-            if (bit < 1 || bit > 8)
-                throw new ArgumentException("Bit is out of range");
+            if (bit > 7)
+                throw new IndexOutOfRangeException("Bit value range is: 0 (lsb) - 7 (msb)");
 
-            return ((value >> (--bit)) & 0x1) == 0x1;
+            return ((value >> bit) & 1) == 1;
         }
 
         public static string FormatByte(byte value)

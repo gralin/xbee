@@ -109,5 +109,20 @@
         </socketUses>
       </module>
     </gadgeteerModelHasGadgeteerHardware>
+    <gadgeteerModelHasGadgeteerHardware Id="e4a3b320-4c7c-41a4-a696-2948028e552c">
+      <module Id="822f4134-4770-417c-80c5-6ce29adad046" cachedDefinition="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&#xD;&#xA;&lt;ModuleDefinition xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; Name=&quot;Joystick&quot; Type=&quot;Gadgeteer.Modules.GHIElectronics.Joystick&quot; HardwareVersion=&quot;1.0&quot; Image=&quot;C:\Program Files (x86)\GHI Electronics\GHI .NET Gadgeteer SDK\Modules\Joystick\Resources\Image.jpg&quot; BoardWidth=&quot;37&quot; BoardHeight=&quot;32&quot; MinimumGadgeteerCoreVersion=&quot;2.41.100&quot; HelpUrl=&quot;&quot; UniqueId=&quot;7d116ef1-2253-459c-89f5-0e8f238a1ad9&quot; Manufacturer=&quot;GHI Electronics&quot; Description=&quot;An analog joystick with a push button&quot; InstanceName=&quot;joystick&quot; ModuleSuppliesPower=&quot;false&quot;&gt;&#xD;&#xA;  &lt;ProvidedSockets /&gt;&#xD;&#xA;  &lt;Assemblies&gt;&#xD;&#xA;    &lt;Assembly MFVersion=&quot;4.1&quot; Name=&quot;GTM.GHIElectronics.Joystick&quot; /&gt;&#xD;&#xA;  &lt;/Assemblies&gt;&#xD;&#xA;  &lt;LibrariesProvided /&gt;&#xD;&#xA;  &lt;Sockets&gt;&#xD;&#xA;    &lt;Socket Orientation=&quot;0&quot; Left=&quot;19.13&quot; Top=&quot;15.32&quot; TypesLabel=&quot;A&quot; ConstructorOrder=&quot;1&quot; Optional=&quot;false&quot;&gt;&#xD;&#xA;      &lt;Types&gt;&#xD;&#xA;        &lt;Type&gt;A&lt;/Type&gt;&#xD;&#xA;      &lt;/Types&gt;&#xD;&#xA;      &lt;Pins&gt;&#xD;&#xA;        &lt;Pin Shared=&quot;false&quot;&gt;3&lt;/Pin&gt;&#xD;&#xA;        &lt;Pin Shared=&quot;false&quot;&gt;4&lt;/Pin&gt;&#xD;&#xA;        &lt;Pin Shared=&quot;false&quot;&gt;5&lt;/Pin&gt;&#xD;&#xA;      &lt;/Pins&gt;&#xD;&#xA;    &lt;/Socket&gt;&#xD;&#xA;  &lt;/Sockets&gt;&#xD;&#xA;  &lt;ExtraLibrariesRequired /&gt;&#xD;&#xA;&lt;/ModuleDefinition&gt;" name="joystick" moduleType="Gadgeteer.Modules.GHIElectronics.Joystick" moduleDefinitionId="7d116ef1-2253-459c-89f5-0e8f238a1ad9">
+        <socketUses>
+          <moduleHasSocketUses Id="5053d320-87a2-4349-b7b4-d0af82564921">
+            <socketUse Id="15cc8097-691d-410e-85d9-9ba83b6a6daf" label="A">
+              <socket>
+                <socketUseReferencesSocket Id="dc6badf5-cf29-4f66-8fbd-dd5521e26e51">
+                  <socketMoniker Id="ecc3546c-5548-4138-a8a4-b24cadf1b59e" />
+                </socketUseReferencesSocket>
+              </socket>
+            </socketUse>
+          </moduleHasSocketUses>
+        </socketUses>
+      </module>
+    </gadgeteerModelHasGadgeteerHardware>
   </gadgeteerHardware>
 </gadgeteerModel>
