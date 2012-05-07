@@ -1,8 +1,25 @@
 ﻿namespace NETMF.OpenSource.XBee.Api.Wpan
 {
+    /// <summary>
+    ///  TODO: Update comments
+    ///     
+    /// </summary>
+    /// <remarks>
+    ///     
+    /// </remarks>
     public static class Pin
     {
+
+        /// <summary>
+        ///  TODO: Update Comments
+        ///     
+        /// </summary>
         public static int DigitalCount = 9;
+
+        /// <summary>
+        ///  TODO: Update Comments
+        ///     
+        /// </summary>
         public static int AnalogCount = 6;
 
         public enum Digital : byte

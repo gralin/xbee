@@ -1,5 +1,11 @@
 namespace NETMF.OpenSource.XBee.Api.Common
 {
+  /// <summary>
+  /// Hardware Versions
+  /// </summary>
+  /// <remarks>
+  /// TODO: Update  comments    
+  /// </remarks>
     public enum HardwareVersions
     {
         Unknown = 0x00,

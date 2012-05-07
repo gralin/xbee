@@ -1,5 +1,11 @@
 ﻿namespace NETMF.OpenSource.XBee.Api.Common
 {
+  /// <summary>
+  /// Reset Mode
+  /// </summary>
+  /// <remarks>
+  /// TODO: Update  comments    
+  /// </remarks>
     public enum ResetMode
     {
         /// <summary>

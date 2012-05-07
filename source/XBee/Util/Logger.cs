@@ -2,15 +2,58 @@
 
 namespace NETMF.OpenSource.XBee.Util
 {
+    /// <summary>
+    ///   TODO: Update Comments
+    ///     
+    /// </summary>
     public enum LogLevel
     {
+        /// <summary>
+        ///  TODO: Update Comments
+        ///     
+        /// </summary>
         Off,
+
+        /// <summary>
+        ///  TODO: Update Comments
+        ///     
+        /// </summary>
         Fatal,
+
+        /// <summary>
+        ///  TODO: Update Comments
+        ///     
+        /// </summary>
         Error,
+
+        /// <summary>
+        ///  TODO: Update Comments
+        ///     
+        /// </summary>
         Warn,
+
+        /// <summary>
+        ///  TODO: Update Comments
+        ///     
+        /// </summary>
         Info,
+
+        /// <summary>
+        ///  TODO: Update Comments
+        ///     
+        /// </summary>
         Debug,
+
+        /// <summary>
+        ///  TODO: Update Comments
+        ///     
+        /// </summary>
         LowDebug,
+
+        /// <summary>
+        ///  TODO: Update Comments
+        ///     
+        /// </summary>
         All
     }
 

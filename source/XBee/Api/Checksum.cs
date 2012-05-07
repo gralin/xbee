@@ -1,7 +1,18 @@
 ﻿namespace NETMF.OpenSource.XBee.Api
 {
+    /// <summary>
+    ///  TODO: Update comments
+    ///     
+    /// </summary>
+    /// <remarks>
+    ///     
+    /// </remarks>
     public class Checksum
     {
+        /// <summary>
+        ///  TODO: Update Comments
+        ///     
+        /// </summary>
         private int _checksum;
 
         /// <summary>
@@ -35,6 +46,13 @@
             return 0xff == _checksum;
         }
 
+        /// <summary>
+        ///   TODO: Update Comments
+        ///     
+        /// </summary>
+        /// <returns>
+        ///     A byte value...
+        /// </returns>
         public byte GetChecksum()
         {
             return (byte)_checksum;

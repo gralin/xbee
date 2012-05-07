@@ -5,10 +5,34 @@
     /// </summary>
     public enum SleepMode
     {
+        /// <summary>
+        ///  TODO: Update Comments
+        ///     
+        /// </summary>
         NoSleep = 0,
+
+        /// <summary>
+        ///  TODO: Update Comments
+        ///     
+        /// </summary>
         PinHibernate = 1,
+
+        /// <summary>
+        ///  TODO: Update Comments
+        ///     
+        /// </summary>
         PinDoze = 2,
+
+        /// <summary>
+        ///  TODO: Update Comments
+        ///     
+        /// </summary>
         CyclicSleepRemote = 4,
+
+        /// <summary>
+        ///  TODO: Update Comments
+        ///     
+        /// </summary>
         CyclicSleepRemoteWithPinWakeUp = 5,
         
         /// <summary>

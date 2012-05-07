@@ -2,10 +2,33 @@
 
 namespace NETMF.OpenSource.XBee.Util
 {
+    /// <summary>
+    ///  TODO: Update comments
+    ///     
+    /// </summary>
+    /// <remarks>
+    ///     
+    /// </remarks>
     public class ByteUtils
     {
+        /// <summary>
+        ///  TODO: Update Comments
+        ///     
+        /// </summary>
         private const string Hex = "0123456789ABCDEF";
 
+        /// <summary>
+        ///   TODO: Update Comments
+        ///     
+        /// </summary>
+        /// <param name="value" type="byte[]">
+        ///     <para>
+        ///         
+        ///     </para>
+        /// </param>
+        /// <returns>
+        ///     A string value...
+        /// </returns>
         public static string ToBase16(byte[] value)
         {
             var result = "";
@@ -16,6 +39,19 @@ namespace NETMF.OpenSource.XBee.Util
             return result;
         }
 
+
+        /// <summary>
+        ///   TODO: Update Comments
+        ///     
+        /// </summary>
+        /// <param name="b" type="ushort">
+        ///     <para>
+        ///         
+        ///     </para>
+        /// </param>
+        /// <returns>
+        ///     A string value...
+        /// </returns>
         public static string ToBase16(ushort b)
         {
             return b <= byte.MaxValue
@@ -61,6 +97,24 @@ namespace NETMF.OpenSource.XBee.Util
             return (byte) (lowDigit + (highDigit << 4));
         }
 
+
+        /// <summary>
+        ///   TODO: Update Comments
+        ///     
+        /// </summary>
+        /// <param name="value" type="byte">
+        ///     <para>
+        ///         
+        ///     </para>
+        /// </param>
+        /// <param name="bit" type="int">
+        ///     <para>
+        ///         
+        ///     </para>
+        /// </param>
+        /// <returns>
+        ///     A bool value...
+        /// </returns>
         public static bool GetBit(byte value, int bit)
         {
             if (bit > 7)
@@ -69,6 +123,18 @@ namespace NETMF.OpenSource.XBee.Util
             return ((value >> bit) & 1) == 1;
         }
 
+        /// <summary>
+        ///   TODO: Update Comments
+        ///     
+        /// </summary>
+        /// <param name="value" type="byte">
+        ///     <para>
+        ///         
+        ///     </para>
+        /// </param>
+        /// <returns>
+        ///     A string value...
+        /// </returns>
         public static string FormatByte(byte value)
         {
             return "0x" + ToBase16(value);

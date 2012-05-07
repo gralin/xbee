@@ -1,8 +1,18 @@
 namespace NETMF.OpenSource.XBee.Api
 {
+    /// <summary>
+    /// TODO: Update comments    
+    /// </summary>
     public enum ModemStatus : byte
     {
+        /// <summary>
+        /// TODO: Update comments    
+        /// </summary>
         HardwareReset = 0,
+
+        /// <summary>
+        /// TODO: Update comments    
+        /// </summary>
         WatchdogTimerReset = 1,
 
         /// <summary>
@@ -10,9 +20,24 @@ namespace NETMF.OpenSource.XBee.Api
         /// </summary>
         Associated = 2,
 
+        /// <summary>
+        /// TODO: Update comments    
+        /// </summary>
         Disassociated = 3,
+
+        /// <summary>
+        /// TODO: Update comments    
+        /// </summary>
         SynchronizationLost = 4,
+
+        /// <summary>
+        /// TODO: Update comments    
+        /// </summary>
         CoordinatorRealigment = 5,
+
+        /// <summary>
+        /// TODO: Update comments    
+        /// </summary>
         CoordinatorStarted = 6,
 
         /// <summary>

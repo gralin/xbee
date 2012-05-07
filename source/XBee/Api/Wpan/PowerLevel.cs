@@ -1,5 +1,8 @@
 ﻿namespace NETMF.OpenSource.XBee.Api.Wpan
 {
+    /// <summary>
+    /// TODO: Update comments    
+    /// </summary>
     public enum PowerLevel
     {
         /// <summary>

@@ -1,5 +1,11 @@
 ﻿namespace NETMF.OpenSource.XBee.Api.Zigbee
 {
+  /// <summary>
+  /// Association Status  
+  /// </summary>
+  /// <remarks>
+  /// TODO: Update  comments    
+  /// </remarks>
     public enum AssociationStatus
     {
         /// <summary>
@@ -13,16 +19,16 @@
         /// <summary>
         /// Scan found no PANs
         /// </summary>
-	    NoPan = 0x21,
+	      NoPan = 0x21,
 
-	    /// <summary>
-	    /// Scan found no valid PANs based on current SC and ID settings.
-	    /// </summary>
+	      /// <summary>
+	      /// Scan found no valid PANs based on current SC and ID settings.
+	      /// </summary>
         NoValidPan = 0x22,
 
-	    /// <summary>
-	    /// Valid Coordinator or Routers found, but they are not allowing joining (NJ expired).
-	    /// </summary>
+	      /// <summary>
+	      /// Valid Coordinator or Routers found, but they are not allowing joining (NJ expired).
+	      /// </summary>
         NodeJoiningExpired = 0x23,
 
         /// <summary>
@@ -35,15 +41,15 @@
         /// </summary>
         UnexpectedState = 0x25,
 
-	    /// <summary>
-	    /// Node Joining attempt failed (typically due to incompatible security settings).
-	    /// </summary>
+	      /// <summary>
+	      /// Node Joining attempt failed (typically due to incompatible security settings).
+	      /// </summary>
         JoiningFailed = 0x27,
 
         /// <summary>
         /// Coordinator Start attempt failed.
         /// </summary>
-	    CoordinatorStartFailed = 0x2A,
+	      CoordinatorStartFailed = 0x2A,
 
         /// <summary>
         /// Checking for an existing coordinator.
@@ -75,9 +81,9 @@
         /// </summary>
         MissingKey = 0xAF,
 
-	    /// <summary>
+        /// <summary>
         /// Scanning for a ZigBee network (routers and end devices).
-	    /// </summary>
+        /// </summary>
         ScanningInProgress = 0xFF,
     }
 }

@@ -1,9 +1,15 @@
 ﻿namespace NETMF.OpenSource.XBee.Api
 {
+    /// <summary>
+    /// TODO: Update comments    
+    /// </summary>
     public class NodeDiscoveryFilter : AtResponseFilter
     {
         private bool _finished;
-
+        /// <summary>
+        /// Constructor.
+        /// TODO: Update comments    
+        /// </summary>      
         public NodeDiscoveryFilter(int packetId = PacketIdGenerator.DefaultId)
             : base((ushort) Common.AtCmd.NodeDiscover, packetId)
         {

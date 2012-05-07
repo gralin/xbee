@@ -1,5 +1,11 @@
 ﻿namespace NETMF.OpenSource.XBee.Api.Common
 {
+  /// <summary>
+  /// API Modes   
+  /// </summary>
+  /// <remarks>
+  /// TODO: Update  comments        
+  /// </remarks>
     public enum ApiModes
     {
         /// <summary>
