@@ -87,32 +87,46 @@ namespace NETMF.OpenSource.XBee.Api
 
         public void ReadConfiguration()
         {
-            try
-            {
-                Config = XBeeConfiguration.Read(this);
+            var readAttempts = 2;
 
-                if (Config.ApiMode != ApiModes.EnabledWithEscaped)
+            while (readAttempts > 0)
+            {
+                try
                 {
-                    Logger.LowDebug("XBee radio is in API mode without escape characters (AP=1)."
-                                    + " The radio must be configured in API mode with escape bytes "
-                                    + "(AP=2) for use with this library.");
-
-                    Config.SetApiMode(ApiModes.EnabledWithEscaped);
-                    Config.Save();
-
-                    Logger.Debug("Successfully set AP mode to ApiMode.EnabledWithEscaped");
+                    Config = XBeeConfiguration.Read(this);
+                    break;
                 }
+                catch (XBeeTimeoutException)
+                {
+                    readAttempts--;
+                }
+            }
 
-                if (!Logger.IsActive(LogLevel.Info))
-                    return;
-                
-                Logger.Info(Config.ToString());
-            }
-            catch (XBeeTimeoutException)
+            if (Config == null)
             {
-                throw new XBeeException("AT command timed-out while attempt to read configuration. "
-                    + "The XBee radio must be in API mode (AP=2) to use with this library");
+                const string message = "AT command timed-out while attempt to read configuration. "
+                     + "The XBee radio must be in API mode (AP=2) to use with this library";
+
+                Logger.Error(message);
+                throw new XBeeException(message);
             }
+
+            if (Config.ApiMode != ApiModes.EnabledWithEscaped)
+            {
+                Logger.LowDebug("XBee radio is in API mode without escape characters (AP=1)."
+                                + " The radio must be configured in API mode with escape bytes "
+                                + "(AP=2) for use with this library.");
+
+                Config.SetApiMode(ApiModes.EnabledWithEscaped);
+                Config.Save();
+
+                Logger.Debug("Successfully set AP mode to ApiMode.EnabledWithEscaped");
+            }
+
+            if (!Logger.IsActive(LogLevel.Info))
+                return;
+
+            Logger.Info(Config.ToString());
         }
 
         public void AddPacketListener(IPacketListener listener)

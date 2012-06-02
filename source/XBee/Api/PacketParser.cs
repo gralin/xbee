@@ -21,7 +21,7 @@ namespace NETMF.OpenSource.XBee.Api
         private XBeeResponse _response;
         private int _escapedBytes;
 
-        public const int DefaultParseTimeout = 5000;
+        public const int DefaultParseTimeout = 2500;
         public int ParseTimeout { get; set; }
         public DateTime ParseStartTime { get; private set; }
         public TimeSpan ParseElapsedTime { get { return DateTime.Now.Subtract(ParseStartTime); } }
