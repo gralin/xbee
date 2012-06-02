@@ -2,7 +2,6 @@
 using NETMF.OpenSource.XBee.Api;
 using NETMF.OpenSource.XBee.Api.Common;
 using NETMF.OpenSource.XBee.Util;
-using LogLevel = NETMF.OpenSource.XBee.Util.LogLevel;
 
 namespace PC.Tester
 {
@@ -10,7 +9,7 @@ namespace PC.Tester
     {
         static void Main()
         {
-            Logger.Initialize(Console.WriteLine, LogLevel.Info);
+            Logger.Initialize(Console.WriteLine);
 
             Console.WriteLine("Connecting to XBee...");
 

@@ -14,7 +14,8 @@ namespace NETMF.Tester
         {
             var device = GetUsbDevice();
 
-            Logger.Initialize(Debug.Print, LogLevel.Info);
+            Debug.EnableGCMessages(false);
+            Logger.Initialize(Debug.Print);
 
             Debug.Print("Connecting to XBee pluged to USB...");
 

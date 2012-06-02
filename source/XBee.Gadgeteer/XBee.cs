@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading;
 using Gadgeteer.Interfaces;
+using Logger = NETMF.OpenSource.XBee.Util.Logger;
+using LogLevel = NETMF.OpenSource.XBee.Util.LogLevel;
 using XBeeApi = NETMF.OpenSource.XBee.Api.XBee;
 using IXBeeConnection = NETMF.OpenSource.XBee.IXBeeConnection;
 using SerialConnection = NETMF.OpenSource.XBee.SerialConnection;
@@ -20,8 +22,6 @@ namespace Gadgeteer.Modules.GHIElectronics
         private readonly Socket _socket;
         private readonly DigitalOutput _resetPin;
         private readonly DigitalOutput _sleepPin;
-        private readonly System.Threading.Timer _resetTimer;
-        private readonly ManualResetEvent _ready;
 
         private static class ResetState
         {
@@ -99,9 +99,6 @@ namespace Gadgeteer.Modules.GHIElectronics
 
             _resetPin = new DigitalOutput(_socket, Socket.Pin.Three, ResetState.NotRunning, this);
             _sleepPin = new DigitalOutput(_socket, Socket.Pin.Eight, SleepState.Awaken, this);
-
-            _resetTimer = new System.Threading.Timer(s => _ready.Set(), null, -1, -1);
-            _ready = new ManualResetEvent(false);
         }
 
         /// <summary>
@@ -116,11 +113,13 @@ namespace Gadgeteer.Modules.GHIElectronics
             if (_api != null)
                 throw new Exception("XBee.Configure can only be called once");
 
+            Logger.Initialize(ErrorPrint, LogLevel.Error, LogLevel.Fatal);
+            Logger.Initialize(DebugPrint, LogLevel.Warn, LogLevel.Info, LogLevel.Debug, LogLevel.LowDebug);
+
             _connection = new SerialConnection(_socket.SerialPortName, baudRate);
             _api = new XBeeApi(_connection);
 
-            if (!Enabled)
-                Enable();
+            Enable();
 
             _api.Open();
         }
@@ -140,7 +139,6 @@ namespace Gadgeteer.Modules.GHIElectronics
         /// </summary>
         public void Disable()
         {
-            _ready.Reset();
             _resetPin.Write(ResetState.NotRunning);
         }
 
@@ -150,7 +148,6 @@ namespace Gadgeteer.Modules.GHIElectronics
         public void Enable()
         {
             _resetPin.Write(ResetState.Running);
-            _resetTimer.Change(StartupTime, -1);
             WaitUntilReady();
         }
 
@@ -172,8 +169,7 @@ namespace Gadgeteer.Modules.GHIElectronics
 
         protected void WaitUntilReady()
         {
-            if (!_ready.WaitOne(5 * StartupTime, false))
-                throw new Exception("Module ready flag was not set in expected time!");
+            Thread.Sleep(StartupTime);
         }
     }
 }
