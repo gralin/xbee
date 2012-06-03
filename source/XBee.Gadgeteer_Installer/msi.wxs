@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <?include common.wxi?>
+  
   <Product Name='$(var.SafeModuleName) !(loc.ForGadgeteer)' 
            Id='*' 
            UpgradeCode='$(var.guid_msi_upgrade_code)'
@@ -62,7 +63,7 @@
       <MergeRef Id="id_msm" />      
     </Feature>
 
-    <Icon Id="AppAddRemoveIcon" SourceFile="$(var.SourcePath)\setup\G.ico"/>
+    <Icon Id="AppAddRemoveIcon" SourceFile="$(var.SourcePath)\G.ico"/>
     <Property Id="ARPPRODUCTICON" Value="AppAddRemoveIcon"/>
 
     <!--Sequences-->
@@ -79,7 +80,7 @@
 
       <!--Display an error if gadgeteer core is not installed-->
       <Custom Action="GadgeteerCoreNotInstalledError" Before="InstallInitialize">&amp;main&gt;2 AND NOT GADGETEER_CORE_INSTALLED</Custom>
-
+      
     </InstallExecuteSequence>
 
   </Product>

@@ -7,7 +7,7 @@ using XBeeApi = NETMF.OpenSource.XBee.Api.XBee;
 using IXBeeConnection = NETMF.OpenSource.XBee.IXBeeConnection;
 using SerialConnection = NETMF.OpenSource.XBee.SerialConnection;
 
-namespace Gadgeteer.Modules.GHIElectronics
+namespace Gadgeteer.Modules.OpenSource
 {
     /// <summary>
     /// A XBee module for Microsoft .NET Gadgeteer
@@ -94,7 +94,7 @@ namespace Gadgeteer.Modules.GHIElectronics
             // If there is more than one socket on this module, then instead of "null" for the last parameter, 
             // put text that identifies the socket to the user (e.g. "S" if there is a socket type S)
             _socket = Socket.GetSocket(socketNumber, true, this, null);
-            
+
             _socket.EnsureTypeIsSupported(new[] { 'K', 'U' }, this);
 
             _resetPin = new DigitalOutput(_socket, Socket.Pin.Three, ResetState.NotRunning, this);
