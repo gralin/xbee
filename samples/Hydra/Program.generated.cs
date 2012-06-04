@@ -11,40 +11,40 @@
 using Gadgeteer;
 using GTM = Gadgeteer.Modules;
 
-namespace Gadgeteer.Tester
+namespace Hydra
 {
     public partial class Program : Gadgeteer.Program
     {
-        // GTM.Module defintions
-		Gadgeteer.Modules.GHIElectronics.XBee router;
-		Gadgeteer.Modules.GHIElectronics.LED7R lED7R;
-		Gadgeteer.Modules.GHIElectronics.XBee coordinator;
-		Gadgeteer.Modules.GHIElectronics.XBee endDevice;
-		Gadgeteer.Modules.GHIElectronics.Joystick joystick;
+        // GTM.Module definitions
+        Gadgeteer.Modules.GHIElectronics.LED7R led7r;
+        Gadgeteer.Modules.GHIElectronics.Joystick joystick;
+        Gadgeteer.Modules.OpenSource.XBee coordinator;
+        Gadgeteer.Modules.OpenSource.XBee router;
+        Gadgeteer.Modules.OpenSource.XBee endDevice;
 
-		public static void Main()
+        public static void Main()
         {
-			//Important to initialize the Mainboard first
+            //Important to initialize the Mainboard first
             Mainboard = new GHIElectronics.Gadgeteer.FEZHydra();			
 
             Program program = new Program();
-			program.InitializeModules();
+            program.InitializeModules();
             program.ProgramStarted();
             program.Run(); // Starts Dispatcher
         }
 
         private void InitializeModules()
         {   
-			// Initialize GTM.Modules and event handlers here.		
-			coordinator = new GTM.GHIElectronics.XBee(4);
+            // Initialize GTM.Modules and event handlers here.		
+            coordinator = new GTM.OpenSource.XBee(4);
 		
-			endDevice = new GTM.GHIElectronics.XBee(6);
+            router = new GTM.OpenSource.XBee(6);
 		
-			router = new GTM.GHIElectronics.XBee(7);
+            endDevice = new GTM.OpenSource.XBee(7);
 		
-			lED7R = new GTM.GHIElectronics.LED7R(13);
+            joystick = new GTM.GHIElectronics.Joystick(13);
 		
-			joystick = new GTM.GHIElectronics.Joystick(14);
+            led7r = new GTM.GHIElectronics.LED7R(14);
 
         }
     }

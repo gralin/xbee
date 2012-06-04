@@ -1,11 +1,11 @@
 ﻿using System.Collections;
 using System.Text;
 using Microsoft.SPOT;
+using NETMF.OpenSource.XBee;
 using NETMF.OpenSource.XBee.Api;
 using NETMF.OpenSource.XBee.Api.Common;
-using XBee = NETMF.OpenSource.XBee.Api.XBee;
 
-namespace Gadgeteer.Tester
+namespace Hydra
 {
     public partial class Program
     {
@@ -27,7 +27,7 @@ namespace Gadgeteer.Tester
             router.Api.StatusChanged += OnStatusChanged;
             router.Api.DataReceived += OnDataReceived;
 
-            joystick.JoystickPressed += (s, e) => lED7R.TurnLightOn(7, true);
+            joystick.JoystickPressed += (s, e) => led7r.TurnLightOn(7, true);
             joystick.JoystickReleased += (s, e) => DiscoverNodes();
 
             Debug.Print("Coordinator config: " + coordinator.Api.Config);
@@ -35,7 +35,7 @@ namespace Gadgeteer.Tester
             Debug.Print("End device config: " + endDevice.Api.Config);
         }
 
-        private static void OnStatusChanged(XBee sender, ModemStatus status)
+        private static void OnStatusChanged(XBeeApi sender, ModemStatus status)
         {
             switch (status)
             {
@@ -81,10 +81,10 @@ namespace Gadgeteer.Tester
         private void PrintNode(int nodeNumber, DiscoverResult info)
         {
             Debug.Print("#" + nodeNumber + " - " + info);
-            lED7R.TurnLightOn(nodeNumber);
+            led7r.TurnLightOn(nodeNumber);
         }
 
-        private static void OnDataReceived(XBee receiver, byte[] data, XBeeAddress sender)
+        private static void OnDataReceived(XBeeApi receiver, byte[] data, XBeeAddress sender)
         {
             var dataStr = new string(Encoding.UTF8.GetChars(data));
 

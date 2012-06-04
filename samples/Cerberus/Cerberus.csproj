@@ -6,13 +6,13 @@
     <!--VS2010 product version-->
     <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{96854CD4-0307-43F1-89A9-5070DC484557}</ProjectGuid>
+    <ProjectGuid>{1B5FC684-257C-425D-9C4D-C5367CA5A2EC}</ProjectGuid>
     <!--This is an executable-->
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Gadgeteer.Tester</RootNamespace>
-    <AssemblyName>XBee Gadgeteer Tester</AssemblyName>
-    <TargetFrameworkVersion>v4.1</TargetFrameworkVersion>
+    <RootNamespace>Cerberus</RootNamespace>
+    <AssemblyName>Cerberus</AssemblyName>
+    <TargetFrameworkVersion>v4.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <!--Identify this as a MicroFramework, CSharp project-->
     <ProjectTypeGuids>{b69e3092-b931-443c-abe7-7e7b65f2a37f};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -21,8 +21,6 @@
     <!-- Default transport and device-->
     <DeployDevice>Gadgeteer</DeployDevice>
     <DeployTransport>USB</DeployTransport>
-    <RootDir Condition="$(RootDir) == '' Or $(RootDir) == '*Undefined*'">..\..\</RootDir>
-    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -40,9 +38,6 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject>Gadgeteer.Tester.Program</StartupObject>
   </PropertyGroup>
   <!-- Everything below here is custom to .NET MF / Gadgeteer template-->
   <Import Project="$(NetMfTargetsBaseDir)$(TargetFrameworkVersion)\CSharp.Targets" />
@@ -64,19 +59,10 @@
     <Reference Include="Gadgeteer">
       <SpecificVersion>false</SpecificVersion>
     </Reference>
-    <Reference Include="Gadgeteer.WebServer">
-      <SpecificVersion>false</SpecificVersion>
-    </Reference>
-    <Reference Include="Gadgeteer.WebClient">
-      <SpecificVersion>false</SpecificVersion>
-    </Reference>
-    <Reference Include="GHIElectronics.Gadgeteer.FEZHydra, Version=4.1.1.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="GHIElectronics.Gadgeteer.FEZCerberus, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="GTM.GHIElectronics.Joystick, Version=4.1.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
-    <Reference Include="GTM.GHIElectronics.LED7R, Version=4.1.1.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="GTM.OpenSource.XBee, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="Microsoft.SPOT.Graphics" />
@@ -89,8 +75,10 @@
     <Reference Include="Microsoft.SPOT.TinyCore" />
     <Reference Include="Microsoft.SPOT.Touch" />
     <Reference Include="mscorlib" />
+    <Reference Include="OpenSource.XBee, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Http" />
     <Reference Include="System.IO" />
   </ItemGroup>
   <ItemGroup>
@@ -114,15 +102,4 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\source\XBee.Gadgeteer\XBee.Gadgeteer.csproj">
-      <Project>{9E0199D1-8B75-4A82-9F03-3F1718C9E9C2}</Project>
-      <Name>XBee.Gadgeteer</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\source\XBee\XBee.csproj">
-      <Project>{7F280F44-4AE1-4917-83BC-36825E729EC2}</Project>
-      <Name>XBee</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <Import Project="$(RootDir)\tools\NuGet\nuget.targets" />
 </Project>
