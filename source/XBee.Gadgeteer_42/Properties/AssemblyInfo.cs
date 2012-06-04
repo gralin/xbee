@@ -3,9 +3,9 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("GTM.OpenSource.XBee")]
-[assembly: AssemblyDescription("Driver for XBee module made by OpenSource for Microsoft .NET Gadgeteer")]
+[assembly: AssemblyDescription("Driver for XBee module made by TinyCLR community for Microsoft .NET Gadgeteer")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("OpenSource")]
+[assembly: AssemblyCompany("Open Source")]
 [assembly: AssemblyProduct("XBee")]
 [assembly: AssemblyCopyright("")]
 [assembly: AssemblyTrademark("")]

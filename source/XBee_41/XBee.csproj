@@ -27,7 +27,7 @@
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>3</WarningLevel>
     <DocumentationFile>bin\Release\OpenSource.XBee.xml</DocumentationFile>
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
@@ -97,22 +97,22 @@
       <Link>Api\Features\NewFolder1\XBeeAddressIp.cs</Link>
     </Compile>
     <Compile Include="..\XBee_42\Api\Features\At\AtCommand.cs">
-      <Link>Api\Features\NewFolder1\AtCommand.cs</Link>
+      <Link>Api\Features\At\AtCommand.cs</Link>
     </Compile>
     <Compile Include="..\XBee_42\Api\Features\At\AtCommandQueue.cs">
-      <Link>Api\Features\NewFolder1\AtCommandQueue.cs</Link>
+      <Link>Api\Features\At\AtCommandQueue.cs</Link>
     </Compile>
     <Compile Include="..\XBee_42\Api\Features\At\AtResponse.cs">
-      <Link>Api\Features\NewFolder1\AtResponse.cs</Link>
+      <Link>Api\Features\At\AtResponse.cs</Link>
     </Compile>
     <Compile Include="..\XBee_42\Api\Features\At\AtResponseStatus.cs">
-      <Link>Api\Features\NewFolder1\AtResponseStatus.cs</Link>
+      <Link>Api\Features\At\AtResponseStatus.cs</Link>
     </Compile>
     <Compile Include="..\XBee_42\Api\Features\At\RemoteAtCommand.cs">
-      <Link>Api\Features\NewFolder1\RemoteAtCommand.cs</Link>
+      <Link>Api\Features\At\RemoteAtCommand.cs</Link>
     </Compile>
     <Compile Include="..\XBee_42\Api\Features\At\RemoteAtResponse.cs">
-      <Link>Api\Features\NewFolder1\RemoteAtResponse.cs</Link>
+      <Link>Api\Features\At\RemoteAtResponse.cs</Link>
     </Compile>
     <Compile Include="..\XBee_42\Api\Features\Listenning\AddressPacketFilter.cs">
       <Link>Api\Features\Listenning\AddressPacketFilter.cs</Link>
@@ -151,22 +151,22 @@
       <Link>Api\Features\Listenning\ResponseHandler.cs</Link>
     </Compile>
     <Compile Include="..\XBee_42\Api\Features\Sending\AtRequest.cs">
-      <Link>Api\Features\NewFolder1\AtRequest.cs</Link>
+      <Link>Api\Features\Sending\AtRequest.cs</Link>
     </Compile>
     <Compile Include="..\XBee_42\Api\Features\Sending\DataDelegateRequest.cs">
-      <Link>Api\Features\NewFolder1\DataDelegateRequest.cs</Link>
+      <Link>Api\Features\Sending\DataDelegateRequest.cs</Link>
     </Compile>
     <Compile Include="..\XBee_42\Api\Features\Sending\DataRequest.cs">
-      <Link>Api\Features\NewFolder1\DataRequest.cs</Link>
+      <Link>Api\Features\Sending\DataRequest.cs</Link>
     </Compile>
     <Compile Include="..\XBee_42\Api\Features\Sending\IRequest.cs">
-      <Link>Api\Features\NewFolder1\IRequest.cs</Link>
+      <Link>Api\Features\Sending\IRequest.cs</Link>
     </Compile>
     <Compile Include="..\XBee_42\Api\Features\Sending\RawRequest.cs">
-      <Link>Api\Features\NewFolder1\RawRequest.cs</Link>
+      <Link>Api\Features\Sending\RawRequest.cs</Link>
     </Compile>
     <Compile Include="..\XBee_42\Api\Features\Sending\RequestBase.cs">
-      <Link>Api\Features\NewFolder1\RequestBase.cs</Link>
+      <Link>Api\Features\Sending\RequestBase.cs</Link>
     </Compile>
     <Compile Include="..\XBee_42\Api\GenericResponse.cs">
       <Link>Api\GenericResponse.cs</Link>
@@ -190,46 +190,46 @@
       <Link>Api\PacketParser.cs</Link>
     </Compile>
     <Compile Include="..\XBee_42\Api\WiFi\AtCmd.cs">
-      <Link>Api\NewFolder1\AtCmd.cs</Link>
+      <Link>Api\WiFi\AtCmd.cs</Link>
     </Compile>
     <Compile Include="..\XBee_42\Api\Wpan\AssociationStatus.cs">
-      <Link>Api\NewFolder1\AssociationStatus.cs</Link>
+      <Link>Api\Wpan\AssociationStatus.cs</Link>
     </Compile>
     <Compile Include="..\XBee_42\Api\Wpan\AtCmd.cs">
-      <Link>Api\NewFolder1\AtCmd.cs</Link>
+      <Link>Api\Wpan\AtCmd.cs</Link>
     </Compile>
     <Compile Include="..\XBee_42\Api\Wpan\DiscoverResult.cs">
-      <Link>Api\NewFolder1\DiscoverResult.cs</Link>
+      <Link>Api\Wpan\DiscoverResult.cs</Link>
     </Compile>
     <Compile Include="..\XBee_42\Api\Wpan\IoSample.cs">
-      <Link>Api\NewFolder1\IoSample.cs</Link>
+      <Link>Api\Wpan\IoSample.cs</Link>
     </Compile>
     <Compile Include="..\XBee_42\Api\Wpan\IoSampleResponse.cs">
-      <Link>Api\NewFolder1\IoSampleResponse.cs</Link>
+      <Link>Api\Wpan\IoSampleResponse.cs</Link>
     </Compile>
     <Compile Include="..\XBee_42\Api\Wpan\IWpanPacket.cs">
-      <Link>Api\NewFolder1\IWpanPacket.cs</Link>
+      <Link>Api\Wpan\IWpanPacket.cs</Link>
     </Compile>
     <Compile Include="..\XBee_42\Api\Wpan\Pin.cs">
-      <Link>Api\NewFolder1\Pin.cs</Link>
+      <Link>Api\Wpan\Pin.cs</Link>
     </Compile>
     <Compile Include="..\XBee_42\Api\Wpan\PowerLevel.cs">
-      <Link>Api\NewFolder1\PowerLevel.cs</Link>
+      <Link>Api\Wpan\PowerLevel.cs</Link>
     </Compile>
     <Compile Include="..\XBee_42\Api\Wpan\RxResponse.cs">
-      <Link>Api\NewFolder1\RxResponse.cs</Link>
+      <Link>Api\Wpan\RxResponse.cs</Link>
     </Compile>
     <Compile Include="..\XBee_42\Api\Wpan\RxResponseBase.cs">
-      <Link>Api\NewFolder1\RxResponseBase.cs</Link>
+      <Link>Api\Wpan\RxResponseBase.cs</Link>
     </Compile>
     <Compile Include="..\XBee_42\Api\Wpan\SleepMode.cs">
-      <Link>Api\NewFolder1\SleepMode.cs</Link>
+      <Link>Api\Wpan\SleepMode.cs</Link>
     </Compile>
     <Compile Include="..\XBee_42\Api\Wpan\TxRequest.cs">
-      <Link>Api\NewFolder1\TxRequest.cs</Link>
+      <Link>Api\Wpan\TxRequest.cs</Link>
     </Compile>
     <Compile Include="..\XBee_42\Api\Wpan\TxStatusResponse.cs">
-      <Link>Api\NewFolder1\TxStatusResponse.cs</Link>
+      <Link>Api\Wpan\TxStatusResponse.cs</Link>
     </Compile>
     <Compile Include="..\XBee_42\Api\XBee.cs">
       <Link>Api\XBee.cs</Link>

@@ -37,7 +37,7 @@
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>3</WarningLevel>
     <DocumentationFile>bin\Release\GTM.OpenSource.XBee.XML</DocumentationFile>
   </PropertyGroup>
   <Import Project="$(NetMfTargetsBaseDir)$(TargetFrameworkVersion)\CSharp.Targets" />
@@ -62,7 +62,7 @@
   <ItemGroup>
     <ProjectReference Include="..\XBee_41\XBee.csproj">
       <Project>{F7972138-A6BC-4817-9938-7ABFFB5ED6C8}</Project>
-      <Name>XBee %28NETMF\4.1\XBee%29</Name>
+      <Name>XBee</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>

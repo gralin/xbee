@@ -6,7 +6,7 @@
 [assembly: AssemblyTitle("OpenSource.XBee")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("open Source")]
 [assembly: AssemblyProduct("OpenSource.XBee")]
 [assembly: AssemblyCopyright("Copyright ©  2012")]
 [assembly: AssemblyTrademark("")]

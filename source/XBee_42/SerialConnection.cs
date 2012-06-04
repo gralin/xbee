@@ -16,8 +16,14 @@ namespace NETMF.OpenSource.XBee
         public void Open()
         {
             // .NET MF 4.1 requires to subscribe to serial events after openning the port
+
+            #if MF_FRAMEWORK_VERSION_V4_1
             _serialPort.Open();
             _serialPort.DataReceived += OnDataReceived;
+            #else
+            _serialPort.DataReceived += OnDataReceived;
+            _serialPort.Open();
+            #endif
         }
 
         public void Close()

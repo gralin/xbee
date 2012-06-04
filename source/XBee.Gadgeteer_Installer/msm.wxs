@@ -60,8 +60,10 @@
                         <File Id="id_file_be_pe_41" Name="$(var.OutputFileName).pe" />
                         <!-- If your module relies on custom assemblies other than the one in this template, -->
                         <!-- then include the be subdirectory's dll, pdb and pdbx and pe files for those assemblies here, e.g.: -->
-                        <!--<File Id="id_custom_be_binary_41" Name="OpenSource.XBee.dll"/>
-                        <File Id="id_custom_be_pdb_41" Name="OpenSource.XBee.pdb" />-->
+                        <!--
+                        <File Id="id_custom_be_binary_41" Name="OpenSource.XBee.dll"/>
+                        <File Id="id_custom_be_pdb_41" Name="OpenSource.XBee.pdb" />
+                        -->
                         <File Id="id_custom_be_pdbx_41" Name="OpenSource.XBee.pdbx" />
                         <File Id="id_custom_be_pe_41" Name="OpenSource.XBee.pe" />
                       </Component>
@@ -75,8 +77,10 @@
                         <File Id="id_file_le_pe_41" Name="$(var.OutputFileName).pe" />
                         <!-- If your module relies on custom assemblies other than the one in this template, -->
                         <!-- then include the le subdirectory's dll, pdb and pdbx and pe files for those assemblies here, e.g.: -->
-                        <!--<File Id="id_custom_le_binary_41" Name="OpenSource.XBee.dll"/>
-                        <File Id="id_custom_le_pdb_41" Name="OpenSource.XBee.pdb" />-->
+                        <!--
+                        <File Id="id_custom_le_binary_41" Name="OpenSource.XBee.dll"/>
+                        <File Id="id_custom_le_pdb_41" Name="OpenSource.XBee.pdb" />
+                        -->
                         <File Id="id_custom_le_pdbx_41" Name="OpenSource.XBee.pdbx" />
                         <File Id="id_custom_le_pe_41" Name="OpenSource.XBee.pe" />
                       </Component>
@@ -110,8 +114,10 @@
                         <File Id="id_file_be_pe_42" Name="$(var.OutputFileName).pe" />
                         <!-- If your module relies on custom assemblies other than the one in this template, -->
                         <!-- then include the be subdirectory's dll, pdb and pdbx and pe files for those assemblies here, e.g.: -->
-                        <!--<File Id="id_custom_be_binary_42" Name="OpenSource.XBee.dll"/>
-                        <File Id="id_custom_be_pdb_42" Name="OpenSource.XBee.pdb" />-->
+                        <!--
+                        <File Id="id_custom_be_binary_42" Name="OpenSource.XBee.dll"/>
+                        <File Id="id_custom_be_pdb_42" Name="OpenSource.XBee.pdb" />
+                        -->
                         <File Id="id_custom_be_pdbx_42" Name="OpenSource.XBee.pdbx" />
                         <File Id="id_custom_be_pe_42" Name="OpenSource.XBee.pe" />
                       </Component>
@@ -125,8 +131,10 @@
                         <File Id="id_file_le_pe_42" Name="$(var.OutputFileName).pe" />
                         <!-- If your module relies on custom assemblies other than the one in this template, -->
                         <!-- then include the le subdirectory's dll, pdb and pdbx and pe files for those assemblies here, e.g.: -->
-                        <!--<File Id="id_custom_le_binary_42" Name="OpenSource.XBee.dll"/>
-                        <File Id="id_custom_le_pdb_42" Name="OpenSource.XBee.pdb" />-->
+                        <!--
+                        <File Id="id_custom_le_binary_42" Name="OpenSource.XBee.dll"/>
+                        <File Id="id_custom_le_pdb_42" Name="OpenSource.XBee.pdb" />
+                        -->
                         <File Id="id_custom_le_pdbx_42" Name="OpenSource.XBee.pdbx" />
                         <File Id="id_custom_le_pe_42" Name="OpenSource.XBee.pe" />
                       </Component>

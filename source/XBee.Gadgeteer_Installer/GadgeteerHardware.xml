@@ -5,7 +5,7 @@
     <!-- The Unique ID is auto-generated and does not usually need to be modified. -->
     <ModuleDefinition Name="XBee"
                   UniqueId="76808a96-7fe1-4c88-bb9b-47c529d48fcf"
-                  Manufacturer="OpenSource"
+                  Manufacturer="Open Source"
                   Description="A XBee module"
                   InstanceName="XBee"
                   Type="Gadgeteer.Modules.OpenSource.XBee"

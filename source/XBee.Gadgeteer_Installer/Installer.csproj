@@ -36,7 +36,7 @@
     <OutputPath>bin\Release\Ignore\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>3</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
     <RunPostBuildEvent>Always</RunPostBuildEvent>
@@ -63,7 +63,9 @@
     </None>
     <None Include="en-us.wxl" />
     <None Include="common.wxi" />
-    <None Include="msi.wxs" />
+    <None Include="msi.wxs">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="G.ico" />
     <None Include="Image.jpg" />
   </ItemGroup>
