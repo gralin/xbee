@@ -2,9 +2,9 @@
 using System.Threading;
 using Gadgeteer.Interfaces;
 using Microsoft.SPOT.Hardware;
+using NETMF.OpenSource.XBee;
 using Logger = NETMF.OpenSource.XBee.Util.Logger;
 using LogLevel = NETMF.OpenSource.XBee.Util.LogLevel;
-using XBeeApi = NETMF.OpenSource.XBee.Api.XBee;
 using IXBeeConnection = NETMF.OpenSource.XBee.IXBeeConnection;
 using SerialConnection = NETMF.OpenSource.XBee.SerialConnection;
 
@@ -40,7 +40,7 @@ namespace Gadgeteer.Modules.OpenSource
         }
 
         /// <summary>
-        /// Gets the <see cref="NETMF.OpenSource.XBee.Api.XBee"/> of the connected XBee module.
+        /// Gets the <see cref="XBeeApi"/> of the connected XBee module.
         /// </summary>
         public XBeeApi Api
         {

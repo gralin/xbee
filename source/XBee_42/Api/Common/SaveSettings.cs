@@ -19,7 +19,7 @@
         ///         
         ///     </para>
         /// </param>
-        public static void Write(XBee xbee)
+        public static void Write(XBeeApi xbee)
         {
             var request = xbee.Send(AtCmd.Write);
             Parse(request.GetResponse());
@@ -39,7 +39,7 @@
         ///         
         ///     </para>
         /// </param>
-        public static void Write(XBee sender, XBeeAddress remoteXbee)
+        public static void Write(XBeeApi sender, XBeeAddress remoteXbee)
         {
             var request = sender.Send(AtCmd.Write).To(remoteXbee);
             Parse((AtResponse) request.GetResponse());

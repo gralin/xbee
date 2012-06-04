@@ -7,7 +7,7 @@ namespace NETMF.OpenSource.XBee.Api
     /// </summary>
     public class XBeeConfiguration
     {
-        private readonly XBee _xbee;
+        private readonly XBeeApi _xbee;
         private readonly XBeeAddress _remoteXbee;
 
         public HardwareVersions HardwareVersion { get; private set; }
@@ -16,7 +16,7 @@ namespace NETMF.OpenSource.XBee.Api
         public ApiModes ApiMode { get; private set; }
         public string NodeIdentifier { get; private set; }
 
-        private XBeeConfiguration(XBee xbee, XBeeAddress remoteXbee = null)
+        private XBeeConfiguration(XBeeApi xbee, XBeeAddress remoteXbee = null)
         {
             _xbee = xbee;
             _remoteXbee = remoteXbee;
@@ -27,7 +27,7 @@ namespace NETMF.OpenSource.XBee.Api
         /// </summary>
         /// <param name="xbee">XBee module to read data from</param>
         /// <returns>XBee basic information</returns>
-        public static XBeeConfiguration Read(XBee xbee)
+        public static XBeeConfiguration Read(XBeeApi xbee)
         {
             return new XBeeConfiguration(xbee)
             {
@@ -45,7 +45,7 @@ namespace NETMF.OpenSource.XBee.Api
         /// <param name="sender">XBee module that will send AT command to remote target</param>
         /// <param name="remoteXbee">XBee module which infomation will be retrieved</param>
         /// <returns>Remote XBee basic infomation</returns>
-        public static XBeeConfiguration Read(XBee sender, XBeeAddress remoteXbee)
+        public static XBeeConfiguration Read(XBeeApi sender, XBeeAddress remoteXbee)
         {
             return new XBeeConfiguration(sender, remoteXbee)
             {

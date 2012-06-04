@@ -1,17 +1,22 @@
 ﻿using System;
 using System.Collections;
+using NETMF.OpenSource.XBee.Api;
 using NETMF.OpenSource.XBee.Api.Common;
 using NETMF.OpenSource.XBee.Api.Wpan;
 using NETMF.OpenSource.XBee.Api.Zigbee;
 using NETMF.OpenSource.XBee.Util;
+using AtCmd = NETMF.OpenSource.XBee.Api.Common.AtCmd;
 using DiscoverResult = NETMF.OpenSource.XBee.Api.Common.DiscoverResult;
+using RxResponse = NETMF.OpenSource.XBee.Api.Zigbee.RxResponse;
+using TxRequest = NETMF.OpenSource.XBee.Api.Wpan.TxRequest;
+using TxStatusResponse = NETMF.OpenSource.XBee.Api.Zigbee.TxStatusResponse;
 
-namespace NETMF.OpenSource.XBee.Api
+namespace NETMF.OpenSource.XBee
 {
     /// <summary>
-    /// This is an API for communicating with Digi XBee 802.15.4 and ZigBee radios
+    /// This is an API for communicating with Digi XBeeApi 802.15.4 and ZigBee radios
     /// </summary>
-    public class XBee
+    public class XBeeApi
     {
         private readonly IXBeeConnection _connection;
         private readonly PacketParser _parser;
@@ -40,7 +45,7 @@ namespace NETMF.OpenSource.XBee.Api
             return _connection != null && _connection.Connected;
         }
 
-        protected XBee()
+        protected XBeeApi()
         {
             _parser = new PacketParser();
             _idGenerator = new PacketIdGenerator();
@@ -50,7 +55,7 @@ namespace NETMF.OpenSource.XBee.Api
             _dataDelegateRequest = new DataDelegateRequest(this);
         }
 
-        public XBee(IXBeeConnection connection) 
+        public XBeeApi(IXBeeConnection connection) 
             : this()
         {
             _connection = connection;
@@ -62,7 +67,7 @@ namespace NETMF.OpenSource.XBee.Api
             };
         }
 
-        public XBee(string portName, int baudRate)
+        public XBeeApi(string portName, int baudRate)
             : this(new SerialConnection(portName, baudRate))
         {
         }
@@ -105,7 +110,7 @@ namespace NETMF.OpenSource.XBee.Api
             if (Config == null)
             {
                 const string message = "AT command timed-out while attempt to read configuration. "
-                     + "The XBee radio must be in API mode (AP=2) to use with this library";
+                     + "The XBeeApi radio must be in API mode (AP=2) to use with this library";
 
                 Logger.Error(message);
                 throw new XBeeException(message);
@@ -113,7 +118,7 @@ namespace NETMF.OpenSource.XBee.Api
 
             if (Config.ApiMode != ApiModes.EnabledWithEscaped)
             {
-                Logger.LowDebug("XBee radio is in API mode without escape characters (AP=1)."
+                Logger.LowDebug("XBeeApi radio is in API mode without escape characters (AP=1)."
                                 + " The radio must be configured in API mode with escape bytes "
                                 + "(AP=2) for use with this library.");
 
@@ -208,7 +213,7 @@ namespace NETMF.OpenSource.XBee.Api
 
         public void DiscoverNodes(DiscoverResultHandler handler)
         {
-            Send(Common.AtCmd.NodeDiscoverTimeout).Invoke(timeoutResponse =>
+            Send(AtCmd.NodeDiscoverTimeout).Invoke(timeoutResponse =>
             {
                 var timeout = GetDiscoverTimeout(timeoutResponse);
                 var request = CreateDiscoverRequest(timeout);
@@ -222,7 +227,7 @@ namespace NETMF.OpenSource.XBee.Api
 
         public DiscoverResult[] DiscoverNodes()
         {
-            var timeoutResponse = Send(Common.AtCmd.NodeDiscoverTimeout).GetResponse();
+            var timeoutResponse = Send(AtCmd.NodeDiscoverTimeout).GetResponse();
             var timeout = GetDiscoverTimeout(timeoutResponse);
             var request = CreateDiscoverRequest(timeout);
             var responses = request.GetResponses();
@@ -240,21 +245,21 @@ namespace NETMF.OpenSource.XBee.Api
             {
                 case ResetMode.Software:
                     var modemStatusFilter = new PacketTypeFilter(typeof(ModemStatusResponse));
-                    var response = Send(Common.AtCmd.SoftwareReset).Use(modemStatusFilter).GetResponse();
+                    var response = Send(AtCmd.SoftwareReset).Use(modemStatusFilter).GetResponse();
                     var modemStatus = ((ModemStatusResponse) response).Status;
                     if (modemStatus != ModemStatus.WatchdogTimerReset)
                         throw new XBeeException("Unexpected modem status: " + modemStatus);
                     break;
 
                 case ResetMode.RestoreDefaults:
-                    Send(Common.AtCmd.RestoreDefaults).GetResponse();
+                    Send(AtCmd.RestoreDefaults).GetResponse();
                     break;
 
                 case ResetMode.Network:
                     if (Config.IsSeries1())
                         throw new NotSupportedException("Series 1 has no network reset command");
 
-                    Send(Common.AtCmd.NetworkReset).GetResponse();
+                    Send(AtCmd.NetworkReset).GetResponse();
                     break;
             }
         }
@@ -281,13 +286,13 @@ namespace NETMF.OpenSource.XBee.Api
         public XBeeRequest CreateRequest(byte[] payload, XBeeAddress destination)
         {
             if (Config.IsSeries1())
-                return new Wpan.TxRequest(destination, payload) 
+                return new TxRequest(destination, payload) 
                     {FrameId = _idGenerator.GetNext()};
 
             if (!(destination is XBeeAddress64) || destination == null)
                 throw new ArgumentException("64 bit address expected", "destination");
 
-            return new Zigbee.TxRequest((XBeeAddress64)destination, GetNetworkAddress(destination), payload) 
+            return new Api.Zigbee.TxRequest((XBeeAddress64)destination, GetNetworkAddress(destination), payload) 
                 { FrameId = _idGenerator.GetNext() };
         }
 
@@ -299,10 +304,10 @@ namespace NETMF.OpenSource.XBee.Api
         public XBeeRequest CreateRequest(byte[] payload, NodeInfo destination)
         {
             if (Config.IsSeries1())
-                return new Wpan.TxRequest(destination.SerialNumber, payload) 
+                return new TxRequest(destination.SerialNumber, payload) 
                     { FrameId = _idGenerator.GetNext() };
 
-            return new Zigbee.TxRequest(destination.SerialNumber, destination.NetworkAddress, payload)
+            return new Api.Zigbee.TxRequest(destination.SerialNumber, destination.NetworkAddress, payload)
                 { FrameId = _idGenerator.GetNext() };
         }
 
@@ -340,19 +345,19 @@ namespace NETMF.OpenSource.XBee.Api
             return _dataRequest;
         }
 
-        public AtRequest Send(Common.AtCmd atCommand, params byte[] value)
+        public AtRequest Send(AtCmd atCommand, params byte[] value)
         {
             _atRequest.Init((ushort)atCommand, value);
             return _atRequest;
         }
 
-        public AtRequest Send(Wpan.AtCmd atCommand, params byte[] value)
+        public AtRequest Send(Api.Wpan.AtCmd atCommand, params byte[] value)
         {
             _atRequest.Init((ushort)atCommand, value);
             return _atRequest;
         }
 
-        public AtRequest Send(Zigbee.AtCmd atCommand, params byte[] value)
+        public AtRequest Send(Api.Zigbee.AtCmd atCommand, params byte[] value)
         {
             _atRequest.Init((ushort)atCommand, value);
             return _atRequest;
@@ -480,15 +485,15 @@ namespace NETMF.OpenSource.XBee.Api
         protected IRequest CreateDiscoverRequest(int timeout)
         {
             var filter = new NodeDiscoveryFilter();
-            var request = Send(Common.AtCmd.NodeDiscover).Use(filter).Timeout(timeout);
+            var request = Send(AtCmd.NodeDiscover).Use(filter).Timeout(timeout);
             return request;
         }
 
         protected DiscoverResult GetDiscoverResponse(XBeeResponse response)
         {
             var discoverResponse = Config.IsSeries1()
-                    ? (DiscoverResult) Wpan.DiscoverResult.Parse(response)
-                    : Zigbee.DiscoverResult.Parse(response);
+                    ? (DiscoverResult) Api.Wpan.DiscoverResult.Parse(response)
+                    : Api.Zigbee.DiscoverResult.Parse(response);
 
             if (_addressLookupEnabled)
             {
@@ -506,16 +511,16 @@ namespace NETMF.OpenSource.XBee.Api
                 var atResponse = response as RemoteAtResponse;
                 AddressLookup[atResponse.RemoteSerial] = atResponse.RemoteAddress;
             }
-            else if (response is Zigbee.RxResponse)
+            else if (response is RxResponse)
             {
-                var zigbeeResponse = response as Zigbee.RxResponse;
+                var zigbeeResponse = response as RxResponse;
                 AddressLookup[zigbeeResponse.SourceSerial] = zigbeeResponse.SourceAddress;
             }
-            else if (response is Zigbee.TxStatusResponse && _currentRequest is Zigbee.TxRequest)
+            else if (response is TxStatusResponse && _currentRequest is Api.Zigbee.TxRequest)
             {
-                var txRequest = _currentRequest as Zigbee.TxRequest;
-                var txResponse = response as Zigbee.TxStatusResponse;
-                var dataDelivered = txResponse.DeliveryStatus == Zigbee.TxStatusResponse.DeliveryResult.Success;
+                var txRequest = _currentRequest as Api.Zigbee.TxRequest;
+                var txResponse = response as TxStatusResponse;
+                var dataDelivered = txResponse.DeliveryStatus == TxStatusResponse.DeliveryResult.Success;
 
                 AddressLookup[txRequest.DestinationSerial] = dataDelivered 
                     ? txResponse.DestinationAddress 
@@ -531,22 +536,22 @@ namespace NETMF.OpenSource.XBee.Api
         
         protected void OnDataReceived(XBeeResponse response, bool finished)
         {
-            if (response is Wpan.RxResponse)
+            if (response is Api.Wpan.RxResponse)
             {
-                var rxResponse = response as Wpan.RxResponse;
+                var rxResponse = response as Api.Wpan.RxResponse;
                 NotifyDataReceived(rxResponse.Payload, rxResponse.Source);
             }
-            else if (response is Zigbee.RxResponse)
+            else if (response is RxResponse)
             {
-                if (response is Zigbee.ExplicitRxResponse)
+                if (response is ExplicitRxResponse)
                 {
-                    var profileId = (response as Zigbee.ExplicitRxResponse).ProfileId;
-                    var clusterId = (response as Zigbee.ExplicitRxResponse).ClusterId;
+                    var profileId = (response as ExplicitRxResponse).ProfileId;
+                    var clusterId = (response as ExplicitRxResponse).ClusterId;
 
                     // if module AtCmd.ApiOptions has been set to value other than default (0)
                     // received API frames will be transported using explicit frames
                     // those frames have profile id set to Zigbee.ProfileId.Digi
-                    if (profileId != (ushort)Zigbee.ProfileId.Digi)
+                    if (profileId != (ushort)ProfileId.Digi)
                         return;
 
                     // cluster id will be set to ApiId value
@@ -563,7 +568,7 @@ namespace NETMF.OpenSource.XBee.Api
                     }
                 }
 
-                var rxResponse = response as Zigbee.RxResponse;
+                var rxResponse = response as RxResponse;
                 NotifyDataReceived(rxResponse.Payload, rxResponse.SourceSerial);
             }
         }
@@ -590,8 +595,8 @@ namespace NETMF.OpenSource.XBee.Api
 
         public event XBeeModemStatusEventHandler StatusChanged;
 
-        public delegate void XBeeDataReceivedEventHandler(XBee receiver, byte[] data, XBeeAddress sender);
+        public delegate void XBeeDataReceivedEventHandler(XBeeApi receiver, byte[] data, XBeeAddress sender);
 
-        public delegate void XBeeModemStatusEventHandler(XBee xbee, ModemStatus status);
+        public delegate void XBeeModemStatusEventHandler(XBeeApi xbee, ModemStatus status);
     }
 }

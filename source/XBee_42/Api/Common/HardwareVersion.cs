@@ -20,13 +20,13 @@ namespace NETMF.OpenSource.XBee.Api.Common
             };
         }
 
-        public static HardwareVersions Read(XBee xbee)
+        public static HardwareVersions Read(XBeeApi xbee)
         {
             var request = xbee.Send(AtCmd.HardwareVersion);
             return Parse(request.GetResponse());
         }
 
-        public static HardwareVersions Read(XBee sender, XBeeAddress remoteXBee)
+        public static HardwareVersions Read(XBeeApi sender, XBeeAddress remoteXBee)
         {
             var request = sender.Send(AtCmd.HardwareVersion).To(remoteXBee);
             return Parse((AtResponse) request.GetResponse());

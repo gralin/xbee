@@ -4,11 +4,11 @@ namespace NETMF.OpenSource.XBee.Api
 {
     public class AsyncSendResult : IDisposable
     {
-        private XBee _xbee;
+        private XBeeApi _xbee;
         private IPacketListener _responseListener;
         private bool _finished;
 
-        internal AsyncSendResult(XBee xbee, IPacketListener responseListener)
+        internal AsyncSendResult(XBeeApi xbee, IPacketListener responseListener)
         {
             _xbee = xbee;
             _responseListener = responseListener;

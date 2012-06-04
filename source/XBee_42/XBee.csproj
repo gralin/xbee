@@ -99,7 +99,6 @@
     <Compile Include="Api\Wpan\TxRequest.cs" />
     <Compile Include="Api\Wpan\TxStatusResponse.cs" />
     <Compile Include="Api\Wpan\DiscoverResult.cs" />
-    <Compile Include="Api\XBee.cs" />
     <Compile Include="Api\Features\Address\XBeeAddress.cs" />
     <Compile Include="Api\Features\Address\XBeeAddress16.cs" />
     <Compile Include="Api\Features\Address\XBeeAddress64.cs" />
@@ -138,6 +137,7 @@
     <Compile Include="Util\OutputStream.cs" />
     <Compile Include="Util\Logger.cs" />
     <Compile Include="Util\UshortUtils.cs" />
+    <Compile Include="XBeeApi.cs" />
     <Compile Include="XBeePin.cs" />
   </ItemGroup>
   <ItemGroup>

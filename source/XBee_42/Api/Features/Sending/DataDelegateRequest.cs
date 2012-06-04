@@ -13,7 +13,7 @@
         ///  TODO: Update Comments
         ///     
         /// </summary>
-        private XBee.PayloadDelegate _bytesDelegate;
+        private XBeeApi.PayloadDelegate _bytesDelegate;
 
         /// <summary>
         ///   TODO: Update Comments
@@ -41,7 +41,7 @@
         ///         
         ///     </para>
         /// </param>
-        public DataDelegateRequest(XBee xbee) 
+        public DataDelegateRequest(XBeeApi xbee) 
             : base(xbee)
         {
         }
@@ -55,7 +55,7 @@
         ///         
         ///     </para>
         /// </param>
-        internal void Init(XBee.PayloadDelegate payloadDelegate)
+        internal void Init(XBeeApi.PayloadDelegate payloadDelegate)
         {
             Init();
             _bytesDelegate = payloadDelegate;

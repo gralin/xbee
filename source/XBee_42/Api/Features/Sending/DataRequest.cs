@@ -6,7 +6,7 @@ namespace NETMF.OpenSource.XBee.Api
     {
         public virtual byte[] Payload { get; set; }
 
-        public DataRequest(XBee xbee)
+        public DataRequest(XBeeApi xbee)
             : base(xbee)
         {
         }

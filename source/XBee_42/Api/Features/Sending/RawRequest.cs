@@ -28,7 +28,7 @@ namespace NETMF.OpenSource.XBee.Api
         ///         
         ///     </para>
         /// </param>
-        public RawRequest(XBee xbee)
+        public RawRequest(XBeeApi xbee)
             : base(xbee)
         {
         }

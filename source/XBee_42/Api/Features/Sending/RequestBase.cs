@@ -12,14 +12,14 @@ namespace NETMF.OpenSource.XBee.Api
             Multiple
         }
 
-        protected readonly XBee LocalXBee;
+        protected readonly XBeeApi LocalXBee;
         protected IPacketFilter Filter;
         protected Response ExpectedResponse;
         protected int TimeoutValue;
         protected NodeInfo DestinationNode;
         protected XBeeAddress DestinationAddress;
 
-        protected RequestBase(XBee localXBee)
+        protected RequestBase(XBeeApi localXBee)
         {
             LocalXBee = localXBee;
         }

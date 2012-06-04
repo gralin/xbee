@@ -34,7 +34,7 @@ namespace NETMF.OpenSource.XBee.Api
         ///         
         ///     </para>
         /// </param>
-        public AtRequest(XBee localXBee) 
+        public AtRequest(XBeeApi localXBee) 
             : base(localXBee)
         {
         }

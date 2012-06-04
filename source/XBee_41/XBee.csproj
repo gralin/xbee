@@ -231,9 +231,6 @@
     <Compile Include="..\XBee_42\Api\Wpan\TxStatusResponse.cs">
       <Link>Api\Wpan\TxStatusResponse.cs</Link>
     </Compile>
-    <Compile Include="..\XBee_42\Api\XBee.cs">
-      <Link>Api\XBee.cs</Link>
-    </Compile>
     <Compile Include="..\XBee_42\Api\XBeeConfiguration.cs">
       <Link>Api\XBeeConfiguration.cs</Link>
     </Compile>
@@ -335,6 +332,9 @@
     </Compile>
     <Compile Include="..\XBee_42\Util\UshortUtils.cs">
       <Link>Util\UshortUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\XBee_42\XBeeApi.cs">
+      <Link>XBeeApi.cs</Link>
     </Compile>
     <Compile Include="..\XBee_42\XBeePin.cs">
       <Link>XBeePin.cs</Link>
