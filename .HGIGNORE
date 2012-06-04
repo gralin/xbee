@@ -9,3 +9,4 @@ packages
 *.ncrunchsolution
 *.ncrunchproject
 *.crunchsolution.cache
+*.diagram
