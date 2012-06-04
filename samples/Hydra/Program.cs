@@ -4,6 +4,8 @@ using Microsoft.SPOT;
 using NETMF.OpenSource.XBee;
 using NETMF.OpenSource.XBee.Api;
 using NETMF.OpenSource.XBee.Api.Common;
+using Gadgeteer.Modules.GHIElectronics;
+using Gadgeteer.Modules.OpenSource;
 
 namespace Hydra
 {
