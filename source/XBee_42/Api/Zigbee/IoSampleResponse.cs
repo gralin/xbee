@@ -85,7 +85,7 @@ namespace NETMF.OpenSource.XBee.Api.Zigbee
 
             Analog = new int[5];
 
-            for (var pin = Pin.A0; pin < Pin.A3; pin++)
+            for (var pin = Pin.A0; pin <= Pin.A3; pin++)
             {
                 if (!IsAnalogEnabled(pin))
                     continue;
