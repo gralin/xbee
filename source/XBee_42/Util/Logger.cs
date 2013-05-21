@@ -71,6 +71,14 @@ namespace NETMF.OpenSource.XBee.Util
         {
             LoggingLevel = LogLevel.Info;
 
+            // in regular .NET Framework:
+            //   LogLevel.Fatal.ToString() == "Fatal"
+            //
+            // in .NET Micro Framework 
+            //    LogLevel.Fatal.ToString() == "1"
+            //
+            // in order to print log level name we need to store it
+
             LevelNames = new Hashtable
             {
                 {LogLevel.Fatal, "Fatal"},
@@ -81,15 +89,10 @@ namespace NETMF.OpenSource.XBee.Util
                 {LogLevel.LowDebug, "LowDebug"},
             };
 
-            LogWritters = new Hashtable
-            {
-                {LogLevel.Fatal, null},
-                {LogLevel.Error, null},
-                {LogLevel.Warn, null},
-                {LogLevel.Info, null},
-                {LogLevel.Debug, null},
-                {LogLevel.LowDebug, null},
-            };
+            LogWritters = new Hashtable();
+
+            foreach (var levelName in LevelNames.Keys)
+                LogWritters.Add(levelName, null);
         }
 
         /// <summary>
@@ -101,7 +104,7 @@ namespace NETMF.OpenSource.XBee.Util
         {
             if (logLevel.Length == 0 || logLevel[0] == LogLevel.All)
             {
-                foreach (var level in LogWritters.Keys)
+                foreach (var level in LevelNames.Keys)
                     LogWritters[level] = logWritter;
             }
             else
