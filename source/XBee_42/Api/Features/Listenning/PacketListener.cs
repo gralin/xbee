@@ -48,19 +48,21 @@ namespace NETMF.OpenSource.XBee.Api
 
             var packetAccepted = Filter == null || Filter.Accepted(packet);
 
-            Finished = (Filter != null && Filter.Finished());
+            var finished = Filter != null && Filter.Finished();
 
             if (!packetAccepted)
                 return;
 
             if (ResponseHandler != null)
             {
-                ResponseHandler.Invoke(packet, Finished);
+                ResponseHandler.Invoke(packet, finished);
             }
             else
             {
                 Packets.Add(packet);
             }
+
+            Finished = finished;
         }
 
         public XBeeResponse[] GetPackets(int timeout = -1)
